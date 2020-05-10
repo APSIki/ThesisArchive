@@ -6,7 +6,7 @@ COPY go.mod .
 RUN go mod download
 
 COPY . .
-RUN go build -o main .
+RUN go build -o pkg/main .
 
 WORKDIR /dist
 RUN cp /build/main .
