@@ -3,7 +3,7 @@ import LandingPage from './LandingPage'
 
 const mapStateToProps = state => {
   return {
-    config: state.config
+    config: state.thesis.theses
   }
 }
 

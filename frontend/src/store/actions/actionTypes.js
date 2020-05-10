@@ -1,0 +1,3 @@
+export const SET_CURRENT_THESIS = "SET_CURRENT_THESIS"
+export const ADD_THESIS = "ADD_THESIS"
+export const GET_THESES = "GET_THESES"

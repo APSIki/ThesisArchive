@@ -3,7 +3,7 @@ import MyTheses from './MyTheses'
 
 const mapStateToProps = state => {
   return {
-    theses: state.config.theses
+    theses: state.thesis.theses
   }
 }
 

@@ -1,25 +1,31 @@
 import React from 'react';
 import { createUseStyles } from 'react-jss';
 import TopBarButton from './TopBarButton';
+import Auxiliary from '../hoc/Auxiliary'
 
 const Layout = props => { 
  
+  const currentYear = new Date().getFullYear();
   const classes = useStyles()
   return (
-    <>
+    <Auxiliary>
         <div className={classes.topBar}>
-            <TopBarButton text="Jakiś link" />
-            <TopBarButton text="Inny link" />
-            <TopBarButton text="Może jeszcze jeden link" />
-            <TopBarButton text="Zaloguj" floatRight />
+            <nav>
+                <TopBarButton text="Jakiś link" />
+                <TopBarButton text="Inny link" />
+                <TopBarButton text="Może jeszcze jeden link" />
+                <TopBarButton text="Zaloguj" floatRight />
+            </nav>
         </div>
         <div className={classes.container}>
             {props.children}
         </div>
         <div className={classes.footer}>
-            © 2020 Very serious developers 
+            <footer>
+                <small>&copy; Copyright {currentYear}, Very serious developers</small>
+            </footer>
         </div>
-    </>
+    </Auxiliary>
   );
 }
 
@@ -34,14 +40,16 @@ const useStyles = createUseStyles({
         width: "100%",
         position: "fixed",
         height: 40,
-        backgroundColor: "#ccc",
+        backgroundColor: "#7927DC",
         container: "flex",
         paddingLeft: 30
     },
     footer: {
         position: "fixed",
         bottom: 0,
-        padding: 5
+        paddingBottom: 5,
+        left: "50%",
+        transform: "translateX(-50%)"
     }
 });
 
