@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import Auxiliary from '../../hoc/Auxiliary'
 
 const AddThesisModalForm = (props) => {
 
@@ -27,7 +26,7 @@ const AddThesisModalForm = (props) => {
   }
 
   return (
-      <Auxiliary>
+      <React.Fragment>
         <div className="form-group">
           <label htmlFor="thesisType">Typ Pracy dyplomowej</label>
           <input className="form-control" id="thesisType" onChange={handleTypeChange} />
@@ -41,7 +40,7 @@ const AddThesisModalForm = (props) => {
             Zapisz
           </button>
         </div>
-      </Auxiliary>
+      </React.Fragment>
   );
 };
 

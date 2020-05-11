@@ -1,14 +1,13 @@
 import React from 'react';
 import { createUseStyles } from 'react-jss';
 import TopBarButton from './TopBarButton';
-import Auxiliary from '../hoc/Auxiliary'
 
 const Layout = props => { 
  
   const currentYear = new Date().getFullYear();
   const classes = useStyles()
   return (
-    <Auxiliary>
+    <React.Fragment>
         <div className={classes.topBar}>
             <nav>
                 <TopBarButton text="Jakiś link" />
@@ -25,7 +24,7 @@ const Layout = props => {
                 <small>&copy; Copyright {currentYear}, Very serious developers</small>
             </footer>
         </div>
-    </Auxiliary>
+    </React.Fragment>
   );
 }
 

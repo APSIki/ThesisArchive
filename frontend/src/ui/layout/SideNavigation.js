@@ -10,10 +10,10 @@ const SideNavigation = () => {
         <div className={classes.sideNav}>
             <p className={classes.title}>Menu</p>
             <ModalContainer triggerText='Dodaj prace dyplomową' modalAction="addThesis"/>
-            <SideNavItem text='Sprawdź wyniki egzaminu' /> 
-            <SideNavItem text='Sprawdź skład komisji' /> 
-            <SideNavItem text='Adam Małysz' /> 
-            <SideNavItem text='Pan Prezes' /> 
+            <SideNavItem text='Jakiś tekst' /> 
+            <SideNavItem text='Jakiś tekst' /> 
+            <SideNavItem text='Jakiś tekst' /> 
+            <SideNavItem text='Jakiś tekst' /> 
         </div>
     );
 }
