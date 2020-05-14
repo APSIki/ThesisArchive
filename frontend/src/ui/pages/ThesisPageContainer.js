@@ -1,16 +1,18 @@
 import { connect } from 'react-redux';
 import ThesisPage from './ThesisPage'
-import { setCurrentThesis } from '../../actions/actions'
+import * as actionCreators from '../../store/actions/index';
 
 const mapStateToProps = state => {
   return {
-    config: state.config,
-    currentThesis: state.currentThesis
+    thesis: state.thesis.theses,
+    currentThesis: state.thesis.currentThesis
   }
 }
 
-const ThesisPageContainer = connect(mapStateToProps, {
-  setCurrentThesis
-})(ThesisPage)
+const mapDispatchToProps = dispatch => {
+  return {
+      setCurrentThesis: (currentThesis) => dispatch(actionCreators.setCurrentThesis(currentThesis))
+  }
+}
 
-export default ThesisPageContainer;
+export default connect(mapStateToProps, mapDispatchToProps)(ThesisPage);
