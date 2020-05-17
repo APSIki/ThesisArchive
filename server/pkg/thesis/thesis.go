@@ -27,7 +27,7 @@ type Thesis struct {
 
 func PostTheses(w http.ResponseWriter, req *http.Request) {
 	t := New()
-	if err := t.DecodeJSON(w, req); err != nil {
+	if err := t.decodeJSON(w, req); err != nil {
 		respond.With(w, req, http.StatusBadRequest, err)
 		return
 	}
@@ -38,7 +38,7 @@ func New() *Thesis {
 	return &Thesis{}
 }
 
-func (t *Thesis) DecodeJSON(w http.ResponseWriter, req *http.Request) error {
+func (t *Thesis) decodeJSON(w http.ResponseWriter, req *http.Request) error {
 	if req.Header.Get("Content-Type") != "" {
 		value, _ := header.ParseValueAndParams(req.Header, "Content-Type")
 		if value != "application/json" {
@@ -49,4 +49,14 @@ func (t *Thesis) DecodeJSON(w http.ResponseWriter, req *http.Request) error {
 	decoder := json.NewDecoder(req.Body)
 	err := decoder.Decode(&t)
 	return err
+}
+
+func PutThesis(w http.ResponseWriter, req *http.Request) {
+	t := New()
+	if err := t.decodeJSON(w, req); err != nil {
+		respond.With(w, req, http.StatusBadRequest, err)
+		return
+	}
+	//TODO create a service for DB communication and add thesis
+	respond.WithStatus(w, req, http.StatusCreated)
 }
