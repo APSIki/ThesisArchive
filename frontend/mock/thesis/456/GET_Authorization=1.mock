@@ -1,0 +1,35 @@
+HTTP/1.1 200 OK
+Content-Type: application/json; charset=utf-8
+Access-Control-Allow-Origin: *
+Access-Control-Allow-Headers: Authorization
+
+{
+    "id": 456,
+    "name": "Spawanie światłowodów przy pomocy klucza nastawnego",
+    "type": "Praca inżynierska",
+    "abstract": "",
+    "keywords": "",
+    "reviews": {
+        "reviewer1": {
+            "reviewerName": "Dariusz Bursztynowski",
+            "text": "Bardzo dobrze, super recenzja, 10/10",
+            "grade": "5"
+        },
+        "reviewer2": {
+            "reviewerName": "Katarzyna Rybacka",
+            "text": "Trochę słabo, za mało elektroniki analogowej",
+            "grade": "3"
+        }
+    },
+    "defense": {
+        "defended": true,
+        "date": "2020-06-31",
+        "commitee": {
+            "chairman": "Jerzy Siuzdak",
+            "advisor": "Dariusz Bursztynowski",
+            "member1": "Ewa Obarska",
+            "member2": "Wiktor Daszczuk"
+        },
+        "grade": "5"
+    }
+}
