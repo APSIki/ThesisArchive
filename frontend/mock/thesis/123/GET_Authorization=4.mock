@@ -31,6 +31,7 @@ Access-Control-Allow-Origin: *
             "member1": "Krystyna Członkowska",
             "member2": "Wiktor Daszczuk"
         }
-    },
+    },    
+    "filePath": "",
     "role": "MEMBER"
 }

@@ -31,6 +31,15 @@ const reducer = ( state = initialState, action ) => {
                 ...action.value
             }
         }
+        case actionTypes.SET_FILEPATH: {
+            return {
+                ...state,
+                currentThesis: {
+                    ...state.currentThesis,
+                    filePath: action.value
+                }
+            }
+        }
         default: {
             return state
         }

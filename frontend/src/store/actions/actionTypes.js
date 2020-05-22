@@ -2,6 +2,7 @@ export const SET_CURRENT_THESIS = "SET_CURRENT_THESIS"
 export const ADD_THESIS = "ADD_THESIS"
 export const GET_THESES = "GET_THESES"
 export const SET_THESES = "SET_THESES"
+export const SET_FILEPATH = "SET_FILEPATH"
 
 export const SET_USERS = "SET_USERS"
 export const SET_AUTHORIZATION = "SET_AUTHORIZATION"

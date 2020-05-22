@@ -1,5 +1,6 @@
 export {
     addThesis,
     setCurrentThesis,
-    getTheses
+    getTheses,
+    setFilePath
 } from './thesis';

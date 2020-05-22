@@ -16,8 +16,57 @@ class WS {
         });
     }
 
-    postThesis(id, thesis) {
-        return axios.post(`${BASE_URL}/thesis/${id}`, thesis, {
+    postAbstractAndKeywords(id, thesis) {
+        return axios.post(`${BASE_URL}/thesis/${id}/abstract-keywords`, {
+            "id": thesis.id,
+            "abstract": thesis.abstract,
+            "keywords": thesis.keywords
+        }, {
+            headers: {
+                'Authorization': store.getState().config.authorization
+            }
+        })
+    }
+
+    postReview1(thesis, review, grade) {
+        return axios.post(`${BASE_URL}/thesis/${thesis.id}/review1`, {
+            "id": thesis.id,
+            "review": review,
+            "grade": grade
+        }, {
+            headers: {
+                'Authorization': store.getState().config.authorization
+            }
+        })
+    }
+
+    postReview2(thesis, review, grade) {
+        return axios.post(`${BASE_URL}/thesis/${thesis.id}/review2`, {
+            "id": thesis.id,
+            "review": review,
+            "grade": grade
+        }, {
+            headers: {
+                'Authorization': store.getState().config.authorization
+            }
+        })
+    }
+
+    postDefenseGrade(thesis, grade) {
+        return axios.post(`${BASE_URL}/thesis/${thesis.id}/defense`, {
+            "defended": "true",
+            "grade": grade
+        }, {
+            headers: {
+                'Authorization': store.getState().config.authorization
+            }
+        })
+    }
+
+    postFilePath(thesis, path) {
+        return axios.post(`${BASE_URL}/thesis/${thesis.id}/file`, {
+            "path": path
+        }, {
             headers: {
                 'Authorization': store.getState().config.authorization
             }

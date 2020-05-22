@@ -32,5 +32,6 @@ Access-Control-Allow-Origin: *
             "member2": "Wiktor Daszczuk"
         }
     },
+    "filePath": "",
     "role": "CHAIRMAN"
 }

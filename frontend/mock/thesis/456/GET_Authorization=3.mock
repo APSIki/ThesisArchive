@@ -32,5 +32,6 @@ Access-Control-Allow-Headers: Authorization
         },
         "grade": "5"
     },
+    "filePath": "/praca.html",
     "role": "MEMBER"
 }

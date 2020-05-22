@@ -20,6 +20,13 @@ export const getTheses = () => {
     }
 }
 
+export const setFilePath = (value) => {
+    return {
+        type: actionTypes.SET_FILEPATH,
+        value
+    }
+}
+
 export const setTheses = value => {
     return {
         type: actionTypes.SET_THESES,

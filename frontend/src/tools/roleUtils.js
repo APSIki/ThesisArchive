@@ -11,6 +11,14 @@ export const canUploadFile = role => {
     return [STUDENT, ADMIN].includes(role)
 }
 
-export const canReview1 = (role, config, thesis) => {
-    return role === MEMBER && config.authorization === thesis.reviews.review1.reviewerId
+export const canReview1 = (thesis, config) => {
+    return thesis.role === MEMBER && config.authorization === thesis.reviews.reviewer1.reviewerId
+}
+
+export const canReview2 = (thesis, config) => {
+    return thesis.role === MEMBER && config.authorization === thesis.reviews.reviewer2.reviewerId
+}
+
+export const canSetDefended = (thesis) => {
+    return thesis.role === CHAIRMAN
 }
