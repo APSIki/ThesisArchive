@@ -4,25 +4,27 @@ Access-Control-Allow-Origin: *
 Access-Control-Allow-Headers: Authorization
 
 {
-    "id": 456,
-    "name": "Spawanie światłowodów przy pomocy klucza nastawnego",
+    "id": 789,
+    "name": "Studia na WEiTI a zdrowie psychiczne",
     "type": "Praca inżynierska",
-    "abstract": "Praca opisuje sposoby spawania światłowodów przy pomocy klucza nastawnego.",
-    "keywords": "światłowody, spawanie, klucz nastawny",
+    "abstract": "Praca opisuje wpływ studiowania na Wydziale Elektroniki i Technik Informacyjnych na zdrowie psychiczne.",
+    "keywords": "zdrowie psychiczne, studia, WEiTI",
     "reviews": {
         "reviewer1": {
             "reviewerName": "Dariusz Bursztynowski",
             "text": "Bardzo dobrze, super recenzja, 10/10",
+            "reviewerId": "100",
             "grade": "5"
         },
         "reviewer2": {
-            "reviewerName": "Katarzyna Rybacka",
-            "text": "Trochę słabo, za mało elektroniki analogowej",
-            "grade": "3"
+            "reviewerName": "Wiesława Promotorska",
+            "text": "",
+            "reviewerId": "2",
+            "grade": ""
         }
     },
     "defense": {
-        "defended": true,
+        "defended": false,
         "date": "2020-06-31",
         "commitee": {
             "chairman": "Krzysztof Przewodniczącki",
@@ -30,8 +32,8 @@ Access-Control-Allow-Headers: Authorization
             "member1": "Wiesława Promotorska",
             "member2": "Wiktor Daszczuk"
         },
-        "grade": "5"
+        "grade": ""
     },
     "filePath": "/praca.html",
-    "role": "MEMBER"
+    "role": "CHAIRMAN"
 }

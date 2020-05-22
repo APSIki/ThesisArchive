@@ -3,8 +3,8 @@ const MEMBER = "MEMBER"
 const CHAIRMAN = "CHAIRMAN"
 const ADMIN = "ADMIN"
 
-export const canChangeAbstractAndKeywords = role => {
-    return [STUDENT, ADMIN].includes(role)
+export const canChangeAbstractAndKeywords = thesis => {
+    return thesis && [STUDENT, ADMIN].includes(thesis.role) && !thesis.defended
 }
 
 export const canUploadFile = role => {
@@ -21,4 +21,8 @@ export const canReview2 = (thesis, config) => {
 
 export const canSetDefended = (thesis) => {
     return thesis.role === CHAIRMAN
+}
+
+export const canSaveReview = (thesis) => {
+    return !!thesis.filePath
 }

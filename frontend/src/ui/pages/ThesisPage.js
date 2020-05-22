@@ -153,27 +153,29 @@ const ThesisPage = props => {
             <p className={classes.thesisName}>{props.currentThesis.name}</p>
             <p className={classes.header}>Streszczenie</p>
             <div className={classes.textFieldContainer}>
-            {roles.canChangeAbstractAndKeywords(props.currentThesis.role) && (
+            {roles.canChangeAbstractAndKeywords(props.currentThesis) && (
               <TextField multiline fullWidth value={abstract} onChange={handleAbstractChange} />
             )}
-            {!roles.canChangeAbstractAndKeywords(props.currentThesis.role) && (
+            {!roles.canChangeAbstractAndKeywords(props.currentThesis) && (
               <p className={classes.reviewText}>{abstract}</p>
             )}
             </div>
             <p className={classes.header}>Słowa kluczowe</p>
             <div className={classes.textFieldContainer}>
-            {roles.canChangeAbstractAndKeywords(props.currentThesis.role) && (
+            {roles.canChangeAbstractAndKeywords(props.currentThesis) && (
               <TextField fullWidth value={keywords} onChange={handleKeywordsChange} />
             )}
-            {!roles.canChangeAbstractAndKeywords(props.currentThesis.role) && (
+            {!roles.canChangeAbstractAndKeywords(props.currentThesis) && (
               <p className={classes.reviewText}>{keywords}</p>
             )}
             </div>
-            <div className={classes.button}>
-              <Button variant="contained" color="#CCC" onClick={handleSaveAbstractAndKeywords}>
-                ZAPISZ DANE PRACY
-              </Button>
-            </div>
+            {roles.canChangeAbstractAndKeywords(props.currentThesis) && (
+              <div className={classes.button}>
+                <Button variant="contained" color="#CCC" onClick={handleSaveAbstractAndKeywords}>
+                 ZAPISZ DANE PRACY
+                </Button>
+              </div>
+            )}
           </React.Fragment>
         )}
         {activeStep === 1 && (
@@ -221,7 +223,7 @@ const ThesisPage = props => {
                 <p className={classes.subHeader}>Wprowadź recenzję:</p>
                 <TextField multiline fullWidth value={review1} onChange={(event) => setReview1(event.target.value)} />
                 <div className={classes.button}>
-                <Button variant="contained" color="#CCC" onClick={handleSaveReview1}>
+                <Button variant="contained" color="#CCC" onClick={handleSaveReview1} disabled={!roles.canSaveReview(props.currentThesis)} >
                   ZAPISZ RECENZJĘ
                 </Button>
               </div>
@@ -245,11 +247,14 @@ const ThesisPage = props => {
                 <p className={classes.subHeader}>Wprowadź recenzję:</p>
                 <TextField multiline fullWidth value={review2} onChange={(event) => setReview2(event.target.value)} />
                 <div className={classes.button}>
-                  <Button variant="contained" color="#CCC" onClick={handleSaveReview2}>
+                  <Button variant="contained" color="#CCC" onClick={handleSaveReview2} disabled={!roles.canSaveReview(props.currentThesis)}>
                     ZAPISZ RECENZJĘ
                   </Button>
                 </div>
               </React.Fragment>
+            )}
+            {!roles.canSaveReview(props.currentThesis) && (
+              <p className={classes.subHeader}>Nie można zapisać recenzji, ponieważ nie została dodana treść pracy.</p>
             )}
           </React.Fragment>
         )}
@@ -268,7 +273,7 @@ const ThesisPage = props => {
                 <p className={classes.subHeader}>Wprowadź ocenę z obrony:</p>
                 <TextField fullWidth value={defenseGrade} onChange={(event) => setDefenseGrade(event.target.value)} />
                 <div className={classes.button}>
-                    <Button variant="contained" color="#CCC" onClick={handleSaveDefenseGrade} disabled={!!defended}>
+                    <Button variant="contained" color="#CCC" onClick={handleSaveDefenseGrade} disabled={!!defended || !props.currentThesis.filePath}>
                       ZATWIERDŹ OBRONĘ
                     </Button>
                   </div>

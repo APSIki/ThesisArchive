@@ -14,7 +14,13 @@ Access-Control-Allow-Origin: *
          "id":456,
          "name":"Spawanie światłowodów przy pomocy klucza nastawnego",
          "type":"Praca inżynierska",
-         "role":"MEMBER"
+         "role":"CHAIRMAN"
+      },
+      {
+         "id": 789,
+         "name":"Studia na WEiTI a zdrowie psychiczne",
+         "type":"Praca inżynierska",
+         "role":"CHAIRMAN"
       }
    ]
 }

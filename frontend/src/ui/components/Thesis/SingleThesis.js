@@ -17,6 +17,7 @@ const SingleThesis = props => {
         <Paper className={classes.paper}>
             <p><strong>{props.thesis.type}</strong></p>
             <p>{props.thesis.name}</p>
+            <p className={classes.additionalText}>{props.thesis.additionalText}</p>
             <IconButton onClick={() => handleButtonClick(props.thesis.id)}>
                 <ArrowForward />
             </IconButton>
@@ -28,11 +29,14 @@ const SingleThesis = props => {
 
 const useStyles = createUseStyles({
     paper: {
-        padding: 10,
-        paddingTop: 2,
-        maxWidth: 300,
-        backgroundColor: "#cccccc"
+      padding: 10,
+      paddingTop: 2,
+      maxWidth: 300,
+      backgroundColor: "#cccccc"
     },
+    additionalText: {
+      fontStyle: "italic"
+    }
 });
 
 export default SingleThesis
