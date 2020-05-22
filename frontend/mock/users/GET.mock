@@ -1,0 +1,28 @@
+HTTP/1.1 200 OK
+Content-Type: application/json; charset=utf-8
+Access-Control-Allow-Origin: *
+
+{
+   "users":[
+      {
+         "authorization":"1",
+         "name":"Jan Studencki"
+      },
+      {
+         "authorization":"2",
+         "name":"Wiesława Promotorska"
+      },
+      {
+         "authorization":"3",
+         "name":"Krzysztof Przewodniczącki"
+      },
+      {
+         "authorization":"4",
+         "name":"Krystyna Członkowska"
+      },
+      {
+         "authorization":"5",
+         "name":"Janusz Admiński"
+      }
+   ]
+}

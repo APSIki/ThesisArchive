@@ -18,7 +18,6 @@ const ThesisPage = props => {
   const [errorSnackbarOpen, setErrorSnackbarOpen] = useState(false)
 
   const [activeStep, setActiveStep] = React.useState(0);
-  const [skipped, setSkipped] = React.useState(new Set());
   const steps = getSteps();
 
   const handleNext = () => {

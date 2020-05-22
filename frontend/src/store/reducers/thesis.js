@@ -3,16 +3,7 @@ import { updateObject } from '../utility.js';
 
 const initialState = {
     theses: [
-        {
-            "id": "123",
-            "type": "Praca inżynierska",
-            "description": "Sieci transportowe w technologii MPLS"
-        },
-        {
-            "id": "456",
-            "type": "Praca magisterska",
-            "description": "Sieci transportowe w technologii EON"
-        }
+        
     ],
     currentThesis: []
 }
@@ -34,6 +25,12 @@ const reducer = ( state = initialState, action ) => {
             return {
                 ...state.theses
             }
+        case actionTypes.SET_THESES: {
+            return {
+                ...state,
+                ...action.value
+            }
+        }
         default: {
             return state
         }

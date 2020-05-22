@@ -4,6 +4,7 @@ import ReactDOM from 'react-dom';
 import FocusTrap from 'focus-trap-react';
 import { createUseStyles } from 'react-jss';
 import AddThesisModalFormContainer from './AddThesisModalFormContainer';
+import SelectUserModalFormContainer from './SelectUserModalFormContainer';
 
 const Modal = ({
   modalAction,
@@ -15,7 +16,8 @@ const Modal = ({
 }) => {
 
   const modals = {
-      addThesis: AddThesisModalFormContainer
+      addThesis: AddThesisModalFormContainer,
+      selectUser: SelectUserModalFormContainer
   }
 
   const classes = useStyles();

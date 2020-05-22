@@ -1,19 +1,18 @@
 import React from 'react';
 import { createUseStyles } from 'react-jss';
-import TopBarButton from './TopBarButton';
+import TopBarButton from './TopBarButton'
+import ModalContainer from '../components/Modal/ModalContainer';
 
 const Layout = props => { 
- 
   const currentYear = new Date().getFullYear();
   const classes = useStyles()
+
   return (
     <React.Fragment>
         <div className={classes.topBar}>
-            <nav>
-                <TopBarButton text="Jakiś link" />
-                <TopBarButton text="Inny link" />
-                <TopBarButton text="Może jeszcze jeden link" />
-                <TopBarButton text="Zaloguj" floatRight />
+            <nav style={{display: "flex"}}>
+                <p className={classes.title}>ARCHIWUM PRAC DYPLOMOWYCH</p>
+                <ModalContainer triggerText="Zaloguj" modalAction="selectUser" />
             </nav>
         </div>
         <div className={classes.container}>
@@ -40,8 +39,10 @@ const useStyles = createUseStyles({
         position: "fixed",
         height: 40,
         backgroundColor: "#7927DC",
-        container: "flex",
-        paddingLeft: 30
+        display: "flex",
+        flexDirection: "row",
+        paddingLeft: 30,
+        zIndex: 1
     },
     footer: {
         position: "fixed",
@@ -49,6 +50,12 @@ const useStyles = createUseStyles({
         paddingBottom: 5,
         left: "50%",
         transform: "translateX(-50%)"
+    },
+    title: {
+        color: "#EEE",
+        paddingTop: 8,
+        fontWeight: "bold",
+        marginRight: 20
     }
 });
 

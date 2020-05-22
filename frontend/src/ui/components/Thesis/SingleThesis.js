@@ -16,7 +16,7 @@ const SingleThesis = props => {
     <Grid item xs={12} xl={12}>
         <Paper className={classes.paper}>
             <p><strong>{props.thesis.type}</strong></p>
-            <p>{props.thesis.description}</p>
+            <p>{props.thesis.name}</p>
             <IconButton onClick={() => handleButtonClick(props.thesis.id)}>
                 <ArrowForward />
             </IconButton>

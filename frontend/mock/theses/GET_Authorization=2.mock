@@ -1,0 +1,20 @@
+HTTP/1.1 200 OK
+Content-Type: application/json; charset=utf-8
+Access-Control-Allow-Origin: *
+
+{
+   "theses":[
+      {
+         "id":"123",
+         "name":"Wpływ zaćmienia księżyca na dorożkarstwo w Kenii",
+         "type":"Praca inżynierska",
+         "role":"ADVISOR"
+      },
+      {
+         "id":456,
+         "name":"Spawanie światłowodów przy pomocy klucza nastawnego",
+         "type":"Praca inżynierska",
+         "role":"MEMBER"
+      }
+   ]
+}

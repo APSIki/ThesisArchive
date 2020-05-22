@@ -19,3 +19,10 @@ export const getTheses = () => {
         type: actionTypes.GET_THESES
     }
 }
+
+export const setTheses = value => {
+    return {
+        type: actionTypes.SET_THESES,
+        value
+    }
+}

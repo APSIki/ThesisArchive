@@ -1,12 +1,29 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import { createUseStyles } from 'react-jss';
 import Grid from '@material-ui/core/Grid';
 import { Paper } from '@material-ui/core';
 import MyThesesContainer from '../../ui/components/Thesis/MyThesesContainer'
 import SideNavigation from '../layout/SideNavigation';
+import WS from '../../tools/WS';
 
 const LandingPage = props => {
     const classes = useStyles();
+
+    useEffect(() => {
+        WS.getUsers().then(response => {
+            props.setUsers(response.data)
+        })
+        
+        WS.getTheses().then(response => {
+            props.setTheses(response.data)
+        })
+      }, []);
+
+    useEffect(() => {
+        WS.getTheses().then(response => {
+            props.setTheses(response.data)
+        })
+    })
 
     return (
         <Grid container spacing={1}>

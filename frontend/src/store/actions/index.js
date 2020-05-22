@@ -3,6 +3,3 @@ export {
     setCurrentThesis,
     getTheses
 } from './thesis';
-export {
-
-} from './user';

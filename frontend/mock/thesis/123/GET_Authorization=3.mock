@@ -1,11 +1,10 @@
 HTTP/1.1 200 OK
 Content-Type: application/json; charset=utf-8
 Access-Control-Allow-Origin: *
-Access-Control-Allow-Headers: Authorization
 
 {
-    "id": 456,
-    "name": "Spawanie światłowodów przy pomocy klucza nastawnego",
+    "id": 123,
+    "name": "Wpływ zaćmienia księżyca na dorożkarstwo w Kenii",
     "type": "Praca inżynierska",
     "abstract": "",
     "keywords": "",
@@ -14,23 +13,17 @@ Access-Control-Allow-Headers: Authorization
             "reviewerName": "Dariusz Bursztynowski",
             "text": "Bardzo dobrze, super recenzja, 10/10",
             "grade": "5"
-        },
-        "reviewer2": {
-            "reviewerName": "Katarzyna Rybacka",
-            "text": "Trochę słabo, za mało elektroniki analogowej",
-            "grade": "3"
         }
     },
     "defense": {
-        "defended": true,
-        "date": "2020-06-31",
+        "defended": false,
+        "date": "2020-05-31",
         "commitee": {
             "chairman": "Jerzy Siuzdak",
             "advisor": "Dariusz Bursztynowski",
             "member1": "Ewa Obarska",
             "member2": "Wiktor Daszczuk"
-        },
-        "grade": "5"
+        }
     },
-    "role": "STUDENT"
+    "role": "CHAIRMAN"
 }

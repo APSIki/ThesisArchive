@@ -23,6 +23,18 @@ class WS {
             }
         })
     }
+    
+    getUsers() {
+        return axios.get(`${BASE_URL}/users`);
+    }
+
+    getTheses() {
+        return axios.get(`${BASE_URL}/theses`, {
+            headers: {
+                'Authorization': store.getState().config.authorization
+            }
+        })
+    }
 }
 
 export default new WS();
