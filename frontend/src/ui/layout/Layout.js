@@ -7,12 +7,17 @@ const Layout = props => {
   const currentYear = new Date().getFullYear();
   const classes = useStyles()
 
+  const getUserName = authorization => {
+      return props.config.users && props.config.users.filter(user => user.authorization === authorization)[0].name
+  }
+
   return (
     <React.Fragment>
         <div className={classes.topBar}>
             <nav style={{display: "flex"}}>
                 <p className={classes.title}>ARCHIWUM PRAC DYPLOMOWYCH</p>
                 <ModalContainer triggerText="Zaloguj" modalAction="selectUser" />
+                <p className={classes.username}>Użytkownik: {getUserName(props.config.authorization)}</p>
             </nav>
         </div>
         <div className={classes.container}>
@@ -56,6 +61,11 @@ const useStyles = createUseStyles({
         paddingTop: 8,
         fontWeight: "bold",
         marginRight: 20
+    },
+    username: {
+        color: "#EEE",
+        paddingTop: 8,
+        marginLeft: 10
     }
 });
 

@@ -25,9 +25,9 @@ Access-Control-Allow-Headers: Authorization
         "defended": true,
         "date": "2020-06-31",
         "commitee": {
-            "chairman": "Jerzy Siuzdak",
+            "chairman": "Krzysztof Przewodniczącki",
             "advisor": "Dariusz Bursztynowski",
-            "member1": "Ewa Obarska",
+            "member1": "Wiesława Promotorska",
             "member2": "Wiktor Daszczuk"
         },
         "grade": "5"

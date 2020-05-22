@@ -6,6 +6,7 @@ import WS from '../../tools/WS';
 import { useHistory } from 'react-router-dom';
 import MuiAlert from '@material-ui/lab/Alert'
 import { getSteps } from '../../tools/stepperHelpers'
+import * as roles from '../../tools/roleUtils'
 
 const ThesisPage = props => {
   const classes = useStyles();
@@ -14,6 +15,13 @@ const ThesisPage = props => {
 
   const [abstract, setAbstract] = useState("")
   const [keywords, setKeywords] = useState("")
+
+  const [review1, setReview1] = useState("")
+  const [review2, setReview2] = useState("")
+
+  const [grade1, setGrade1] = useState("")
+  const [grade2, setGrade2] = useState("")
+
   const [successSnackbarOpen, setSuccessSnackbarOpen] = useState(false)
   const [errorSnackbarOpen, setErrorSnackbarOpen] = useState(false)
 
@@ -40,6 +48,13 @@ const ThesisPage = props => {
     WS.getThesis(props.match.params.thesisId)
       .then(response => {
         props.setCurrentThesis(response.data)
+
+        setAbstract(response.data.abstract)
+        setKeywords(response.data.keywords)
+        setReview1(response.data.reviews.reviewer1.text)
+        setGrade1(response.data.reviews.reviewer1.grade)
+        setReview2(response.data.reviews.reviewer2.text)
+        setGrade2(response.data.reviews.reviewer2.grade)
       })
   }, []);
 
@@ -91,11 +106,21 @@ const ThesisPage = props => {
             <p className={classes.thesisName}>{props.currentThesis.name}</p>
             <p className={classes.header}>Streszczenie</p>
             <div className={classes.textFieldContainer}>
+            {roles.canChangeAbstractAndKeywords(props.currentThesis.role) && (
               <TextField multiline fullWidth value={abstract} onChange={handleAbstractChange} />
+            )}
+            {!roles.canChangeAbstractAndKeywords(props.currentThesis.role) && (
+              <p className={classes.reviewText}>{abstract}</p>
+            )}
             </div>
             <p className={classes.header}>Słowa kluczowe</p>
             <div className={classes.textFieldContainer}>
+            {roles.canChangeAbstractAndKeywords(props.currentThesis.role) && (
               <TextField fullWidth value={keywords} onChange={handleKeywordsChange} />
+            )}
+            {!roles.canChangeAbstractAndKeywords(props.currentThesis.role) && (
+              <p className={classes.reviewText}>{keywords}</p>
+            )}
             </div>
             <div className={classes.button}>
               <Button variant="contained" color="#CCC" onClick={handleSave}>
@@ -119,7 +144,7 @@ const ThesisPage = props => {
         )}
         {activeStep === 2 && (
           <React.Fragment>
-            {!!props.currentThesis.reviews.reviewer1 ? (
+            {!!props.currentThesis.reviews.reviewer1.text ? (
             <React.Fragment>
               <p className={classes.header}>Recenzja 1 jest dostępna:</p>
               <p className={classes.subHeader}>Recenzent: {props.currentThesis.reviews.reviewer1.reviewerName}</p>
@@ -130,7 +155,7 @@ const ThesisPage = props => {
             ) : (
               <p className={classes.header}>Recenzja 1 nie jest jeszcze dostępna.</p>
             )}
-            {!!props.currentThesis.reviews.reviewer2 ? (
+            {!!props.currentThesis.reviews.reviewer2.text ? (
               <React.Fragment>
                 <p className={classes.header}>Recenzja 2 jest dostępna:</p>
                 <p className={classes.subHeader}>Recenzent: {props.currentThesis.reviews.reviewer2.reviewerName}</p>

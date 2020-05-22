@@ -5,7 +5,8 @@ import * as actionCreators from '../../store/actions/index';
 const mapStateToProps = state => {
   return {
     thesis: state.thesis.theses,
-    currentThesis: state.thesis.currentThesis
+    currentThesis: state.thesis.currentThesis,
+    config: state.config
   }
 }
 

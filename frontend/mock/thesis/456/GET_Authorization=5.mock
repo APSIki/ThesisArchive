@@ -13,13 +13,11 @@ Access-Control-Allow-Headers: Authorization
         "reviewer1": {
             "reviewerName": "Dariusz Bursztynowski",
             "text": "Bardzo dobrze, super recenzja, 10/10",
-            "reviewerId": "100",
             "grade": "5"
         },
         "reviewer2": {
-            "reviewerName": "Wiesława Promotorska",
+            "reviewerName": "Katarzyna Rybacka",
             "text": "Trochę słabo, za mało elektroniki analogowej",
-            "reviewerId": "2",
             "grade": "3"
         }
     },
@@ -34,5 +32,5 @@ Access-Control-Allow-Headers: Authorization
         },
         "grade": "5"
     },
-    "role": "STUDENT"
+    "role": "ADMIN"
 }

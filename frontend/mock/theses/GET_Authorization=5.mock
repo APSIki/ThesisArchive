@@ -8,13 +8,13 @@ Access-Control-Allow-Origin: *
          "id":"123",
          "name":"Wpływ zaćmienia księżyca na dorożkarstwo w Kenii",
          "type":"Praca inżynierska",
-         "role":"MEMBER"
+         "role":"ADMIN"
       },
       {
          "id":456,
          "name":"Spawanie światłowodów przy pomocy klucza nastawnego",
          "type":"Praca inżynierska",
-         "role":"MEMBER"
+         "role":"ADMIN"
       }
    ]
 }

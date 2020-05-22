@@ -6,22 +6,29 @@ Access-Control-Allow-Origin: *
     "id": 123,
     "name": "Wpływ zaćmienia księżyca na dorożkarstwo w Kenii",
     "type": "Praca inżynierska",
-    "abstract": "",
-    "keywords": "",
+    "abstract": "Praca opisuje wpływ zaćmień księżyca na jakość dorożkarstwa w Kenii.",
+    "keywords": "dorożkarstwo, Kenia, zaćmienie księżyca",
     "reviews": {
         "reviewer1": {
-            "reviewerName": "Dariusz Bursztynowski",
+            "reviewerName": "Wiesława Promotorska",
+            "reviewerId": "2",
             "text": "Bardzo dobrze, super recenzja, 10/10",
             "grade": "5"
+        },
+        "reviewer2": {
+            "reviewerName": "Krystyna Członkowska",
+            "reviewerId": "4",
+            "text": "",
+            "grade": ""
         }
     },
     "defense": {
         "defended": false,
         "date": "2020-05-31",
         "commitee": {
-            "chairman": "Jerzy Siuzdak",
-            "advisor": "Dariusz Bursztynowski",
-            "member1": "Ewa Obarska",
+            "chairman": "Krzysztof Przewodniczącki",
+            "advisor": "Wiesława Promotorska",
+            "member1": "Krystyna Członkowska",
             "member2": "Wiktor Daszczuk"
         }
     },

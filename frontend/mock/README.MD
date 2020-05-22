@@ -12,8 +12,8 @@ Lista ról
 Praca  |  User  |  Rola 
 123    |  1     |  STUDENT
 456    |  1     |  STUDENT
-123    |  2     |  ADVISOR
+123    |  2     |  MEMBER
 123    |  3     |  CHAIRMAN
 123    |  4     |  MEMBER
 456    |  2     |  MEMBER
-456    |  3     |  ADVISOR
+456    |  3     |  MEMBER
