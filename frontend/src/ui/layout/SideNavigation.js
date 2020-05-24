@@ -9,7 +9,7 @@ const SideNavigation = () => {
     return (
         <div className={classes.sideNav}>
             <p className={classes.title}>Menu</p>
-            <ModalContainer triggerText='Dodaj prace dyplomową' modalAction="addThesis"/>
+            {/* <ModalContainer triggerText='Dodaj prace dyplomową' modalAction="addThesis"/> */}
             <SideNavItem text='Jakiś tekst' /> 
             <SideNavItem text='Jakiś tekst' /> 
             <SideNavItem text='Jakiś tekst' /> 

@@ -22,15 +22,16 @@ const useStyles = createUseStyles({
             left: 6
         },
         'text-decoration': 'none',
-        'font-size': 20,
-        color: '#000',
+        color: '#ffffff',
         display: 'block',
         '&:hover': {
-            color: '#7927DC', 
+            color: '#000000', 
             cursor: 'pointer'
         },
         background: 'none !important',
         border: 'none',
+        right: "0%",
+        "border-left": "1px dotted #fff"
     }
 });
 

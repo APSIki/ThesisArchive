@@ -1,7 +1,6 @@
 import React from 'react';
 import { createUseStyles } from 'react-jss';
-import TopBarButton from './TopBarButton'
-import ModalContainer from '../components/Modal/ModalContainer';
+import TopBar from './TopBar'
 
 const Layout = props => { 
   const currentYear = new Date().getFullYear();
@@ -13,13 +12,7 @@ const Layout = props => {
 
   return (
     <React.Fragment>
-        <div className={classes.topBar}>
-            <nav style={{display: "flex"}}>
-                <p className={classes.title}>ARCHIWUM PRAC DYPLOMOWYCH</p>
-                <ModalContainer triggerText="Zaloguj" modalAction="selectUser" />
-                <p className={classes.username}>Użytkownik: {getUserName(props.config.authorization)}</p>
-            </nav>
-        </div>
+        <TopBar username={getUserName(props.config.authorization)} />
         <div className={classes.container}>
             {props.children}
         </div>
@@ -39,33 +32,12 @@ const useStyles = createUseStyles({
         height: "100%",
         paddingTop: 48
     },
-    topBar: {
-        width: "100%",
-        position: "fixed",
-        height: 40,
-        backgroundColor: "#7927DC",
-        display: "flex",
-        flexDirection: "row",
-        paddingLeft: 30,
-        zIndex: 1
-    },
     footer: {
         position: "fixed",
         bottom: 0,
         paddingBottom: 5,
         left: "50%",
         transform: "translateX(-50%)"
-    },
-    title: {
-        color: "#EEE",
-        paddingTop: 8,
-        fontWeight: "bold",
-        marginRight: 20
-    },
-    username: {
-        color: "#EEE",
-        paddingTop: 8,
-        marginLeft: 10
     }
 });
 

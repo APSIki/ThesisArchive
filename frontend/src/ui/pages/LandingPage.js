@@ -31,7 +31,7 @@ const LandingPage = props => {
                 <SideNavigation />
             </Grid>
             <Grid item xs={12} sm={10}>
-                <Paper className={classes.paper}>
+                <Paper variant="outlined" elevation={3} className={classes.paper}>
                     <MyThesesContainer />
                 </Paper>
             </Grid>
@@ -42,7 +42,7 @@ const LandingPage = props => {
 const useStyles = createUseStyles({
     paper: {
         padding: 10,
-        height: 500,
+        height: 700,
         marginLeft: 10
       },
     sideNav: {

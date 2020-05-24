@@ -5,7 +5,7 @@ import SingleThesis from './SingleThesis';
 const MyTheses = props => { 
  
   return (
-    <Grid container spacing={2}>
+    <Grid container spacing={1}>
         {props.theses.map((thesis, id) => (
           <SingleThesis 
           thesis={thesis}
