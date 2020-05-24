@@ -1,0 +1,50 @@
+HTTP/1.1 200 OK
+Content-Type: application/json; charset=utf-8
+Access-Control-Allow-Origin: *
+
+{
+      "theses":[
+      {
+         "id":"1",
+         "name":"Czy gdzieś w oddali widać bunkry?",
+         "type":"Praca inżynierska",
+         "author":"Krzysztof Jeżyna"
+      },
+      {
+         "id": 2,
+         "name":"Wpływ mugoli na świat czarodziejów",
+         "type":"Praca doktorancka",
+         "author":"Harry Potter"
+      },
+      {
+         "id": 3,
+         "name":"Studia na WEiTI a zdrowie psychiczne",
+         "type":"Praca inżynierska",
+         "author":"Student WEiTI"
+      },
+      {
+         "id": 4,
+         "name":"Hot16challenge, a koronawirus",
+         "type":"Praca magisterska",
+         "author":"Zatroskany obywatel"
+      },
+      {
+         "id": 5,
+         "name":"Jak PiS zabił trójkę",
+         "type":"Praca doktorancka",
+         "author":"Kazik"
+      },
+      {
+         "id": 6,
+         "name":"Czy żyje się nam lepiej?",
+         "type":"Praca doktorancka",
+         "author":"Ekonomista z UW"
+      },
+      {
+         "id": 7,
+         "name":"Wpływ koronawirusa na studiowanie",
+         "type":"Praca doktorancka",
+         "author":"Jerzy Bralczyk"
+      }
+   ]
+}

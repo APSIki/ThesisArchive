@@ -84,6 +84,10 @@ class WS {
             }
         })
     }
+
+    getThesisBySearch(titleOrAuthorName) {
+        return axios.get(`${BASE_URL}/searchTheses`);
+    }
 }
 
 export default new WS();
