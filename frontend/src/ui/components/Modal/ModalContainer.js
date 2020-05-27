@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import ModalTrigger from './ModalTrigger'
 import Modal from './Modal'
+import AddThesisComponent from '../Thesis/AddThesisComponent';
 
 export class ModalContainer extends Component {
     state = { 
@@ -44,11 +45,18 @@ export class ModalContainer extends Component {
 
         return (
             <React.Fragment>
+                {this.props.ButtonAsTrigger ? 
                 <ModalTrigger 
                     showModal={this.showModal}
                     buttonRef={(n) => (this.ModalTrigger = n)}
                     triggerText={this.props.triggerText}
-                />
+                /> :
+                <AddThesisComponent 
+                    showModal={this.showModal}
+                    buttonRef={(n) => (this.ModalTrigger = n)}
+                    triggerText={this.props.triggerText}
+                />}
+
                 {this.state.isShown ? modal : null}
             </React.Fragment>
         );

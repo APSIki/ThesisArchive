@@ -10,11 +10,11 @@ const TopBarLinkItem = props => {
     <div className={classes.topBar}>
         <p className={classes.title}>ARCHIWUM PRAC DYPLOMOWYCH</p>
 
-        <TopBarLink title='Katalog' href='/catalog' />
         <TopBarLink title='Moje prace' href='/' />
-
+        <TopBarLink title='Katalog' href='/catalog' />
+        
         <p className={classes.username}>Użytkownik: {props.username}</p>
-        <ModalContainer triggerText="Zaloguj" modalAction="selectUser" />
+        <ModalContainer triggerText="Zaloguj" modalAction="selectUser" ButtonAsTrigger />
     </div>
   );
 }

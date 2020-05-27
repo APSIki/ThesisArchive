@@ -1,7 +1,6 @@
 import React from 'react';
 import { createUseStyles } from 'react-jss';
 import SideNavItem from './SideNavItem'
-import ModalContainer from '../components/Modal/ModalContainer';
 
 const SideNavigation = () => { 
     const classes = useStyles();
@@ -9,8 +8,8 @@ const SideNavigation = () => {
     return (
         <div className={classes.sideNav}>
             <p className={classes.title}>Menu</p>
-            {/* <ModalContainer triggerText='Dodaj prace dyplomową' modalAction="addThesis"/> */}
-            <SideNavItem text='Jakiś tekst' /> 
+        
+            <SideNavItem text='Prace wymagające akcji' /> 
             <SideNavItem text='Jakiś tekst' /> 
             <SideNavItem text='Jakiś tekst' /> 
             <SideNavItem text='Jakiś tekst' /> 
