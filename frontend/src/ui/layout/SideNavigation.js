@@ -8,11 +8,7 @@ const SideNavigation = () => {
     return (
         <div className={classes.sideNav}>
             <p className={classes.title}>Menu</p>
-        
             <SideNavItem text='Prace wymagające akcji' /> 
-            <SideNavItem text='Jakiś tekst' /> 
-            <SideNavItem text='Jakiś tekst' /> 
-            <SideNavItem text='Jakiś tekst' /> 
         </div>
     );
 }

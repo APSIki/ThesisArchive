@@ -47,5 +47,5 @@ Access-Control-Allow-Headers: Authorization
         "grade": ""
     },
     "filePath": "/praca.html",
-    "role": "STUDENT"
+    "role": "ADMIN"
 }
