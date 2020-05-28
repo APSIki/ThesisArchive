@@ -25,10 +25,22 @@ Access-Control-Allow-Headers: Authorization
         "defended": true,
         "date": "2020-06-31",
         "commitee": {
-            "chairman": "Krzysztof Przewodniczącki",
-            "advisor": "Dariusz Bursztynowski",
-            "member1": "Wiesława Promotorska",
-            "member2": "Wiktor Daszczuk"
+            "chairman": {
+                "name": "Krzysztof Przewodniczącki",
+                "id": 3
+            },
+            "advisor": {
+                "name": "Wiesław Elektroniczny",
+                "id": 7
+            },
+            "member1": {
+                "name": "Wiesława Promotorska",
+                "id": "2"
+            },
+            "member2": {
+                "name": "Monika Przykładowa",
+                "id": "6"
+            }
         },
         "grade": "5"
     },

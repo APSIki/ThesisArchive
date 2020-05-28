@@ -8,7 +8,7 @@ export const canChangeAbstractAndKeywords = thesis => {
 }
 
 export const canUploadFile = role => {
-    return [STUDENT, ADMIN].includes(role)
+    return [STUDENT].includes(role)
 }
 
 export const canReview1 = (thesis, config) => {
@@ -25,4 +25,8 @@ export const canSetDefended = (thesis) => {
 
 export const canSaveReview = (thesis) => {
     return !!thesis.filePath
+}
+
+export const canChangeCommittee = (thesis) => {
+    return thesis.role === ADMIN
 }

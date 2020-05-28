@@ -6,6 +6,8 @@ Authorization | User name
 3  |  Krzysztof Przewodniczącki
 4  |  Krystyna Członkowska
 5  |  Janusz Admiński
+6  |  Monika Przykładowa
+7  |  Wiesław Elektroniczny
 
 Lista ról
 

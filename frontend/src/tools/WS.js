@@ -88,6 +88,10 @@ class WS {
     getThesisBySearch(titleOrAuthorName) {
         return axios.get(`${BASE_URL}/searchTheses`);
     }
+
+    getPerson(personId) {
+        return axios.get(`${BASE_URL}/person/${personId}`)
+    }
 }
 
 export default new WS();

@@ -28,6 +28,17 @@ const ThesisPage = props => {
   const [successSnackbarOpen, setSuccessSnackbarOpen] = useState(false)
   const [errorSnackbarOpen, setErrorSnackbarOpen] = useState(false)
 
+  const [isCommitteEdited, setIsCommiteeEdited] = useState(false)
+
+  const [chairmanId, setChairmanId] = useState(0)
+  const [advisorId, setAdvisorId] = useState(0)
+  const [member1Id, setMember1Id] = useState(0)
+  const [member2Id, setMember2Id] = useState(0)
+  const [chairmanName, setChairmanName] = useState("")
+  const [advisorName, setAdvisorName] = useState("")
+  const [member1Name, setMember1Name] = useState("")
+  const [member2Name, setMember2Name] = useState("")
+
   const [activeStep, setActiveStep] = React.useState(0);
   const steps = getSteps();
 
@@ -59,6 +70,14 @@ const ThesisPage = props => {
         setReview2(response.data.reviews.reviewer2.text)
         setGrade2(response.data.reviews.reviewer2.grade)
         setDefenseGrade(response.data.defense.grade)
+        setChairmanId(response.data.defense.commitee.chairman.id)
+        setAdvisorId(response.data.defense.commitee.advisor.id)
+        setMember1Id(response.data.defense.commitee.member1.id)
+        setMember2Id(response.data.defense.commitee.member2.id)
+        setChairmanName(response.data.defense.commitee.chairman.name)
+        setAdvisorName(response.data.defense.commitee.advisor.name)
+        setMember1Name(response.data.defense.commitee.member1.name)
+        setMember2Name(response.data.defense.commitee.member2.name)
       })
   }, []);
 
@@ -119,6 +138,31 @@ const ThesisPage = props => {
       })
   }
 
+  const handleCommitteeChangeClick = () => {
+    if (!isCommitteEdited) {
+      setIsCommiteeEdited(true)
+    } else {
+      WS.getPerson(chairmanId)
+        .then(response => {
+          setChairmanName(response.data.name)
+        })
+      WS.getPerson(advisorId)
+        .then(response => {
+          setAdvisorName(response.data.name)
+        })
+      WS.getPerson(member1Id)
+        .then(response => {
+          setMember1Name(response.data.name)
+        })
+      WS.getPerson(member2Id)
+        .then(response => {
+          setMember2Name(response.data.name)
+        })
+      setSuccessSnackbarOpen(true)
+      setIsCommiteeEdited(false)
+    }
+  }
+
   return (
     <React.Fragment>
       <Stepper activeStep={activeStep}>
@@ -136,12 +180,12 @@ const ThesisPage = props => {
         Powrót
       </Button>
       <Button
-                variant="contained"
-                color="primary"
-                onClick={handleNext}
-                className={classes.button} 
-                disabled={activeStep === steps.length - 1}>
-                Dalej
+        variant="contained"
+        color="primary"
+        onClick={handleNext}
+        className={classes.button}
+        disabled={activeStep === steps.length - 1}>
+        Dalej
       </Button>
       <Paper className={classes.paper}>
         <IconButton onClick={navigateBack}>
@@ -153,26 +197,26 @@ const ThesisPage = props => {
             <p className={classes.thesisName}>{props.currentThesis.name}</p>
             <p className={classes.header}>Streszczenie</p>
             <div className={classes.textFieldContainer}>
-            {roles.canChangeAbstractAndKeywords(props.currentThesis) && (
-              <TextField multiline fullWidth value={abstract} onChange={handleAbstractChange} />
-            )}
-            {!roles.canChangeAbstractAndKeywords(props.currentThesis) && (
-              <p className={classes.reviewText}>{abstract}</p>
-            )}
+              {roles.canChangeAbstractAndKeywords(props.currentThesis) && (
+                <TextField multiline fullWidth value={abstract} onChange={handleAbstractChange} />
+              )}
+              {!roles.canChangeAbstractAndKeywords(props.currentThesis) && (
+                <p className={classes.reviewText}>{abstract}</p>
+              )}
             </div>
             <p className={classes.header}>Słowa kluczowe</p>
             <div className={classes.textFieldContainer}>
-            {roles.canChangeAbstractAndKeywords(props.currentThesis) && (
-              <TextField fullWidth value={keywords} onChange={handleKeywordsChange} />
-            )}
-            {!roles.canChangeAbstractAndKeywords(props.currentThesis) && (
-              <p className={classes.reviewText}>{keywords}</p>
-            )}
+              {roles.canChangeAbstractAndKeywords(props.currentThesis) && (
+                <TextField fullWidth value={keywords} onChange={handleKeywordsChange} />
+              )}
+              {!roles.canChangeAbstractAndKeywords(props.currentThesis) && (
+                <p className={classes.reviewText}>{keywords}</p>
+              )}
             </div>
             {roles.canChangeAbstractAndKeywords(props.currentThesis) && (
               <div className={classes.button}>
                 <Button variant="contained" color="#CCC" onClick={handleSaveAbstractAndKeywords}>
-                 ZAPISZ DANE PRACY
+                  ZAPISZ DANE PRACY
                 </Button>
               </div>
             )}
@@ -186,14 +230,14 @@ const ThesisPage = props => {
             <div className={classes.button}>
               {!props.currentThesis.filePath && roles.canUploadFile(props.currentThesis.role) && (
                 <Button variant="contained" color="#CCC" disabled={props.currentThesis.defense.defended} onClick={handleUploadFileClick}>
-                Dodaj plik z pracą
+                  Dodaj plik z pracą
                 </Button>
               )}
               {!props.currentThesis.filePath && !roles.canUploadFile(props.currentThesis.role) && (
                 <p className={classes.header}>Praca nie została jeszcze załadowana przez studenta.</p>
               )}
             </div>
-            <input type="file" id="file" ref={inputFile} style={{display: "none"}}/>
+            <input type="file" id="file" ref={inputFile} style={{ display: "none" }} />
             {props.currentThesis.filePath && (
               <React.Fragment>
                 <p className={classes.header}>Plik z pracą został już dodany.</p>
@@ -205,42 +249,42 @@ const ThesisPage = props => {
         )}
         {activeStep === 2 && (
           <React.Fragment>
-            {!roles.canReview1(props.currentThesis, props.config) && !!props.currentThesis.reviews.reviewer1.text ? (
-            <React.Fragment>
-              <p className={classes.header}>Recenzja 1 jest dostępna:</p>
-              <p className={classes.subHeader}>Recenzent: {props.currentThesis.reviews.reviewer1.reviewerName}</p>
-              <p className={classes.subHeader}>Ocena: {props.currentThesis.reviews.reviewer1.grade}</p>
-              <p className={classes.subHeader}>Tekst recenzji:</p>
-              <p className={classes.reviewText}>{props.currentThesis.reviews.reviewer1.text}</p>
-            </React.Fragment>
+            {!roles.canReview1(props.currentThesis, props.config) && roles.canSaveReview(props.currentThesis) && !!props.currentThesis.reviews.reviewer1.text ? (
+              <React.Fragment>
+                <p className={classes.header}>Recenzja 1 jest dostępna:</p>
+                <p className={classes.subHeader}>Recenzent: {props.currentThesis.reviews.reviewer1.reviewerName}</p>
+                <p className={classes.subHeader}>Ocena: {props.currentThesis.reviews.reviewer1.grade}</p>
+                <p className={classes.subHeader}>Tekst recenzji:</p>
+                <p className={classes.reviewText}>{props.currentThesis.reviews.reviewer1.text}</p>
+              </React.Fragment>
             ) : (
-              <p className={classes.header}>Recenzja 1 nie jest jeszcze gotowa..</p>
-            )}
-            {roles.canReview1(props.currentThesis, props.config) && (
+                <p className={classes.header}>Recenzja 1 nie jest jeszcze gotowa.</p>
+              )}
+            {roles.canReview1(props.currentThesis, props.config) && roles.canSaveReview(props.currentThesis) && (
               <React.Fragment>
                 <p className={classes.subHeader}>Wprowadź ocenę:</p>
                 <TextField multiline fullWidth value={grade1} onChange={(event) => setGrade1(event.target.value)} />
                 <p className={classes.subHeader}>Wprowadź recenzję:</p>
                 <TextField multiline fullWidth value={review1} onChange={(event) => setReview1(event.target.value)} />
                 <div className={classes.button}>
-                <Button variant="contained" color="#CCC" onClick={handleSaveReview1} disabled={!roles.canSaveReview(props.currentThesis)} >
-                  ZAPISZ RECENZJĘ
+                  <Button variant="contained" color="#CCC" onClick={handleSaveReview1} disabled={!roles.canSaveReview(props.currentThesis)} >
+                    ZAPISZ RECENZJĘ
                 </Button>
-              </div>
+                </div>
               </React.Fragment>
             )}
-            {!roles.canReview2(props.currentThesis, props.config) && !!props.currentThesis.reviews.reviewer2.text ? (
+            {!roles.canReview2(props.currentThesis, props.config) && roles.canSaveReview(props.currentThesis) && !!props.currentThesis.reviews.reviewer2.text ? (
               <React.Fragment>
                 <p className={classes.header}>Recenzja 2 jest dostępna:</p>
                 <p className={classes.subHeader}>Recenzent: {props.currentThesis.reviews.reviewer2.reviewerName}</p>
                 <p className={classes.subHeader}>Ocena: {props.currentThesis.reviews.reviewer2.grade}</p>
                 <p className={classes.subHeader}>Tekst recenzji:</p>
                 <p className={classes.reviewText}>{props.currentThesis.reviews.reviewer2.text}</p>
-            </React.Fragment>
+              </React.Fragment>
             ) : (
-              <p className={classes.header}>Recenzja 2 nie jest jeszcze gotowa.</p>
-            )}
-            {roles.canReview2(props.currentThesis, props.config) && (
+                <p className={classes.header}>Recenzja 2 nie jest jeszcze gotowa.</p>
+              )}
+            {roles.canReview2(props.currentThesis, props.config) && roles.canSaveReview(props.currentThesis) && (
               <React.Fragment>
                 <p className={classes.subHeader}>Wprowadź ocenę:</p>
                 <TextField multiline fullWidth value={grade2} onChange={(event) => setGrade2(event.target.value)} />
@@ -261,26 +305,53 @@ const ThesisPage = props => {
         {activeStep === 3 && (
           <React.Fragment>
             <p className={classes.header}>Czy praca obroniona:</p>
-            <p className={classes.subHeader}>{props.currentThesis.defense.defended ? "TAK" : "NIE" }</p>
+            <p className={classes.subHeader}>{props.currentThesis.defense.defended ? "TAK" : "NIE"}</p>
             <p className={classes.subHeader}>Data obrony: {props.currentThesis.defense.date}</p>
             <p className={classes.header}>Skład komisji:</p>
-            <p className={classes.reviewText}>Przewodniczący: {props.currentThesis.defense.commitee.chairman}</p>
-            <p className={classes.reviewText}>Opiekun: {props.currentThesis.defense.commitee.advisor}</p>
-            <p className={classes.reviewText}>Członek: {props.currentThesis.defense.commitee.member1}</p>
-            <p className={classes.reviewText}>Członek: {props.currentThesis.defense.commitee.member2}</p>
+            {roles.canChangeCommittee(props.currentThesis) && (
+              <Button onClick={handleCommitteeChangeClick}>{isCommitteEdited ? "ZATWIERDŹ ZMIANY" : "ZMIEŃ"}</Button>
+            )}
+            {!isCommitteEdited && (
+              <React.Fragment>
+                <p className={classes.reviewText}>Przewodniczący: {chairmanName}</p>
+                <p className={classes.reviewText}>Opiekun: {advisorName}</p>
+                <p className={classes.reviewText}>Członek: {member1Name}</p>
+                <p className={classes.reviewText}>Członek: {member2Name}</p>
+              </React.Fragment>
+            )}
+            {isCommitteEdited && (
+              <React.Fragment>
+                <div className={classes.textAndButton}>
+                  <p className={classes.reviewText}>Przewodniczący: </p>
+                  <TextField value={chairmanId} onChange={(e) => setChairmanId(e.target.value)} />
+                </div>
+                <div className={classes.textAndButton}>
+                  <p className={classes.reviewText}>Opiekun: </p>
+                  <TextField value={advisorId} onChange={(e) => setAdvisorId(e.target.value)} />
+                </div>
+                <div className={classes.textAndButton}>
+                  <p className={classes.reviewText}>Członek: </p>
+                  <TextField value={member1Id} onChange={(e) => setMember1Id(e.target.value)} />
+                </div>
+                <div className={classes.textAndButton}>
+                  <p className={classes.reviewText}>Członek: </p>
+                  <TextField value={member2Id} onChange={(e) => setMember2Id(e.target.value)} />
+                </div>
+              </React.Fragment>
+            )}
             {roles.canSetDefended(props.currentThesis) && !props.currentThesis.defense.defended && (
               <React.Fragment>
                 <p className={classes.subHeader}>Wprowadź ocenę z obrony:</p>
                 <TextField fullWidth value={defenseGrade} onChange={(event) => setDefenseGrade(event.target.value)} />
                 <div className={classes.button}>
-                    <Button variant="contained" color="#CCC" onClick={handleSaveDefenseGrade} disabled={!!defended || !props.currentThesis.filePath}>
-                      ZATWIERDŹ OBRONĘ
+                  <Button variant="contained" color="#CCC" onClick={handleSaveDefenseGrade} disabled={!!defended || !props.currentThesis.filePath}>
+                    ZATWIERDŹ OBRONĘ
                     </Button>
-                  </div>
+                </div>
               </React.Fragment>
             )}
             {(!roles.canSetDefended(props.currentThesis) || props.currentThesis.defense.defended) && (
-                <p className={classes.subHeader}>Ocena: {props.currentThesis.defense.grade || "Brak oceny (praca nie obroniona)"}</p>
+              <p className={classes.subHeader}>Ocena: {props.currentThesis.defense.grade || "Brak oceny (praca nie obroniona)"}</p>
             )}
           </React.Fragment>
         )}
@@ -327,6 +398,10 @@ const useStyles = createUseStyles({
   reviewText: {
     padding: 5,
     maxWidth: 500
+  },
+  textAndButton: {
+    display: "flex",
+    alignItems: "center"
   }
 });
 
