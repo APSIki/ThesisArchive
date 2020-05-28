@@ -18,9 +18,9 @@ Access-Control-Allow-Headers: Authorization
         },
         "reviewer2": {
             "reviewerName": "Wiesława Promotorska",
-            "text": "",
+            "text": "Doskonale, wybornie",
             "reviewerId": "2",
-            "grade": ""
+            "grade": "2"
         }
     },
     "defense": {
