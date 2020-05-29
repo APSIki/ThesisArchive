@@ -22,3 +22,36 @@ Praca  |  User  |  Rola
 789    |  1     |  STUDENT
 789    |  2     |  MEMBER
 789    |  3     |  CHAIRMAN
+
+Lista jednostek organizacyjnych:
+{
+    "id": "1",
+    "name": "Instytut Telekomunikacji"
+},
+{
+    "id": "2",
+    "name": "Instytut Informatyki"
+},
+{
+    "id": "3",
+    "name": "Instytut Radiokomunikacji i Mulitimediów"
+}
+
+Lista tematyk pracy:
+{
+    "id": "1",
+    "name": "teleinformatyka"
+},
+{
+    "id": "2",
+    "name": "dorożkarstwo"
+},
+{
+    "id": "3",
+    "name": "systemy wbudowane"
+},
+{
+    "id": "4",
+    "name": "systemy operacyjne"
+}
+

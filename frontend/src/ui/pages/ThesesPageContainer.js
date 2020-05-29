@@ -1,5 +1,5 @@
 import { connect } from 'react-redux';
-import LandingPage from './LandingPage'
+import ThesesPage from './ThesesPage'
 import { setUsers } from '../../store/actions/config'
 import { setTheses } from '../../store/actions/thesis'
 
@@ -9,9 +9,9 @@ const mapStateToProps = state => {
   }
 }
 
-const LandingPageContainer = connect(mapStateToProps, {
+const ThesesPageContainer = connect(mapStateToProps, {
     setUsers,
     setTheses
-})(LandingPage)
+})(ThesesPage)
 
-export default LandingPageContainer;
+export default ThesesPageContainer;

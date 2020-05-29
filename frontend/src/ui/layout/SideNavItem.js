@@ -1,11 +1,13 @@
 import React from 'react';
 import { createUseStyles } from 'react-jss';
+import { useHistory } from 'react-router-dom';
 
 const SideNavItem= props => { 
     const classes = useStyles();
+    const history = useHistory();
 
     return (
-        <button className={classes.sideNavItem}>
+        <button className={classes.sideNavItem} onClick={() => history.push(props.route)}>
             {props.text}
         </button>
     );

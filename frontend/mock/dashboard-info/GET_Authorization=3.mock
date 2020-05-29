@@ -1,0 +1,20 @@
+HTTP/1.1 200 OK
+Content-Type: application/json; charset=utf-8
+Access-Control-Allow-Origin: *
+
+{
+    "nearestDefenses": [
+        {
+            "date": "2020-05-31T12:00:00.000Z",
+            "thesisId": "123",
+            "thesisName": "Wpływ zaćmienia księżyca na dorożkarstwo w Kenii",
+            "thesisType": "Praca inżynierska"
+        },
+        {
+            "date": "2020-06-29T12:00:00.000Z",
+            "thesisId": "789",
+            "thesisName": "Studia na WEiTI a zdrowie psychiczne",
+            "thesisType": "Praca inżynierska"
+        }
+    ]
+}

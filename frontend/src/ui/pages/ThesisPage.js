@@ -7,6 +7,9 @@ import { useHistory } from 'react-router-dom';
 import MuiAlert from '@material-ui/lab/Alert'
 import { getSteps } from '../../tools/stepperHelpers'
 import * as roles from '../../tools/roleUtils'
+import Autocomplete from '../components/Autocomplete'
+import moment from 'moment'
+import { DateTimePicker } from '@material-ui/pickers'
 
 const ThesisPage = props => {
   const classes = useStyles();
@@ -38,6 +41,10 @@ const ThesisPage = props => {
   const [advisorName, setAdvisorName] = useState("")
   const [member1Name, setMember1Name] = useState("")
   const [member2Name, setMember2Name] = useState("")
+  const [subjectMatter, setSubjectMatter] = useState(null)
+  const [organizationalUnit, setOrganizationalUnit] = useState(null)
+
+  const [defenseDate, setDefenseDate] = useState(null)
 
   const [activeStep, setActiveStep] = React.useState(0);
   const steps = getSteps();
@@ -78,6 +85,9 @@ const ThesisPage = props => {
         setAdvisorName(response.data.defense.commitee.advisor.name)
         setMember1Name(response.data.defense.commitee.member1.name)
         setMember2Name(response.data.defense.commitee.member2.name)
+        setSubjectMatter(props.config.subjectMatters.filter(subjectMatter => subjectMatter.id == response.data.subjectMatter)[0]);
+        setOrganizationalUnit(props.config.organizationalUnits.filter(organizationalUnit => organizationalUnit.id == response.data.organizationalUnit)[0]);
+        setDefenseDate(moment(response.data.defense.date))
       })
   }, []);
 
@@ -86,7 +96,7 @@ const ThesisPage = props => {
   }
 
   const handleSaveAbstractAndKeywords = () => {
-    WS.postAbstractAndKeywords(props.currentThesis.id, props.currentThesis)
+    WS.postThesisDetails(props.currentThesis.id, props.currentThesis, subjectMatter ? subjectMatter.id : null, organizationalUnit ? organizationalUnit.id : null)
       .then(response => {
         setSuccessSnackbarOpen(true)
       })
@@ -163,6 +173,17 @@ const ThesisPage = props => {
     }
   }
 
+  const handleDefenseDateChange = (date) => {
+    setDefenseDate(date)
+    WS.postDefenseDate(props.currentThesis, date)
+      .then(response => {
+        setSuccessSnackbarOpen(true)
+      })
+      .catch(err => {
+        setErrorSnackbarOpen(true)
+      })
+  }
+
   return (
     <React.Fragment>
       <Stepper activeStep={activeStep}>
@@ -192,35 +213,51 @@ const ThesisPage = props => {
           <ArrowBack />
         </IconButton>
         {activeStep === 0 && (
-          <React.Fragment>
-            <p className={classes.header}>{props.currentThesis.type}</p>
-            <p className={classes.thesisName}>{props.currentThesis.name}</p>
-            <p className={classes.header}>Streszczenie</p>
-            <div className={classes.textFieldContainer}>
-              {roles.canChangeAbstractAndKeywords(props.currentThesis) && (
-                <TextField multiline fullWidth value={abstract} onChange={handleAbstractChange} />
-              )}
-              {!roles.canChangeAbstractAndKeywords(props.currentThesis) && (
-                <p className={classes.reviewText}>{abstract}</p>
-              )}
-            </div>
-            <p className={classes.header}>Słowa kluczowe</p>
-            <div className={classes.textFieldContainer}>
-              {roles.canChangeAbstractAndKeywords(props.currentThesis) && (
-                <TextField fullWidth value={keywords} onChange={handleKeywordsChange} />
-              )}
-              {!roles.canChangeAbstractAndKeywords(props.currentThesis) && (
-                <p className={classes.reviewText}>{keywords}</p>
-              )}
-            </div>
-            {roles.canChangeAbstractAndKeywords(props.currentThesis) && (
-              <div className={classes.button}>
-                <Button variant="contained" color="#CCC" onClick={handleSaveAbstractAndKeywords}>
-                  ZAPISZ DANE PRACY
-                </Button>
+          <div style={{display: 'flex'}}>
+            <div className={classes.halfPage}>
+              <p className={classes.header}>{props.currentThesis.type}</p>
+              <p className={classes.thesisName}>{props.currentThesis.name}</p>
+              <p className={classes.header}>Streszczenie</p>
+              <div className={classes.textFieldContainer}>
+                {roles.canChangeAbstractAndKeywords(props.currentThesis) && (
+                  <TextField multiline fullWidth value={abstract} onChange={handleAbstractChange} />
+                )}
+                {!roles.canChangeAbstractAndKeywords(props.currentThesis) && (
+                  <p className={classes.reviewText}>{abstract}</p>
+                )}
               </div>
-            )}
-          </React.Fragment>
+              <p className={classes.header}>Słowa kluczowe</p>
+              <div className={classes.textFieldContainer}>
+                {roles.canChangeAbstractAndKeywords(props.currentThesis) && (
+                  <TextField fullWidth value={keywords} onChange={handleKeywordsChange} />
+                )}
+                {!roles.canChangeAbstractAndKeywords(props.currentThesis) && (
+                  <p className={classes.reviewText}>{keywords}</p>
+                )}
+              </div>
+            </div>
+            <div className={classes.halfPage}>
+              <p className={classes.header}>Tematyka pracy</p>
+              <Autocomplete
+                value={subjectMatter}
+                setValue={setSubjectMatter}
+                options={props.config.subjectMatters}
+              />
+              <p className={classes.header}>Jednostka organizacyjna</p>
+              <Autocomplete
+                value={organizationalUnit}
+                setValue={setOrganizationalUnit}
+                options={props.config.organizationalUnits}
+              />
+              {roles.canChangeAbstractAndKeywords(props.currentThesis) && (
+                <div className={classes.button}>
+                  <Button variant="contained" color="#CCC" onClick={handleSaveAbstractAndKeywords}>
+                    ZAPISZ DANE PRACY
+                </Button>
+                </div>
+              )}
+            </div>
+          </div>
         )}
         {activeStep === 1 && (
           <React.Fragment>
@@ -306,7 +343,18 @@ const ThesisPage = props => {
           <React.Fragment>
             <p className={classes.header}>Czy praca obroniona:</p>
             <p className={classes.subHeader}>{props.currentThesis.defense.defended ? "TAK" : "NIE"}</p>
-            <p className={classes.subHeader}>Data obrony: {props.currentThesis.defense.date}</p>
+            {!roles.canChangeCommittee(props.currentThesis) && (
+              <p className={classes.subHeader}>Data obrony: {moment(props.currentThesis.defense.date).format("DD/MM/YYYY HH:mm")}</p>
+            )}
+            {roles.canChangeCommittee(props.currentThesis) && (
+              <div style={{margin: 10}}>
+                <DateTimePicker 
+                  label="Data obrony"
+                  value={defenseDate}
+                  onChange={handleDefenseDateChange}
+                />
+              </div>
+            )}
             <p className={classes.header}>Skład komisji:</p>
             {roles.canChangeCommittee(props.currentThesis) && (
               <Button onClick={handleCommitteeChangeClick}>{isCommitteEdited ? "ZATWIERDŹ ZMIANY" : "ZMIEŃ"}</Button>
@@ -389,7 +437,7 @@ const useStyles = createUseStyles({
   },
   textFieldContainer: {
     padding: 10,
-    width: "40%",
+    width: "90%",
     minWidth: 100
   },
   button: {
@@ -402,6 +450,10 @@ const useStyles = createUseStyles({
   textAndButton: {
     display: "flex",
     alignItems: "center"
+  },
+  halfPage: {
+    width: "45%",
+    margin: 5
   }
 });
 

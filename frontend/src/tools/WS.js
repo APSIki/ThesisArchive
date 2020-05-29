@@ -16,11 +16,13 @@ class WS {
         });
     }
 
-    postAbstractAndKeywords(id, thesis) {
-        return axios.post(`${BASE_URL}/thesis/${id}/abstract-keywords`, {
+    postThesisDetails(id, thesis, subjectMatter, organizationalUnit) {
+        return axios.post(`${BASE_URL}/thesis/${id}/thesis-details`, {
             "id": thesis.id,
             "abstract": thesis.abstract,
-            "keywords": thesis.keywords
+            "keywords": thesis.keywords,
+            "subjectMatter": subjectMatter,
+            "organizationalUnit": organizationalUnit
         }, {
             headers: {
                 'Authorization': store.getState().config.authorization
@@ -91,6 +93,20 @@ class WS {
 
     getPerson(personId) {
         return axios.get(`${BASE_URL}/person/${personId}`)
+    }
+
+    getDashboardData() {
+        return axios.get(`${BASE_URL}/dashboard-info`, {
+            headers: {
+                'Authorization': store.getState().config.authorization
+            }
+        })
+    }
+
+    postDefenseDate(thesis, date) {
+        return axios.post(`${BASE_URL}/thesis/${thesis.id}/defense-date`, {
+            "date": date
+        })
     }
 }
 
