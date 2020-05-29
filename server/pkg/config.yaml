@@ -1,0 +1,8 @@
+---
+enable_db: true
+database:
+  db_name: "thesis_db"
+  user_name: "name"
+  password: "docker"
+  host: "localhost"
+  port: 5432
