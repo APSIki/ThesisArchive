@@ -1,0 +1,1 @@
+0. If you want to use server without DB set enable_db to false in config.yaml

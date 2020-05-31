@@ -29,7 +29,7 @@ func main() {
 		}
 		defer dbService.DB.Close()
 	}
-	
+
 	r := mux.NewRouter()
 	r.HandleFunc("/thesis", thesis.PostTheses).Methods("POST")
 	r.HandleFunc("/thesis", thesis.PutThesis).Methods("PUT")
