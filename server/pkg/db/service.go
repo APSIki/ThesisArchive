@@ -1,22 +1,27 @@
 package db
 
 import (
+	"context"
 	"database/sql"
 	"fmt"
+	"github.com/golang/gddo/log"
+	"time"
+
+	_ "github.com/lib/pq"
 	"github.com/spf13/viper"
 )
 
 type Service struct {
-	db            *sql.DB
+	DB *sql.DB
 }
 
-func NewServiceFromConfig() (*Service, error) {
+func NewService() (*Service, error) {
 	sqlDB, err := ConnectDB()
 	if err != nil {
 		return nil, fmt.Errorf("init DB failed: %v", err)
 	}
 	return &Service{
-		db: sqlDB,
+		DB: sqlDB,
 	}, nil
 }
 
@@ -29,16 +34,27 @@ func ConnectDB() (*sql.DB, error) {
 	psqlInfo := fmt.Sprintf("host=%s port=%d user=%s "+
 		"password=%s dbname=%s sslmode=disable",
 		host, port, user, password, dbName)
-	fmt.Println(psqlInfo)
+
 	db, err := sql.Open("postgres", psqlInfo)
 	if err != nil {
 		return nil, err
 	}
-	defer db.Close() //TODO remove since it will be used elsewhere
 
-	err = db.Ping()
-	if err != nil {
-		return nil, err //TODO add retry
+	maxConn := viper.GetInt("database.max_open_conn")
+	db.SetMaxOpenConns(maxConn)
+	db.SetMaxIdleConns(maxConn)
+
+	retries, period := viper.GetInt("database.connection_retries"), viper.GetDuration("database.retry_period")
+	for i := 0; i < retries; i++ {
+		err = db.Ping()
+		if err == nil {
+			log.Info(context.Background(), "connected to DB")
+			return db, nil
+		}
+		time.Sleep(period)
+		log.Info(context.Background(), "could not connect to DB, retrying.. (%s)", err)
 	}
+	defer db.Close() // TODO move it
+
 	return db, nil
 }

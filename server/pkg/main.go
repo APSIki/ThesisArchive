@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"server/pkg/db"
 
 	"github.com/gorilla/mux"
 	"github.com/spf13/viper"
@@ -21,7 +22,12 @@ func main() {
  	}
 	enableDB := viper.GetBool("enable_db")
 	if enableDB {
-		fmt.Println("DB enabled") //TODO connect to DB here
+		dbService, err := db.NewService()
+		if err != nil {
+			log.Fatal(err)
+			panic(err)
+		}
+		defer dbService.DB.Close()
 	}
 	r := mux.NewRouter()
 	r.HandleFunc("/thesis", thesis.PostTheses).Methods("POST")
