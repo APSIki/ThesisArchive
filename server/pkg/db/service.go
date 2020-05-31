@@ -1,10 +1,9 @@
 package db
 
 import (
-	"context"
 	"database/sql"
 	"fmt"
-	"github.com/golang/gddo/log"
+	"log"
 	"time"
 
 	_ "github.com/lib/pq"
@@ -48,11 +47,11 @@ func ConnectDB() (*sql.DB, error) {
 	for i := 0; i < retries; i++ {
 		err = db.Ping()
 		if err == nil {
-			log.Info(context.Background(), "connected to DB")
+			log.Print("connected to DB")
 			return db, nil
 		}
 		time.Sleep(period)
-		log.Info(context.Background(), "could not connect to DB, retrying.. (%s)", err)
+		log.Printf("could not connect to DB, retrying.. (%s)", err)
 	}
 	defer db.Close() // TODO move it
 

@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"log"
 	"net/http"
 	"server/pkg/db"
@@ -20,6 +19,7 @@ func main() {
 		log.Fatal(err)
 		panic(err)
  	}
+
 	enableDB := viper.GetBool("enable_db")
 	if enableDB {
 		dbService, err := db.NewService()
@@ -29,6 +29,7 @@ func main() {
 		}
 		defer dbService.DB.Close()
 	}
+	
 	r := mux.NewRouter()
 	r.HandleFunc("/thesis", thesis.PostTheses).Methods("POST")
 	r.HandleFunc("/thesis", thesis.PutThesis).Methods("PUT")
