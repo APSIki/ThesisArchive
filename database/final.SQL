@@ -12,7 +12,7 @@ Database: PostgreSQL 11
 CREATE TABLE "thesis"
 (
   "thesis_id" Integer NOT NULL GENERATED ALWAYS AS IDENTITY
-    (INCREMENT BY 1 NO MINVALUE NO MAXVALUE START WITH 0 CACHE 1),
+    (INCREMENT BY 1 NO MINVALUE NO MAXVALUE START WITH 1 CACHE 1),
   "date" Date NOT NULL,
   "thesis_type_id" Integer NOT NULL,
   "major_speciality_id" Integer NOT NULL,
@@ -48,7 +48,7 @@ ALTER TABLE "thesis" ADD CONSTRAINT "thesis_id" UNIQUE ("thesis_id")
 CREATE TABLE "staff_person"
 (
   "staff_person_id" Integer NOT NULL GENERATED ALWAYS AS IDENTITY
-    (INCREMENT BY 1 NO MINVALUE NO MAXVALUE START WITH 0 CACHE 1),
+    (INCREMENT BY 1 NO MINVALUE NO MAXVALUE START WITH 1 CACHE 1),
   "session_token" Name NOT NULL,
   "first_name" Text NOT NULL,
   "second_name" Text,
@@ -68,7 +68,7 @@ ALTER TABLE "staff_person" ADD CONSTRAINT "PK_staff_person" PRIMARY KEY ("staff_
 CREATE TABLE "organizational_unit"
 (
   "organizational_unit_id" Integer NOT NULL GENERATED ALWAYS AS IDENTITY
-    (INCREMENT BY 1 NO MINVALUE NO MAXVALUE START WITH 0 CACHE 1),
+    (INCREMENT BY 1 NO MINVALUE NO MAXVALUE START WITH 1 CACHE 1),
   "name" Text NOT NULL
 )
 WITH (
@@ -82,7 +82,7 @@ ALTER TABLE "organizational_unit" ADD CONSTRAINT "PK_organizational_unit" PRIMAR
 CREATE TABLE "subject_matter"
 (
   "subject_matter_id" Integer NOT NULL GENERATED ALWAYS AS IDENTITY
-    (INCREMENT BY 1 NO MINVALUE NO MAXVALUE START WITH 0 CACHE 1),
+    (INCREMENT BY 1 NO MINVALUE NO MAXVALUE START WITH 1 CACHE 1),
   "name" Text NOT NULL
 )
 WITH (
@@ -96,7 +96,7 @@ ALTER TABLE "subject_matter" ADD CONSTRAINT "PK_subject_matter" PRIMARY KEY ("su
 CREATE TABLE "thesis_type"
 (
   "thesis_type_id" Integer NOT NULL GENERATED ALWAYS AS IDENTITY
-    (INCREMENT BY 1 NO MINVALUE NO MAXVALUE START WITH 0 CACHE 1),
+    (INCREMENT BY 1 NO MINVALUE NO MAXVALUE START WITH 1 CACHE 1),
   "name" Integer NOT NULL
 )
 WITH (
@@ -110,7 +110,7 @@ ALTER TABLE "thesis_type" ADD CONSTRAINT "PK_thesis_type" PRIMARY KEY ("thesis_t
 CREATE TABLE "major_speciality"
 (
   "major_speciality_id" Integer NOT NULL GENERATED ALWAYS AS IDENTITY
-    (INCREMENT BY 1 NO MINVALUE NO MAXVALUE START WITH 0 CACHE 1),
+    (INCREMENT BY 1 NO MINVALUE NO MAXVALUE START WITH 1 CACHE 1),
   "major" Text NOT NULL,
   "speciality" Text NOT NULL
 )
@@ -125,7 +125,7 @@ ALTER TABLE "major_speciality" ADD CONSTRAINT "PK_major_speciality" PRIMARY KEY 
 CREATE TABLE "commitee_person"
 (
   "committee_person_id" Integer NOT NULL GENERATED ALWAYS AS IDENTITY
-    (INCREMENT BY 1 NO MINVALUE NO MAXVALUE START WITH 0 CACHE 1),
+    (INCREMENT BY 1 NO MINVALUE NO MAXVALUE START WITH 1 CACHE 1),
   "committee_id" Integer NOT NULL,
   "committee_role" Integer,
   "person_id" Integer NOT NULL
@@ -145,7 +145,7 @@ ALTER TABLE "commitee_person" ADD CONSTRAINT "PK_commitee_person" PRIMARY KEY ("
 CREATE TABLE "committee"
 (
   "committee_id" Integer NOT NULL GENERATED ALWAYS AS IDENTITY
-    (INCREMENT BY 1 NO MINVALUE NO MAXVALUE START WITH 0 CACHE 1)
+    (INCREMENT BY 1 NO MINVALUE NO MAXVALUE START WITH 1 CACHE 1)
 )
 WITH (
   autovacuum_enabled=true)
@@ -158,7 +158,7 @@ ALTER TABLE "committee" ADD CONSTRAINT "PK_committee" PRIMARY KEY ("committee_id
 CREATE TABLE "person_title"
 (
   "person_title_id" Integer NOT NULL GENERATED ALWAYS AS IDENTITY
-    (INCREMENT BY 1 NO MINVALUE NO MAXVALUE START WITH 0 CACHE 1),
+    (INCREMENT BY 1 NO MINVALUE NO MAXVALUE START WITH 1 CACHE 1),
   "name" Text NOT NULL
 )
 WITH (
@@ -172,7 +172,7 @@ ALTER TABLE "person_title" ADD CONSTRAINT "PK_person_title" PRIMARY KEY ("person
 CREATE TABLE "committee_roles"
 (
   "committee_role_id" Integer NOT NULL GENERATED ALWAYS AS IDENTITY
-    (INCREMENT BY 1 NO MINVALUE NO MAXVALUE START WITH 0 CACHE 1),
+    (INCREMENT BY 1 NO MINVALUE NO MAXVALUE START WITH 1 CACHE 1),
   "name" Text NOT NULL
 )
 WITH (

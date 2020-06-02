@@ -25,7 +25,7 @@ type Thesis struct {
 	Tags                 string   `json:"tags"`
 }
 
-func PostTheses(w http.ResponseWriter, req *http.Request) {
+func PostThesis(w http.ResponseWriter, req *http.Request) {
 	t := New()
 	if err := t.decodeJSON(w, req); err != nil {
 		respond.With(w, req, http.StatusBadRequest, err)
@@ -34,6 +34,34 @@ func PostTheses(w http.ResponseWriter, req *http.Request) {
 	//TODO create a service for DB communication and add thesis
 	respond.WithStatus(w, req, http.StatusCreated)
 }
+
+func PostCommittee(w http.ResponseWriter, req *http.Request) {
+	//TODO
+}
+func PostDefense(w http.ResponseWriter, req *http.Request) {
+	//TODO
+}
+
+func PostDefenseDate(w http.ResponseWriter, req *http.Request) {
+	//TODO
+}
+
+func PostFile(w http.ResponseWriter, req *http.Request) {
+	//TODO
+}
+
+func PostReview1(w http.ResponseWriter, req *http.Request) {
+	//TODO
+}
+
+func PostReview2(w http.ResponseWriter, req *http.Request) {
+	//TODO
+}
+
+func PostThesisDetails(w http.ResponseWriter, req *http.Request) {
+	//TODO
+}
+
 func New() *Thesis {
 	return &Thesis{}
 }
