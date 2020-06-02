@@ -12,8 +12,8 @@ Database: PostgreSQL 11
 CREATE TABLE "thesis"
 (
   "thesis_id" Integer NOT NULL GENERATED ALWAYS AS IDENTITY
-    (INCREMENT BY 1 NO MINVALUE NO MAXVALUE START WITH 0 CACHE 1),
-  "date" Date NOT NULL,
+    (INCREMENT BY 1 NO MINVALUE NO MAXVALUE START WITH 1 CACHE 1),
+  "defence_date" Date NOT NULL,
   "thesis_type_id" Integer NOT NULL,
   "major_speciality_id" Integer NOT NULL,
   "title" Text NOT NULL,
@@ -22,10 +22,13 @@ CREATE TABLE "thesis"
   "subject_matter_id" Integer NOT NULL,
   "committee_id" Integer NOT NULL,
   "grade_defence" Numeric(2,1),
+  "grade_review_supervisor" Numeric(2,1),
+  "grade_review_reviewer" Numeric(2,1),
   "grade_avg" Numeric(3,2),
   "author_id" Integer NOT NULL,
-  "Abstract" Text,
-  "Review" Text
+  "abstract" Text,
+  "reviewer_review" Text,
+  "supervisor_review" Text
 )
 WITH (
   autovacuum_enabled=true)
@@ -48,12 +51,13 @@ ALTER TABLE "thesis" ADD CONSTRAINT "thesis_id" UNIQUE ("thesis_id")
 CREATE TABLE "staff_person"
 (
   "staff_person_id" Integer NOT NULL GENERATED ALWAYS AS IDENTITY
-    (INCREMENT BY 1 NO MINVALUE NO MAXVALUE START WITH 0 CACHE 1),
+    (INCREMENT BY 1 NO MINVALUE NO MAXVALUE START WITH 1 CACHE 1),
   "session_token" Name NOT NULL,
   "first_name" Text NOT NULL,
   "second_name" Text,
   "surname" Text NOT NULL,
-  "person_title_id" Integer NOT NULL
+  "person_title_id" Integer NOT NULL,
+  "is_admin" BOOLEAN NOT NULL
 )
 WITH (
   autovacuum_enabled=true)
@@ -68,7 +72,7 @@ ALTER TABLE "staff_person" ADD CONSTRAINT "PK_staff_person" PRIMARY KEY ("staff_
 CREATE TABLE "organizational_unit"
 (
   "organizational_unit_id" Integer NOT NULL GENERATED ALWAYS AS IDENTITY
-    (INCREMENT BY 1 NO MINVALUE NO MAXVALUE START WITH 0 CACHE 1),
+    (INCREMENT BY 1 NO MINVALUE NO MAXVALUE START WITH 1 CACHE 1),
   "name" Text NOT NULL
 )
 WITH (
@@ -82,7 +86,7 @@ ALTER TABLE "organizational_unit" ADD CONSTRAINT "PK_organizational_unit" PRIMAR
 CREATE TABLE "subject_matter"
 (
   "subject_matter_id" Integer NOT NULL GENERATED ALWAYS AS IDENTITY
-    (INCREMENT BY 1 NO MINVALUE NO MAXVALUE START WITH 0 CACHE 1),
+    (INCREMENT BY 1 NO MINVALUE NO MAXVALUE START WITH 1 CACHE 1),
   "name" Text NOT NULL
 )
 WITH (
@@ -96,8 +100,8 @@ ALTER TABLE "subject_matter" ADD CONSTRAINT "PK_subject_matter" PRIMARY KEY ("su
 CREATE TABLE "thesis_type"
 (
   "thesis_type_id" Integer NOT NULL GENERATED ALWAYS AS IDENTITY
-    (INCREMENT BY 1 NO MINVALUE NO MAXVALUE START WITH 0 CACHE 1),
-  "name" Integer NOT NULL
+    (INCREMENT BY 1 NO MINVALUE NO MAXVALUE START WITH 1 CACHE 1),
+  "name" Text NOT NULL
 )
 WITH (
   autovacuum_enabled=true)
@@ -110,7 +114,7 @@ ALTER TABLE "thesis_type" ADD CONSTRAINT "PK_thesis_type" PRIMARY KEY ("thesis_t
 CREATE TABLE "major_speciality"
 (
   "major_speciality_id" Integer NOT NULL GENERATED ALWAYS AS IDENTITY
-    (INCREMENT BY 1 NO MINVALUE NO MAXVALUE START WITH 0 CACHE 1),
+    (INCREMENT BY 1 NO MINVALUE NO MAXVALUE START WITH 1 CACHE 1),
   "major" Text NOT NULL,
   "speciality" Text NOT NULL
 )
@@ -125,7 +129,7 @@ ALTER TABLE "major_speciality" ADD CONSTRAINT "PK_major_speciality" PRIMARY KEY 
 CREATE TABLE "commitee_person"
 (
   "committee_person_id" Integer NOT NULL GENERATED ALWAYS AS IDENTITY
-    (INCREMENT BY 1 NO MINVALUE NO MAXVALUE START WITH 0 CACHE 1),
+    (INCREMENT BY 1 NO MINVALUE NO MAXVALUE START WITH 1 CACHE 1),
   "committee_id" Integer NOT NULL,
   "committee_role" Integer,
   "person_id" Integer NOT NULL
@@ -145,7 +149,7 @@ ALTER TABLE "commitee_person" ADD CONSTRAINT "PK_commitee_person" PRIMARY KEY ("
 CREATE TABLE "committee"
 (
   "committee_id" Integer NOT NULL GENERATED ALWAYS AS IDENTITY
-    (INCREMENT BY 1 NO MINVALUE NO MAXVALUE START WITH 0 CACHE 1)
+    (INCREMENT BY 1 NO MINVALUE NO MAXVALUE START WITH 1 CACHE 1)
 )
 WITH (
   autovacuum_enabled=true)
@@ -158,7 +162,7 @@ ALTER TABLE "committee" ADD CONSTRAINT "PK_committee" PRIMARY KEY ("committee_id
 CREATE TABLE "person_title"
 (
   "person_title_id" Integer NOT NULL GENERATED ALWAYS AS IDENTITY
-    (INCREMENT BY 1 NO MINVALUE NO MAXVALUE START WITH 0 CACHE 1),
+    (INCREMENT BY 1 NO MINVALUE NO MAXVALUE START WITH 1 CACHE 1),
   "name" Text NOT NULL
 )
 WITH (
@@ -172,7 +176,7 @@ ALTER TABLE "person_title" ADD CONSTRAINT "PK_person_title" PRIMARY KEY ("person
 CREATE TABLE "committee_roles"
 (
   "committee_role_id" Integer NOT NULL GENERATED ALWAYS AS IDENTITY
-    (INCREMENT BY 1 NO MINVALUE NO MAXVALUE START WITH 0 CACHE 1),
+    (INCREMENT BY 1 NO MINVALUE NO MAXVALUE START WITH 1 CACHE 1),
   "name" Text NOT NULL
 )
 WITH (
@@ -185,7 +189,8 @@ ALTER TABLE "committee_roles" ADD CONSTRAINT "PK_committee_roles" PRIMARY KEY ("
 
 CREATE TABLE "students"
 (
-  "student_id" Integer NOT NULL,
+  "student_id" Integer NOT NULL GENERATED ALWAYS AS IDENTITY
+    (INCREMENT BY 1 NO MINVALUE NO MAXVALUE START WITH 1 CACHE 1),
   "session_token" Text NOT NULL,
   "first_name" Text NOT NULL,
   "second_name" Text,
@@ -231,4 +236,85 @@ ALTER TABLE "thesis" ADD CONSTRAINT "thesis_has_author" FOREIGN KEY ("author_id"
 
 
 
+INSERT INTO public.person_title(
+	name)VALUES
+	('prof.'),
+	('dr hab.'),
+	('dr'),
+	('mgr inż.'),
+	('mgr');
 
+INSERT INTO public.staff_person(
+	session_token, first_name, second_name, surname, person_title_id, is_admin)
+	VALUES ('bb1d3f49cf83e4e648d85f1869531fc0', 'Wiesława', null, 'Promotorska', 1, FALSE),
+	('841a6fcd6d89c80b5c70bca17fae2e83', 'Krzysztof', null, 'Przewodniczącki', 1, FALSE),
+	('8d8f78efc6a303197cf2b8d1e922a79d', 'Krystyna', null, 'Członkowska', 3, FALSE),
+	('28d34059b453bedefcaadefda96e4633', 'Janusz', null, 'Admiński', 4, TRUE),
+	('5f4d25e1dafdbf1c61407f2b693229de', 'Monika', null, 'Przykładowa', 4, FALSE),
+	('abc6598533fe31cc6e87c0d71ac760a7', 'Wiesław', null, 'Elektroniczny', 5, FALSE);
+
+INSERT INTO public.students(
+	session_token, first_name, second_name, surname)
+	VALUES ('c70bca17f841a6fcd6d89c80b5ae2e83', 'Jan', null, 'Studencki');
+
+INSERT INTO public.organizational_unit(
+	name)
+	VALUES ('Instytut Telekomunikacji'),
+	('Instytut Informatyki'),
+	('Instytut Radiokomunikacji i Mulitimediów');
+
+INSERT INTO public.subject_matter(
+	name)
+	VALUES ('teleinformatyka'),
+	('dorożkarstwo'),
+	('systemy wbudowane'),
+	('systemy operacyjne');
+
+INSERT INTO public.committee_roles(
+	name)
+	VALUES ('Chairman'),
+	('Member'),
+	('Reviewer'),
+	('Thesis supervisor');
+
+INSERT INTO public.committee DEFAULT VALUES;
+INSERT INTO public.committee DEFAULT VALUES;
+INSERT INTO public.committee DEFAULT VALUES;
+
+INSERT INTO public.commitee_person(
+	committee_id, committee_role, person_id)
+	VALUES 
+	(1, 1, 2),
+	(1, 2, 3),
+	(1, 4, 1),
+	(1, 3, 6),
+	(2, 1, 2),
+	(2, 2, 3),
+	(2, 4, 1),
+	(2, 3, 6),
+	(3, 1, 2),
+	(3, 2, 3),
+	(3, 4, 1),
+	(3, 3, 6);
+
+INSERT INTO public.thesis_type(
+	name)
+	VALUES ('Inżynierska'),
+	('Magisterska'),
+	('Doktorska');
+
+INSERT INTO public.major_speciality(
+	major, speciality)
+	VALUES ('Telekomunikacja', 'Teleinformatyka i Cyberbezpieczeństwo'),
+	('Dorożkarstwo', 'Budowa linijek i powozów wyścigowych'),
+	('Automatyka i Robotyka', 'Coś ze żwirem'),
+	('Informatyka', 'Systemy operacyjne');
+
+INSERT INTO public.thesis(
+	defence_date, thesis_type_id, major_speciality_id, title, key_words, organizational_unit_id, subject_matter_id, committee_id, grade_defence, grade_review_supervisor, grade_review_reviewer, grade_avg, author_id, abstract, reviewer_review, supervisor_review)
+	VALUES 	
+('2020-05-23', 2, 2, 'Wpływ zaćmień księżyca na jakość dorożkarstwa w Kenii', 'dorożkarstwo, Kenia, zaćmienie księżyca', 3, 2, 1, null, 5.0, 5.0, null, 1, 'Praca opisuje wpływ zaćmień księżyca na jakość dorożkarstwa w Kenii.', 'Bardzo dobrze, super recenzja, 10/10', 'Bardzo dobrze, super recenzja, 10/10'),
+
+('2020-05-23', 2, 2, 'Wpływ zaćmień księżyca na jakość dorożkarstwa w Kenii', 'dorożkarstwo, Kenia, zaćmienie księżyca', 3, 2, 2, null, 5.0, 5.0, null, 1, 'Praca opisuje wpływ zaćmień księżyca na jakość dorożkarstwa w Kenii.', 'Bardzo dobrze, super recenzja, 10/10', 'Bardzo dobrze, super recenzja, 10/10'),
+
+('2020-05-21', 1, 1, 'Wwpływ studiowania na Wydziale Elektroniki i Technik Informacyjnych na zdrowie psychiczne.', 'zdrowie psychiczne, studia, WEiTI', 1, 1, 3, null, 5.0, 5.0, null, 1, 'Praca opisuje wpływ studiowania na Wydziale Elektroniki i Technik Informacyjnych na zdrowie psychiczne.', 'Bardzo dobrze, super recenzja, 10/10', 'Bardzo dobrze, super recenzja, 10/10');
