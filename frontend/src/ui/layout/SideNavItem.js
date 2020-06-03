@@ -6,7 +6,7 @@ const SideNavItem= props => {
     const classes = useStyles();
     const history = useHistory();
 
-    return (
+    return (  
         <button className={classes.sideNavItem} onClick={() => history.push(props.route)}>
             {props.text}
         </button>

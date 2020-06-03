@@ -85,7 +85,7 @@ const ThesisPage = props => {
         setAdvisorName(response.data.defense.commitee.advisor.name)
         setMember1Name(response.data.defense.commitee.member1.name)
         setMember2Name(response.data.defense.commitee.member2.name)
-        setSubjectMatter(props.config.subjectMatters.filter(subjectMatter => subjectMatter.id == response.data.subjectMatter)[0]);
+        setSubjectMatter(props.config.subjectMatters.filter(subjectMatter => subjectMatter.id === response.data.subjectMatter)[0]);
         setOrganizationalUnit(props.config.organizationalUnits.filter(organizationalUnit => organizationalUnit.id == response.data.organizationalUnit)[0]);
         setDefenseDate(moment(response.data.defense.date))
       })
@@ -428,8 +428,7 @@ const useStyles = createUseStyles({
   paper: {
     margin: 10,
     height: "80%",
-    overflowX: "scroll",
-    overflowX: "hidden"
+    overflowX: "scroll"
   },
   thesisName: {
     padding: 10,

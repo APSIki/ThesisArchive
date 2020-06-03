@@ -4,7 +4,6 @@ import Grid from '@material-ui/core/Grid';
 import { Paper } from '@material-ui/core';
 import SideNavigation from '../layout/SideNavigation';
 import WS from '../../tools/WS';
-import NearestDefense from '../components/Dashboard/NearestDefense';
 import BigCalendar from '../components/Dashboard/BigCalendar'
 
 

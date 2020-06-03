@@ -24,7 +24,7 @@ const useStyles = createUseStyles({
         width: "100%",
         position: "fixed",
         height: 40,
-        backgroundColor: "#775f94",
+        backgroundColor: "#3f51b5",
         display: "flex",
         flexDirection: "row",
         paddingLeft: 10,

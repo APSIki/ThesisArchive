@@ -87,7 +87,7 @@ class WS {
         })
     }
 
-    getThesisBySearch(titleOrAuthorName) {
+    getThesisBySearch(query, type) {
         return axios.get(`${BASE_URL}/searchTheses`);
     }
 
