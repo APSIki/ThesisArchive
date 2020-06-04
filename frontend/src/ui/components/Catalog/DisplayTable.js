@@ -10,7 +10,7 @@ import Paper from '@material-ui/core/Paper';
 
 const StyledTableCell = withStyles((theme) => ({
   head: {
-    backgroundColor: theme.palette.common.black,
+    backgroundColor: '#3f51b5',
     color: theme.palette.common.white,
   },
   body: {
@@ -37,7 +37,7 @@ function DisplayTable(rows) {
   const classes = useStyles();
 
   return (
-    <TableContainer component={Paper}>
+    <TableContainer component={Paper} style={{marginTop:'20px'}}>
       <Table className={classes.table} aria-label="customized table">
         <TableHead>
           <TableRow>

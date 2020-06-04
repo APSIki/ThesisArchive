@@ -1,24 +1,44 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { IconButton } from '@material-ui/core';
 import SearchIcon from '@material-ui/icons/Search';
 import { createUseStyles } from 'react-jss';
+import WS from '../../../tools/WS'
+import DisplayTable from '../Catalog/DisplayTable'
 
 const BasicSearch = (props) => {
 
     const classes = useStyles();
+    const [query, setQuery] = useState('');
+    const [dataRows, setDataRows] = useState(null);
+
+    const handleUserInput = event => {
+        const query = event.target.value;
+        setQuery(query);
+        // if(query.length > 2){
+        //     getData();
+        // }
+      };
 
 
-    const handleUserInput = (event) => {
-        props.onChangeMethod(event);
+    const handlebuttonSearchClick = () => {
+        WS.getThesisByAdvancedSearch('all').then(response => {
+            setDataRows(response.data.theses);
+        })
     }
 
     return (
-        <div className={classes.searchForm}>
-            <input className={classes.searchBox} placeholder="Search for..." value={props.query} onChange={handleUserInput} />
-            <IconButton onClick={props.onClickMethod}>
-                <SearchIcon />
-            </IconButton>
-        </div>
+        <React.Fragment>
+            <div className={classes.searchForm}>
+                <input className={classes.searchBox} placeholder="Wpisz tytuł pracy..." value={query} onChange={handleUserInput} />
+                <IconButton onClick={handlebuttonSearchClick}>
+                    <SearchIcon />
+                </IconButton>
+            </div>
+            { 
+                dataRows != null ? <DisplayTable rows={dataRows} /> : null
+            }
+        </React.Fragment>
+
     )
 }
 

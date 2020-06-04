@@ -13,29 +13,11 @@ import PropsGenerator from '../components/Catalog/PropsGenerator'
 
 const CatalogPage = () => {
 
-    const [filteredData, setFilteredData] = useState([]);
-    const [query, setQuery] = useState([]);
     const [tabNumber, setTabNumber] = useState(0);
 
     const handleChange = (event, newValue) => {
         setTabNumber(newValue);
     };
-
-    const getData = () => {
-        WS.getThesisBySearch().then(response => {
-            console.log(response);
-            setFilteredData(response.data.theses);
-        })
-    }
-
-    const handleInputChange = event => {
-        const query = event.target.value;
-        console.log(query)
-        setQuery(query);
-        if(query.length > 2){
-            getData();
-        }
-      };
 
     const classes = useStyles();
     return (
@@ -52,14 +34,10 @@ const CatalogPage = () => {
             </Tabs>
         </AppBar>
         <TabPanel value={tabNumber} index={0}>
-            <BasicSearch query={query} 
-                         onChangeMethod={handleInputChange} 
-                         onClickMethod={getData}/>
+            <BasicSearch />
         </TabPanel>
         <TabPanel value={tabNumber} index={1}>
-            <AdvancedSearch query={query} 
-                         onChangeMethod={handleInputChange} 
-                         onClickMethod={getData}/>
+            <AdvancedSearch />
         </TabPanel>
         </Grid>
     )

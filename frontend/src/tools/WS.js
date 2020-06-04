@@ -91,6 +91,10 @@ class WS {
         return axios.get(`${BASE_URL}/searchTheses`);
     }
 
+    getThesisByAdvancedSearch(thesisType) {
+        return axios.get(`${BASE_URL}/searchTheses/${thesisType}`);
+    }
+
     getPerson(personId) {
         return axios.get(`${BASE_URL}/person/${personId}`)
     }

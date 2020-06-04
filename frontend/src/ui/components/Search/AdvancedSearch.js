@@ -73,15 +73,32 @@ const AdvancedSearch = (props) => {
         setKeyWord(e.target.value)
     }
 
+    // const handlebuttonSearchClick = () => {
+    //     WS.getThesisBySearch().then(response => {
+    //         setDataRows(response.data.theses);
+    //     })
+    // }
+
     const handlebuttonSearchClick = () => {
-        WS.getThesisBySearch().then(response => {
+        let thesisType;
+        if(engineeringThesis && masterThesis && doctoralThesis){
+            thesisType = 'all'
+        } else if(engineeringThesis && !masterThesis && !doctoralThesis) {
+            thesisType = 'engineering'
+        } else if(!engineeringThesis && !masterThesis && doctoralThesis) {
+            thesisType = 'doctoral'
+        } else if(!engineeringThesis && masterThesis && !doctoralThesis) {
+            thesisType = 'master'
+        }
+
+        WS.getThesisByAdvancedSearch(thesisType).then(response => {
             setDataRows(response.data.theses);
         })
     }
-
+    
     return (
         <div className={classes.root}>
-            <Grid container spacing={2}>
+            <Grid container spacing={4}>
                 <Grid item xs={6} className={classes.width6}>
                     <div className={classes.searchForm}>    
                         <FormControl className={classes.formControl}>
@@ -261,28 +278,26 @@ const useStyles = createUseStyles({
         flexGrow: 1,
     },
     searchForm: {
-        marginTop: 5,
+        marginTop: '20px',
         marginBottom: 5,
         padding: '6px',
-        border: '1px solid #0c0a8c'
+        border: '1px solid #0c0a8c',
+        marginRight: '30px !important'
     },
     formControl: {
         display: 'block !important',
-        marginBottom: '10px !important' ,
+        marginBottom: '20px !important' ,
         marginLeft: '15px !important',
-        padding: '2px !important',
+        padding: '5px !important',
         border: '1px solid #0c0a8c !important'
     },
     buttonSearch: {
-        marginLeft: '15px !important'
+        marginLeft: '15px !important',
+        marginTop: '15px !important'
     },
     sectionTitle: {
         color: '#000000 !important',
         fontSize: '22px !important'
-    },
-    searchButton: {
-        "background": "#7f5c8c",
-        "border-radius": "5px"
     },
     searchBox: {
         border: "1px solid #7f5c8c",
