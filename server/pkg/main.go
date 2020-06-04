@@ -1,6 +1,7 @@
 package main
 
 import (
+	"database/sql"
 	"log"
 	"net/http"
 	"server/pkg/db"
@@ -17,6 +18,10 @@ import (
 	"server/pkg/userdata"
 	"server/pkg/users"
 )
+
+type dbConn struct {
+	dbService *sql.DB
+}
 
 func main() {
 	viper.SetConfigFile("config.yaml")
@@ -58,4 +63,7 @@ func main() {
 		log.Fatal(err)
 	}
 
+	//func getDbService() {
+	//	return dbService
+	//}
 }

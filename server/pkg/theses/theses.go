@@ -2,43 +2,62 @@ package theses
 
 import (
 	"encoding/json"
+	"fmt"
+	"log"
 	"net/http"
+	"server/pkg/db"
 )
 
 type Theses struct {
-	ThesisID string `json:"id"`
-	Name     string `json:"name"`
-	Type     string `json:"type"`
-	Role     string `json:"role"`
+	ThesisID       int    `json:"id"`
+	Name           string `json:"name"`
+	Type           string `json:"type"`
+	Role           string `json:"role"`
+	AdditionalText string `json:"additionalText,omitempty"`
 }
 
+func QueryDB(query string) (int, string, string) {
+	dbConnection := db.GetDB()
+	rows, err := dbConnection.Query(query)
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer rows.Close()
+	var title string
+	var id int
+	var kind string
+	for rows.Next() {
+		err := rows.Scan(&id, &title, &kind)
+		if err != nil {
+			log.Fatal(err)
+		}
+	}
+	err = rows.Err()
+	if err != nil {
+		log.Fatal(err)
+	}
+	//log.Println(rows)
+	fmt.Println(id, title, kind)
+	return id, title, kind
+}
 func GetTheses(w http.ResponseWriter, r *http.Request) {
 	token := r.Header.Get("Authorization")
-
+	w.Header().Set("Content-Type", "application/json")
+	id, title, kind := QueryDB("select thesis.thesis_id, thesis.title, thesis_type.name from thesis, thesis_type where thesis.thesis_type_id = thesis_type.thesis_type_id")
 	if token == "1" {
-		w.Header().Set("Content-Type", "application/json")
-		//Mock data - @todo - implement connection with DB
-		thesesData := []Theses{{ThesisID: "1", Name: "Wpływ zaćmienia księżyca na dorożkarstwo w Kenii", Type: "Praca inżynierska", Role: "STUDENT"}}
+		thesesData := []Theses{{ThesisID: id, Name: title, Type: kind, Role: "STUDENT"}, {ThesisID: 1}}
 		json.NewEncoder(w).Encode(thesesData)
 	} else if token == "2" {
-		w.Header().Set("Content-Type", "application/json")
-		//Mock data - @todo - implement connection with DB
-		thesesData := []Theses{{ThesisID: "2", Name: "Wpływ zaćmienia księżyca na dorożkarstwo w Kenii", Type: "Praca inżynierska", Role: "STUDENT"}}
+		thesesData := []Theses{{ThesisID: id, Name: title, Type: kind, Role: "MEMBER"}}
 		json.NewEncoder(w).Encode(thesesData)
 	} else if token == "3" {
-		w.Header().Set("Content-Type", "application/json")
-		//Mock data - @todo - implement connection with DB
-		thesesData := []Theses{{ThesisID: "3", Name: "Wpływ zaćmienia księżyca na dorożkarstwo w Kenii", Type: "Praca inżynierska", Role: "STUDENT"}}
+		thesesData := []Theses{{ThesisID: id, Name: title, Type: kind, Role: "CHAIRMAN"}}
 		json.NewEncoder(w).Encode(thesesData)
 	} else if token == "4" {
-		w.Header().Set("Content-Type", "application/json")
-		//Mock data - @todo - implement connection with DB
-		thesesData := []Theses{{ThesisID: "4", Name: "Wpływ zaćmienia księżyca na dorożkarstwo w Kenii", Type: "Praca inżynierska", Role: "STUDENT"}}
+		thesesData := []Theses{{ThesisID: id, Name: title, Type: kind, Role: "MEMBER"}}
 		json.NewEncoder(w).Encode(thesesData)
 	} else if token == "5" {
-		w.Header().Set("Content-Type", "application/json")
-		//Mock data - @todo - implement connection with DB
-		thesesData := []Theses{{ThesisID: "5", Name: "Wpływ zaćmienia księżyca na dorożkarstwo w Kenii", Type: "Praca inżynierska", Role: "STUDENT"}}
+		thesesData := []Theses{{ThesisID: id, Name: title, Type: kind, Role: "ADMIN"}}
 		json.NewEncoder(w).Encode(thesesData)
 	} else {
 		w.WriteHeader(http.StatusBadRequest)
