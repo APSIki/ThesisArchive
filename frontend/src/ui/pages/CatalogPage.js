@@ -22,23 +22,22 @@ const CatalogPage = () => {
     const classes = useStyles();
     return (
         <Grid container spacing={1} >
-
-        <AppBar position="static" style={{ background: '0c0a8c', marginTop: '10px' }}>
-            <Tabs value={tabNumber} onChange={handleChange} className={classes.tabs} centered>
-                <Tab label="Podstawowe wyszukiwanie" 
-                    {...PropsGenerator(0)} 
-                    classes={{ root: classes.root }}/>
-                <Tab label="Zaawansowane Wyszukiwanie" 
-                    {...PropsGenerator(1)} 
-                    className={{ root: classes.root }}/>
-            </Tabs>
-        </AppBar>
-        <TabPanel value={tabNumber} index={0}>
-            <BasicSearch />
-        </TabPanel>
-        <TabPanel value={tabNumber} index={1}>
-            <AdvancedSearch />
-        </TabPanel>
+            <AppBar position="static" style={{ background: '0c0a8c', marginTop: '10px' }}>
+                <Tabs value={tabNumber} onChange={handleChange} className={classes.tabs} centered>
+                    <Tab label="Wyszukiwanie podstawowe" 
+                        {...PropsGenerator(0)} 
+                        classes={{ root: classes.root }}/>
+                    <Tab label="Wyszukiwanie zaawansowane" 
+                        {...PropsGenerator(1)} 
+                        className={{ root: classes.root }}/>
+                </Tabs>
+            </AppBar>
+            <TabPanel value={tabNumber} index={0} style={{ width: 'inherit'}}>
+                <BasicSearch />
+            </TabPanel>
+            <TabPanel value={tabNumber} index={1}  style={{ width: 'inherit'}}>
+                <AdvancedSearch />
+            </TabPanel>
         </Grid>
     )
 }
@@ -54,7 +53,8 @@ const useStyles = createUseStyles({
         marginLeft: 10
     },
     tabs: {
-        borderBottom: `1px solid #000`
+        borderBottom: `1px solid #000`,
+        width: 'inherit !important'
     },
 });
 

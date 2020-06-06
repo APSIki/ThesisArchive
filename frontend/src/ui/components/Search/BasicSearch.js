@@ -1,9 +1,11 @@
 import React, { useState } from 'react';
 import { IconButton } from '@material-ui/core';
+import Button from '@material-ui/core/Button';
 import SearchIcon from '@material-ui/icons/Search';
 import { createUseStyles } from 'react-jss';
 import WS from '../../../tools/WS'
 import DisplayTable from '../Catalog/DisplayTable'
+import ModalContainer from '../Modal/ModalContainer'
 
 const BasicSearch = (props) => {
 
@@ -29,10 +31,17 @@ const BasicSearch = (props) => {
     return (
         <React.Fragment>
             <div className={classes.searchForm}>
-                <input className={classes.searchBox} placeholder="Wpisz tytuł pracy..." value={query} onChange={handleUserInput} />
-                <IconButton onClick={handlebuttonSearchClick}>
-                    <SearchIcon />
-                </IconButton>
+                <input className={classes.searchBox} placeholder="tytuł, imiona i nazwiska autorów lub opiekunów" value={query} onChange={handleUserInput} />
+                <Button
+                    variant="contained"
+                    color="primary"
+                    className={classes.button}
+                    onClick={handlebuttonSearchClick}
+                    endIcon={<SearchIcon />}>
+                    Szukaj
+                </Button>
+                <p classes={classes.guideText}>Możesz wpisać fragment tytułu albo imiona i nazwiska autorów lub opiekunów pracy. <br/>
+                By uzyskać więcej opcji skorzystaj z wyszukiwania zaawansowanego.</p>
             </div>
             { 
                 dataRows != null ? <DisplayTable rows={dataRows} /> : null
@@ -44,20 +53,33 @@ const BasicSearch = (props) => {
 
 const useStyles = createUseStyles({
     searchForm: {
-        marginTop: 10,
-        marginBottom: 20
+        marginTop: 5,
+        paddingTop: 5,
+        marginBottom: 20,
+        background: '#8b96d2',
+        'text-align': 'center',
+        border: '2px solid #3f51b5'
     },
     searchButton: {
-        "background": "#7f5c8c",
         "border-radius": "5px"
     },
     searchBox: {
         border: "1px solid #7f5c8c",
-        width: "500px",
+        width: "700px",
         "border-radius": "5px",
         "&:focus": {
             "outline-color": "#7f5c8c"
         }
+    },
+    button: {
+        height: '28px !important',
+        border: 'none !important',
+        '&:focus': {
+           
+        }
+    },
+    guideText: {
+        color: 'grey'
     }
 });
 

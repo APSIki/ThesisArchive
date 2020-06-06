@@ -1,6 +1,6 @@
 import { connect } from 'react-redux';
 import SelectUserModalForm from './SelectUserModalForm'
-import { setAuthorization } from '../../../store/actions/config'
+import { setAuthorization } from '../../../../store/actions/config'
 
 const mapStateToProps = state => {
   return {

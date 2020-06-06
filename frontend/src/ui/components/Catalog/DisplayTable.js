@@ -7,10 +7,11 @@ import TableContainer from '@material-ui/core/TableContainer';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import Paper from '@material-ui/core/Paper';
+import ModalContainer from '../Modal/ModalContainer'
 
 const StyledTableCell = withStyles((theme) => ({
   head: {
-    backgroundColor: '#3f51b5',
+    backgroundColor: '#8b96d2',
     color: theme.palette.common.white,
   },
   body: {
@@ -46,6 +47,7 @@ function DisplayTable(rows) {
             <StyledTableCell align="right">Typ pracy</StyledTableCell>
             <StyledTableCell align="right">Autor</StyledTableCell>
             <StyledTableCell align="right">Opiekun</StyledTableCell>
+            <StyledTableCell align="right">Szczegóły</StyledTableCell>
           </TableRow>
         </TableHead>
         <TableBody>
@@ -59,6 +61,7 @@ function DisplayTable(rows) {
               <StyledTableCell align="right">{row.thesisType}</StyledTableCell>
               <StyledTableCell align="right">{row.thesisAuthor}</StyledTableCell>
               <StyledTableCell align="right">{row.thesisGuardian}</StyledTableCell>
+              <StyledTableCell align="right"><ModalContainer triggerText="Szczegóły" modalAction="thesisDetails" ButtonAsTrigger /></StyledTableCell>
             </StyledTableRow>
           ))}
         </TableBody>

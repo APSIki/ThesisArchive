@@ -8,13 +8,13 @@ const AddThesisComponent = ({ triggerText, buttonRef, showModal }) => {
 
     return (
         <Grid item xs={12} xl={12}>
-        <Paper className={classes.paper}>
-            <IconButton onClick={showModal} ref={buttonRef}>
-                <AddIcon />
-                <p>{triggerText}</p>
-            </IconButton>
-        </Paper>
-    </Grid>
+            <Paper className={classes.paper}>
+                <IconButton onClick={showModal} ref={buttonRef}>
+                    <AddIcon />
+                    <p>{triggerText}</p>
+                </IconButton>
+            </Paper>
+        </Grid>
     );
 }
 
