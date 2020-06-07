@@ -129,6 +129,14 @@ class WS {
     getThesisDetailsById(thesisId) {
         return axios.get(`${BASE_URL}/searchTheses/thesisDetails/${thesisId}`);
     }
+
+    postNewThesis(thesisData) {
+        return axios.post(`${BASE_URL}/thesis`, thesisData, {
+            headers: {
+                'Authorization': store.getState().config.authorization
+            }
+        });
+    }
 }
 
 export default new WS();

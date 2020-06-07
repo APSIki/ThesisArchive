@@ -1,0 +1,6 @@
+{
+    "type": "1",
+    "title": "Horyzontalne plastry sieciowe"
+}
+
+Ten POST tworzy nową pracę przypisaną do danego usera (w headerze Authorization jest jego ID)

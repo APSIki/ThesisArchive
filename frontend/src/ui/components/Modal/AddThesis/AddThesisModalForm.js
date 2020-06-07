@@ -1,18 +1,20 @@
 import React, { useState } from 'react';
+import WS from '../../../../tools/WS'
 
 const AddThesisModalForm = (props) => {
 
   const [thesisTitle, setThesisTitle] = useState("");
-  const [thesisType, setThesisType] = useState("");
+  const [thesisType, setThesisType] = useState(1);
 
   const addThesis = () => {
-    props.addThesis(
-      {
-        "id": 1000,
-        "type": thesisType,
-        "description": thesisTitle
-    });
     props.closeModal();
+
+    WS.postNewThesis({
+      type: thesisType,
+      title: thesisTitle
+    }).then(response => {
+      window.location.reload()
+    })
   }
 
   const handleTypeChange = (event) => {
@@ -29,7 +31,11 @@ const AddThesisModalForm = (props) => {
       <React.Fragment>
         <div className="form-group">
           <label htmlFor="thesisType">Typ Pracy dyplomowej</label>
-          <input className="form-control" id="thesisType" onChange={handleTypeChange} />
+          <select className="form-control" id="thesisType" onChange={handleTypeChange} >
+            <option value={1}>Praca inżynierska</option>
+            <option value={2}>Praca magisterska</option>
+            <option value={3}>Praca doktorska</option>
+          </select>
         </div>
         <div className="form-group">
           <label htmlFor="email">Temat pracy dyplomowej</label>
