@@ -4,7 +4,6 @@ import { createUseStyles } from 'react-jss';
 import AppBar from '@material-ui/core/AppBar';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
-import WS from '../../tools/WS';
 import TabPanel from '../components/Catalog/TabPanel'
 import BasicSearch from '../components/Search/BasicSearch'
 import AdvancedSearch from '../components/Search/AdvancedSearch'

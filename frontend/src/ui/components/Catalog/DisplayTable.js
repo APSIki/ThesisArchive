@@ -36,32 +36,28 @@ const useStyles = makeStyles({
 
 function DisplayTable(rows) {
   const classes = useStyles();
-
   return (
     <TableContainer component={Paper} style={{marginTop:'20px'}}>
       <Table className={classes.table} aria-label="customized table">
         <TableHead>
           <TableRow>
-            <StyledTableCell>Id</StyledTableCell>
-            <StyledTableCell align="right">Temat pracy</StyledTableCell>
-            <StyledTableCell align="right">Typ pracy</StyledTableCell>
-            <StyledTableCell align="right">Autor</StyledTableCell>
-            <StyledTableCell align="right">Opiekun</StyledTableCell>
-            <StyledTableCell align="right">Szczegóły</StyledTableCell>
+            <StyledTableCell>#</StyledTableCell>
+            <StyledTableCell >Temat pracy</StyledTableCell>
+            <StyledTableCell >Typ pracy</StyledTableCell>
+            <StyledTableCell >Autor</StyledTableCell>
+            <StyledTableCell >Opiekun</StyledTableCell>
+            <StyledTableCell >Szczegóły</StyledTableCell>
           </TableRow>
         </TableHead>
         <TableBody>
-          {console.log(rows)}
-          {rows.rows.map((row) => (
+          {rows.rows.map((row, index) => (
             <StyledTableRow key={row.name}>
-              <StyledTableCell component="th" scope="row">
-                {row.id}
-              </StyledTableCell>
-              <StyledTableCell align="right">{row.thesisSubject}</StyledTableCell>
-              <StyledTableCell align="right">{row.thesisType}</StyledTableCell>
-              <StyledTableCell align="right">{row.thesisAuthor}</StyledTableCell>
-              <StyledTableCell align="right">{row.thesisGuardian}</StyledTableCell>
-              <StyledTableCell align="right"><ModalContainer triggerText="Szczegóły" modalAction="thesisDetails" ButtonAsTrigger /></StyledTableCell>
+              <StyledTableCell component="th" scope="row">{index}</StyledTableCell>
+              <StyledTableCell>{row.thesisSubject}</StyledTableCell>
+              <StyledTableCell>{row.thesisType}</StyledTableCell>
+              <StyledTableCell>{row.thesisAuthor}</StyledTableCell>
+              <StyledTableCell>{row.thesisGuardian}</StyledTableCell>
+              <StyledTableCell><ModalContainer triggerText="Szczegóły" modalAction="thesisDetails" ButtonAsTrigger thesisId={row.id} table/></StyledTableCell>
             </StyledTableRow>
           ))}
         </TableBody>

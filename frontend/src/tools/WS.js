@@ -87,12 +87,25 @@ class WS {
         })
     }
 
-    getThesisBySearch(query, type) {
-        return axios.get(`${BASE_URL}/searchTheses`);
+    getThesisByBasicSearch(query) {
+        return axios.get(`${BASE_URL}/searchTheses/all`);
     }
 
-    getThesisByAdvancedSearch(thesisType) {
-        return axios.get(`${BASE_URL}/searchTheses/${thesisType}`);
+    getThesisByAdvancedSearch(thesisType, author, reviewer, memberOfTheCommission, keyword, defenseDateFrom, defenseDateTo,
+        publicationDateFrom, publicationDateTo) {
+        return axios.get(`${BASE_URL}/searchTheses`, {
+            params: {
+                type: thesisType,
+                author: author,
+                reviewer: reviewer,
+                memberOfTheCommission: memberOfTheCommission,
+                keyword: keyword,
+                defenseDateFrom: defenseDateFrom,
+                defenseDateTo: defenseDateTo,
+                publicationDateFrom: publicationDateFrom,
+                publicationDateTo: publicationDateTo
+            }
+        });
     }
 
     getPerson(personId) {
@@ -111,6 +124,10 @@ class WS {
         return axios.post(`${BASE_URL}/thesis/${thesis.id}/defense-date`, {
             "date": date
         })
+    }
+
+    getThesisDetailsById(thesisId) {
+        return axios.get(`${BASE_URL}/searchTheses/thesisDetails/${thesisId}`);
     }
 }
 

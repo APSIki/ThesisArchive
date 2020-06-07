@@ -73,25 +73,21 @@ const AdvancedSearch = (props) => {
         setKeyWord(e.target.value)
     }
 
-    // const handlebuttonSearchClick = () => {
-    //     WS.getThesisBySearch().then(response => {
-    //         setDataRows(response.data.theses);
-    //     })
-    // }
-
     const handlebuttonSearchClick = () => {
         let thesisType;
-        if(engineeringThesis && masterThesis && doctoralThesis){
-            thesisType = 'all'
-        } else if(engineeringThesis && !masterThesis && !doctoralThesis) {
+        if(engineeringThesis){
             thesisType = 'engineering'
-        } else if(!engineeringThesis && !masterThesis && doctoralThesis) {
-            thesisType = 'doctoral'
-        } else if(!engineeringThesis && masterThesis && !doctoralThesis) {
-            thesisType = 'master'
+        } 
+        if(masterThesis) {
+            thesisType = thesisType + ";master"
         }
+        if(doctoralThesis) {
+            thesisType = thesisType + ";doctoral"
+        } 
 
-        WS.getThesisByAdvancedSearch(thesisType).then(response => {
+        WS.getThesisByAdvancedSearch(thesisType, thesisAuthor, thesisReviewer, 
+            memberOfTheCommission, keyWord, defenseDateFrom, defenseDateTo,
+            publicationDateFrom, publicationDateTo).then(response => {
             setDataRows(response.data.theses);
         })
     }

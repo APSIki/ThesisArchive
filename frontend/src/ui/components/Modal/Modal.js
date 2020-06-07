@@ -13,7 +13,8 @@ const Modal = ({
   onKeyDown,
   modalRef,
   buttonRef,
-  closeModal
+  closeModal,
+  thesisId
 }) => {
 
   const modals = {
@@ -49,7 +50,7 @@ const Modal = ({
             </svg>
           </button>
           <div className={classes._modalBody}>
-            <SpecificModal closeModal={closeModal}/>
+            <SpecificModal closeModal={closeModal} thesisId={thesisId}/>
           </div>
         </div>
       </aside>

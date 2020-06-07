@@ -1,38 +1,45 @@
-import React from 'react';
-import { useHistory } from 'react-router-dom'
+import React, {  useState, useEffect } from 'react';
 import { createUseStyles } from 'react-jss';
-import { Button } from '@material-ui/core';
+import WS from '../../../../tools/WS'
 
 const ThesisDetailsModalForm = props => { 
   const classes = useStyles();
-  const history = useHistory();
+
+  const [abstract, setAbstract] = useState('')
+  const [keywords, setKeywords] = useState('')
+  const [organizationalUnit, setOrganizationalUnit] = useState(0)
+  const [reviewer, setReviewer] = useState('')
+  const [subjectMatter, setSubjectMatter] = useState(0)
+  const [thesisGuardian, setThesisGuardian] = useState('')
+  const [thesisSubject, setThesisSubject] = useState('')
+  const [thesisType, setThesisType] = useState('')
 
 
- 
+  useEffect(() => {
+     WS.getThesisDetailsById(props.thesisId).then(response => {
+      setAbstract(response.data.abstract)
+      setKeywords(response.data.keywords)
+      setOrganizationalUnit(response.data.organizationalUnit)
+      setReviewer(response.data.reviewer)
+      setSubjectMatter(response.data.subjectMatter)
+      setThesisGuardian(response.data.thesisGuardian)
+      setThesisSubject(response.data.thesisSubject)
+      setThesisType(response.data.thesisType)
+    })
+  }, []);
+
+
+
   return (
     <React.Fragment>
         <p className={classes.header}>Szczegóły pracy</p>
         <div className={classes.container}>
-          <p>EloooooooooooooooooooooooooooooooooooooooooooooElooooooooooooooooooooooooooooooooooooooooooooo</p>
-          <p>Elooooooooooooooooooooooooooooooooooooooooooooo</p>
-          <p>Elooooooooooooooooooooooooooooooooooooooooooooo</p>
-          <p>Elooooooooooooooooooooooooooooooooooooooooooooo</p>
-          <p>Elooooooooooooooooooooooooooooooooooooooooooooo</p>
-          <p>Elooooooooooooooooooooooooooooooooooooooooooooo</p>
-          <p>Elooooooooooooooooooooooooooooooooooooooooooooo</p>
-          <p>Elooooooooooooooooooooooooooooooooooooooooooooo</p>
-          <p>Elooooooooooooooooooooooooooooooooooooooooooooo</p>
-          <p>Elooooooooooooooooooooooooooooooooooooooooooooo</p>
-          <p>Elooooooooooooooooooooooooooooooooooooooooooooo</p>
-          <p>Elooooooooooooooooooooooooooooooooooooooooooooo</p>
-          <p>Elooooooooooooooooooooooooooooooooooooooooooooo</p>
-          <p>Elooooooooooooooooooooooooooooooooooooooooooooo</p>
-          <p>Elooooooooooooooooooooooooooooooooooooooooooooo</p>
-          <p>Elooooooooooooooooooooooooooooooooooooooooooooo</p>
-          <p>Elooooooooooooooooooooooooooooooooooooooooooooo</p>
-          <p>Elooooooooooooooooooooooooooooooooooooooooooooo</p>
-          <p>Elooooooooooooooooooooooooooooooooooooooooooooo</p>
-
+          <p><b>Tytuł:</b> {thesisSubject}</p>
+          <p><b>Typ:</b> {thesisType}</p>
+          <p><b>Streszczenie:</b> {abstract}</p>
+          <p><b>Słowa kluczowe:</b> {keywords}</p>
+          <p><b>Recenzent:</b>  {reviewer}</p>
+          <p><b>Promotor:</b> {thesisGuardian}</p>
         </div>
     </React.Fragment>
   );

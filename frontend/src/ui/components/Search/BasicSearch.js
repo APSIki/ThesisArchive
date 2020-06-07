@@ -1,11 +1,9 @@
 import React, { useState } from 'react';
-import { IconButton } from '@material-ui/core';
 import Button from '@material-ui/core/Button';
 import SearchIcon from '@material-ui/icons/Search';
 import { createUseStyles } from 'react-jss';
 import WS from '../../../tools/WS'
 import DisplayTable from '../Catalog/DisplayTable'
-import ModalContainer from '../Modal/ModalContainer'
 
 const BasicSearch = (props) => {
 
@@ -16,9 +14,6 @@ const BasicSearch = (props) => {
     const handleUserInput = event => {
         const query = event.target.value;
         setQuery(query);
-        // if(query.length > 2){
-        //     getData();
-        // }
       };
 
 
