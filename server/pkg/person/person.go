@@ -19,26 +19,17 @@ func GetPerson(w http.ResponseWriter, r *http.Request) {
 	dbConnection := db.GetDB()
 	var query string
 	id := params["id"]
+	// TODO change session_token in DB
 	if id == "1" {
-		query = "select first_name, surname from students where session_token = id"
+		query = `select first_name, surname from students where session_token = $1`
 	} else {
-		query = "select first_name, surname from staff_person where session_token = id"
+		query = `select first_name, surname from staff_person where session_token = $1`
 	}
-	rows, err := dbConnection.Query(query)
-	if err != nil {
-		log.Fatal(err)
-	}
-	defer rows.Close()
+	row := dbConnection.QueryRow(query, id)
 	var firstName string
 	var surname string
-	for rows.Next() {
-		err := rows.Scan(&firstName, &surname)
-		if err != nil {
+	if err := row.Scan(&firstName, &surname); err != nil {
 			log.Fatal(err)
-		}
-	}
-	if rows.Err() != nil {
-		log.Fatal(err)
 	}
 	name := firstName + " " + surname
 	person = Person{Name: name}
