@@ -317,4 +317,12 @@ INSERT INTO public.thesis(
 
 ('2020-05-23', 2, 2, 'Wpływ zaćmień księżyca na jakość dorożkarstwa w Kenii', 'dorożkarstwo, Kenia, zaćmienie księżyca', 3, 2, 2, null, 5.0, 5.0, null, 1, 'Praca opisuje wpływ zaćmień księżyca na jakość dorożkarstwa w Kenii.', 'Bardzo dobrze, super recenzja, 10/10', 'Bardzo dobrze, super recenzja, 10/10'),
 
-('2020-05-21', 1, 1, 'Wwpływ studiowania na Wydziale Elektroniki i Technik Informacyjnych na zdrowie psychiczne.', 'zdrowie psychiczne, studia, WEiTI', 1, 1, 3, null, 5.0, 5.0, null, 1, 'Praca opisuje wpływ studiowania na Wydziale Elektroniki i Technik Informacyjnych na zdrowie psychiczne.', 'Bardzo dobrze, super recenzja, 10/10', 'Bardzo dobrze, super recenzja, 10/10');
+('2020-05-21', 1, 1, 'Wwpływ studiowania na Wydziale Elektroniki i Technik Informacyjnych na zdrowie psychiczne.', 'zdrowie psychiczne, studia, WEiTI', 1, 1, 3, null, 5.0, 5.0, null, 1, 'Praca opisuje wpływ studiowania na Wydziale Elektroniki i Technik Informacyjnych na zdrowie psychiczne.', 'Bardzo dobrze, super recenzja, 10/10', 'Bardzo dobrze, super recenzja, 10/10'),
+
+('2020-06-12', 3, 3, 'Sieci SDN', 'SDN, kontroler, sieci', 1, 1, 3, null, 5.0, 5.0, null, 1, 'Praca opisuje sieci SDN', 'Bardzo dobrze, super recenzja, 10/10', 'Bardzo dobrze, super recenzja, 10/10'),
+
+('2020-06-05', 3, 3, 'Systemy operacyjne', 'Linux, Windows', 2, 2, 3, null, 5.0, 5.0, null, 1, 'Praca opisuje systemy operacyjne', 'Bardzo dobrze, super recenzja, 10/10', 'Bardzo dobrze, super recenzja, 10/10'),
+
+('2020-06-03', 1, 3, 'Swiatlowody', 'swiatlowod, kwarc', 2, 1, 3, null, 3.0, 3.0, null, 1, 'Praca opisuje swiatlowody', 'Marnie, 0/10', 'Bardzo dobrze, super recenzja, 10/10');
+
+
