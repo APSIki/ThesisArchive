@@ -14,25 +14,15 @@ type Person struct {
 
 func GetPerson(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
-	params := mux.Vars(r) //get parameters
+	params := mux.Vars(r)
 	var person Person
 	dbConnection := db.GetDB()
 	var query string
-	switch params["id"] {
-	case "1":
-		query = "select first_name, surname from students"
-	case "2":
-		query = "select first_name, surname from staff_person where surname = 'Promotorska'"
-	case "3":
-		query = "select first_name, surname from staff_person where surname = 'Przewodniczącki'"
-	case "4":
-		query = "select first_name, surname from staff_person where surname = 'Członkowska'"
-	case "5":
-		query = "select first_name, surname from staff_person where surname = 'Admiński'"
-	case "6":
-		query = "select first_name, surname from staff_person where surname = 'Przykładowa'"
-	case "7":
-		query = "select first_name, surname from staff_person where surname = 'Elektroniczny'"
+	id := params["id"]
+	if id == "1" {
+		query = "select first_name, surname from students where session_token = id"
+	} else {
+		query = "select first_name, surname from staff_person where session_token = id"
 	}
 	rows, err := dbConnection.Query(query)
 	if err != nil {
