@@ -2,6 +2,7 @@ package searchTheses
 
 import (
 	"encoding/json"
+	"github.com/gorilla/mux"
 	"log"
 	"net/http"
 	"server/pkg/db"
@@ -16,7 +17,19 @@ type ThesesData struct {
 
 func Search(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
-	query := "select thesis.thesis_id, thesis.title, students.first_name, students.surname, thesis_type.name from thesis, thesis_type, students where thesis.thesis_type_id = thesis_type.thesis_type_id and thesis.title is not null and students.session_token = thesis.author_id"
+	params := mux.Vars(r)
+	kind := params["type"]
+	var query string
+	switch kind {
+	case "all":
+		query = "select thesis.thesis_id, thesis.title, students.first_name, students.surname, thesis_type.name from thesis, thesis_type, students where thesis.thesis_type_id = thesis_type.thesis_type_id and thesis.title is not null and students.session_token = thesis.author_id"
+	case "doctoral":
+		query = "select thesis.thesis_id, thesis.title, students.first_name, students.surname, thesis_type.name from thesis, thesis_type, students where thesis.thesis_type_id = thesis_type.thesis_type_id and thesis.title is not null and students.session_token = thesis.author_id and thesis_type.name = 'Doktorska'"
+	case "master":
+		query = "select thesis.thesis_id, thesis.title, students.first_name, students.surname, thesis_type.name from thesis, thesis_type, students where thesis.thesis_type_id = thesis_type.thesis_type_id and thesis.title is not null and students.session_token = thesis.author_id and thesis_type.name = 'Magisterska'"
+	case "engineering":
+		query = "select thesis.thesis_id, thesis.title, students.first_name, students.surname, thesis_type.name from thesis, thesis_type, students where thesis.thesis_type_id = thesis_type.thesis_type_id and thesis.title is not null and students.session_token = thesis.author_id and thesis_type.name = 'Inżynierska'"
+	}
 	thesesData := make([]ThesesData, 0)
 	dbConnection := db.GetDB()
 	rows, err := dbConnection.Query(query)
