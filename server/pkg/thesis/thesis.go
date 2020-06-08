@@ -4,6 +4,7 @@ import (
 	"database/sql"
 	"encoding/json"
 	"fmt"
+	"log"
 	"net/http"
 
 	"server/pkg/db"
@@ -15,7 +16,6 @@ import (
 	"gopkg.in/matryer/respond.v1"
 )
 
-//TODO add handler for required and optional fields
 type Thesis struct {
 	ThesisID           int     `json:"thesisid"`
 	Name               string  `json:"name"`
@@ -77,13 +77,19 @@ type Review struct {
 	Grade      []uint8 `json:"grade,omitempty"`
 }
 
+
 func PostThesis(w http.ResponseWriter, req *http.Request) {
-	t := New()
-	if err := t.decodeJSON(w, req); err != nil {
+	thesis := New()
+	if err := thesis.decodeJSON(w, req); err != nil {
 		respond.With(w, req, http.StatusBadRequest, err)
 		return
 	}
-	//TODO create a service for DB communication and add thesis
+	auth := req.Header.Get("Authorization")
+	insertStmt := `insert into thesis(thesis_type_id, title, author_id) values ($1 $2 $3)`
+	dbConnection := db.GetDB()
+	if _, err := dbConnection.Exec(insertStmt, thesis.Type, thesis.Name, auth); err != nil {
+		log.Fatal(err)
+	}
 	respond.WithStatus(w, req, http.StatusCreated)
 }
 
@@ -244,33 +250,28 @@ func PostCommittee(w http.ResponseWriter, req *http.Request) {
 	var committeeID int
 
 	row := dbConnection.QueryRow(sqlStatement1, params["id"])
-	switch err := row.Scan(&committeeID); err {
-	case sql.ErrNoRows:
-		fmt.Println("No rows were returned!")
-	case nil:
-		fmt.Println(committeeID)
-	default:
-		panic(err)
+	err := row.Scan(&committeeID)
+	if err == sql.ErrNoRows {
+		log.Fatal("No rows were returned!")
+	} else if err != nil {
+		log.Fatal(err)
 	}
+
 	sqlStatementChairman := "update commitee_person set person_id = $1 where committee_id = $2 and committee_role = 1"
 	sqlStatementMember := "update commitee_person set person_id = $1 where committee_id = $2 and committee_role = 2"
 	sqlStatementReviewer := "update commitee_person set person_id = $1 where committee_id = $2 and committee_role = 3"
 	sqlStatementSupervisor := "update commitee_person set person_id = $1 where committee_id = $2 and committee_role = 4"
-	_, err1 := dbConnection.Exec(sqlStatementChairman, committee.Chairman, committeeID)
-	if err1 != nil {
-		panic(err1)
+	if _, err := dbConnection.Exec(sqlStatementChairman, committee.Chairman, committeeID); err != nil {
+		panic(err)
 	}
-	_, err2 := dbConnection.Exec(sqlStatementMember, committee.Member, committeeID)
-	if err2 != nil {
-		panic(err2)
+	if _, err := dbConnection.Exec(sqlStatementMember, committee.Member, committeeID); err != nil {
+		panic(err)
 	}
-	_, err3 := dbConnection.Exec(sqlStatementReviewer, committee.Reviewer, committeeID)
-	if err3 != nil {
-		panic(err3)
+	if _, err := dbConnection.Exec(sqlStatementReviewer, committee.Reviewer, committeeID); err != nil {
+		panic(err)
 	}
-	_, err4 := dbConnection.Exec(sqlStatementSupervisor, committee.Supervisor, committeeID)
-	if err4 != nil {
-		panic(err4)
+	if _, err := dbConnection.Exec(sqlStatementSupervisor, committee.Supervisor, committeeID); err != nil {
+		panic(err)
 	}
 	json.NewEncoder(w).Encode(committee)
 }
@@ -284,7 +285,7 @@ func PostDefense(w http.ResponseWriter, req *http.Request) {
 	sqlStatement := "update thesis set grade_defence = $1 where thesis_id = $2"
 	_, err := dbConnection.Exec(sqlStatement, defense.Grade, params["id"])
 	if err != nil {
-		panic(err)
+		log.Fatal(err)
 	}
 	json.NewEncoder(w).Encode(defense)
 }
@@ -300,7 +301,7 @@ func PostDefenseDate(w http.ResponseWriter, req *http.Request) {
 	sqlStatement := "update thesis set defence_date = $1 where thesis_id = $2"
 	_, err := dbConnection.Exec(sqlStatement, date_final, params["id"])
 	if err != nil {
-		panic(err)
+		log.Fatal(err)
 	}
 	json.NewEncoder(w).Encode(date_final)
 }
@@ -314,7 +315,7 @@ func PostFile(w http.ResponseWriter, req *http.Request) {
 	sqlStatement := "update thesis set file_path = $1 where thesis_id = $2"
 	_, err := dbConnection.Exec(sqlStatement, path.Path, params["id"])
 	if err != nil {
-		panic(err)
+		log.Fatal(err)
 	}
 	json.NewEncoder(w).Encode(path)
 }
@@ -328,7 +329,7 @@ func PostReview1(w http.ResponseWriter, req *http.Request) {
 	sqlStatement := "update thesis set supervisor_review = $1, grade_review_supervisor = $2 where thesis_id = $3"
 	_, err := dbConnection.Exec(sqlStatement, review.Text, review.Grade, params["id"])
 	if err != nil {
-		panic(err)
+		log.Fatal(err)
 	}
 	json.NewEncoder(w).Encode(review)
 }
@@ -342,7 +343,7 @@ func PostReview2(w http.ResponseWriter, req *http.Request) {
 	sqlStatement := "update thesis set reviewer_review = $1, grade_review_reviewer = $2 where thesis_id = $3"
 	_, err := dbConnection.Exec(sqlStatement, review.Text, review.Grade, params["id"])
 	if err != nil {
-		panic(err)
+		log.Fatal(err)
 	}
 	json.NewEncoder(w).Encode(review)
 }
@@ -356,7 +357,7 @@ func PostThesisDetails(w http.ResponseWriter, req *http.Request) {
 	sqlStatement := "update thesis set key_words = $1, abstract = $2 where thesis_id = $3"
 	_, err := dbConnection.Exec(sqlStatement, details.Keywords, details.Abstract, params["id"])
 	if err != nil {
-		panic(err)
+		log.Fatal(err)
 	}
 	json.NewEncoder(w).Encode(details)
 }
@@ -384,6 +385,5 @@ func PutThesis(w http.ResponseWriter, req *http.Request) {
 		respond.With(w, req, http.StatusBadRequest, err)
 		return
 	}
-	//TODO create a service for DB communication and add thesis
 	respond.WithStatus(w, req, http.StatusCreated)
 }

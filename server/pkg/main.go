@@ -15,7 +15,6 @@ import (
 	"server/pkg/searchTheses"
 	"server/pkg/subjectMatters"
 	"server/pkg/thesis"
-	"server/pkg/userdata"
 	"server/pkg/users"
 )
 
@@ -44,9 +43,8 @@ func main() {
 	r := mux.NewRouter()
 	r.HandleFunc("/thesis", thesis.PostThesis).Methods("POST")
 	r.HandleFunc("/thesis", thesis.PutThesis).Methods("PUT")
-	r.HandleFunc("/user-data", userdata.GetAllUserData).Methods("GET")
 	r.HandleFunc("/theses", theses.GetTheses).Methods("GET")
-	r.HandleFunc("/dashbord-info/", dashbordInfo.GetDashbord).Methods("GET")
+	r.HandleFunc("/dashboard-info", dashbordInfo.GetDashboard).Methods("GET")
 	r.HandleFunc("/person/{id}", person.GetPerson).Methods("GET")
 	r.HandleFunc("/searchTheses", searchTheses.Search).Methods("GET")
 	r.HandleFunc("/subject-matters", subjectMatters.GetSubjects).Methods("GET")
