@@ -13,14 +13,14 @@ CREATE TABLE "thesis"
 (
   "thesis_id" Integer NOT NULL GENERATED ALWAYS AS IDENTITY
     (INCREMENT BY 1 NO MINVALUE NO MAXVALUE START WITH 1 CACHE 1),
-  "defence_date" Date NOT NULL,
+  "defence_date" Date,
   "thesis_type_id" Integer NOT NULL,
-  "major_speciality_id" Integer NOT NULL,
+  "major_speciality_id" Integer,
   "title" Text NOT NULL,
-  "key_words" Text NOT NULL,
-  "organizational_unit_id" Integer NOT NULL,
-  "subject_matter_id" Integer NOT NULL,
-  "committee_id" Integer NOT NULL,
+  "key_words" Text,
+  "organizational_unit_id" Integer,
+  "subject_matter_id" Integer,
+  "committee_id" Integer,
   "grade_defence" Numeric(2,1),
   "grade_review_supervisor" Numeric(2,1),
   "grade_review_reviewer" Numeric(2,1),
@@ -52,7 +52,7 @@ CREATE TABLE "staff_person"
 (
   "staff_person_id" Integer NOT NULL GENERATED ALWAYS AS IDENTITY
     (INCREMENT BY 1 NO MINVALUE NO MAXVALUE START WITH 1 CACHE 1),
-  "session_token" Name NOT NULL,
+  "session_token" Integer NOT NULL
   "first_name" Text NOT NULL,
   "second_name" Text,
   "surname" Text NOT NULL,
@@ -191,7 +191,7 @@ CREATE TABLE "students"
 (
   "student_id" Integer NOT NULL GENERATED ALWAYS AS IDENTITY
     (INCREMENT BY 1 NO MINVALUE NO MAXVALUE START WITH 1 CACHE 1),
-  "session_token" Text NOT NULL,
+  "session_token" Integer NOT NULL,
   "first_name" Text NOT NULL,
   "second_name" Text,
   "surname" Text NOT NULL
@@ -246,16 +246,16 @@ INSERT INTO public.person_title(
 
 INSERT INTO public.staff_person(
 	session_token, first_name, second_name, surname, person_title_id, is_admin)
-	VALUES ('bb1d3f49cf83e4e648d85f1869531fc0', 'Wiesława', null, 'Promotorska', 1, FALSE),
-	('841a6fcd6d89c80b5c70bca17fae2e83', 'Krzysztof', null, 'Przewodniczącki', 1, FALSE),
-	('8d8f78efc6a303197cf2b8d1e922a79d', 'Krystyna', null, 'Członkowska', 3, FALSE),
-	('28d34059b453bedefcaadefda96e4633', 'Janusz', null, 'Admiński', 4, TRUE),
-	('5f4d25e1dafdbf1c61407f2b693229de', 'Monika', null, 'Przykładowa', 4, FALSE),
-	('abc6598533fe31cc6e87c0d71ac760a7', 'Wiesław', null, 'Elektroniczny', 5, FALSE);
+	VALUES (2, 'Wiesława', null, 'Promotorska', 1, FALSE),
+	(3, 'Krzysztof', null, 'Przewodniczącki', 1, FALSE),
+	(4, 'Krystyna', null, 'Członkowska', 3, FALSE),
+	(5, 'Janusz', null, 'Admiński', 4, TRUE),
+	(6, 'Monika', null, 'Przykładowa', 4, FALSE),
+	(7, 'Wiesław', null, 'Elektroniczny', 5, FALSE);
 
 INSERT INTO public.students(
 	session_token, first_name, second_name, surname)
-	VALUES ('c70bca17f841a6fcd6d89c80b5ae2e83', 'Jan', null, 'Studencki');
+	VALUES (1, 'Jan', null, 'Studencki');
 
 INSERT INTO public.organizational_unit(
 	name)
@@ -315,9 +315,7 @@ INSERT INTO public.thesis(
 	VALUES 	
 ('2020-05-23', 2, 2, 'Wpływ zaćmień księżyca na jakość dorożkarstwa w Kenii', 'dorożkarstwo, Kenia, zaćmienie księżyca', 3, 2, 1, null, 5.0, 5.0, null, 1, 'Praca opisuje wpływ zaćmień księżyca na jakość dorożkarstwa w Kenii.', 'Bardzo dobrze, super recenzja, 10/10', 'Bardzo dobrze, super recenzja, 10/10'),
 
-('2020-05-23', 2, 2, 'Wpływ zaćmień księżyca na jakość dorożkarstwa w Kenii', 'dorożkarstwo, Kenia, zaćmienie księżyca', 3, 2, 2, null, 5.0, 5.0, null, 1, 'Praca opisuje wpływ zaćmień księżyca na jakość dorożkarstwa w Kenii.', 'Bardzo dobrze, super recenzja, 10/10', 'Bardzo dobrze, super recenzja, 10/10'),
-
-('2020-05-21', 1, 1, 'Wwpływ studiowania na Wydziale Elektroniki i Technik Informacyjnych na zdrowie psychiczne.', 'zdrowie psychiczne, studia, WEiTI', 1, 1, 3, null, 5.0, 5.0, null, 1, 'Praca opisuje wpływ studiowania na Wydziale Elektroniki i Technik Informacyjnych na zdrowie psychiczne.', 'Bardzo dobrze, super recenzja, 10/10', 'Bardzo dobrze, super recenzja, 10/10'),
+('2020-05-21', 1, 1, 'Wwpływ studiowania na Wydziale Elektroniki i Technik Informacyjnych na zdrowie psychiczne.', 'zdrowie psychiczne, studia, WEiTI', 1, 1, 2, null, 5.0, 5.0, null, 1, 'Praca opisuje wpływ studiowania na Wydziale Elektroniki i Technik Informacyjnych na zdrowie psychiczne.', 'Bardzo dobrze, super recenzja, 10/10', 'Bardzo dobrze, super recenzja, 10/10'),
 
 ('2020-06-12', 3, 3, 'Sieci SDN', 'SDN, kontroler, sieci', 1, 1, 3, null, 5.0, 5.0, null, 1, 'Praca opisuje sieci SDN', 'Bardzo dobrze, super recenzja, 10/10', 'Bardzo dobrze, super recenzja, 10/10'),
 
