@@ -16,7 +16,6 @@ import (
 	"gopkg.in/matryer/respond.v1"
 )
 
-//TODO add handler for required and optional fields
 type Thesis struct {
 	ThesisID           int     `json:"thesisid"`
 	Name               string  `json:"name"`
@@ -78,31 +77,19 @@ type Review struct {
 	Grade      []uint8 `json:"grade,omitempty"`
 }
 
-//TODO remove after unifying mocks
-type postedThesis struct {
-	Title               string  `json:"title"`
-	Type               string  `json:"type"`
-}
 
 func PostThesis(w http.ResponseWriter, req *http.Request) {
-	//t := New()
-	//if err := t.decodeJSON(w, req); err != nil {
-	//	respond.With(w, req, http.StatusBadRequest, err)
-	//	return
-	//}
-	auth := req.Header.Get("Authorization")
-	var thesis postedThesis
-	err := json.NewDecoder(req.Body).Decode(&thesis)
-	if err != nil {
+	thesis := New()
+	if err := thesis.decodeJSON(w, req); err != nil {
 		respond.With(w, req, http.StatusBadRequest, err)
 		return
 	}
+	auth := req.Header.Get("Authorization")
 	insertStmt := `insert into thesis(thesis_type_id, title, author_id) values ($1 $2 $3)`
 	dbConnection := db.GetDB()
-	if _, err := dbConnection.Exec(insertStmt, thesis.Type, thesis.Title, auth); err != nil {
+	if _, err := dbConnection.Exec(insertStmt, thesis.Type, thesis.Name, auth); err != nil {
 		log.Fatal(err)
 	}
-	//TODO create a service for DB communication and add thesis
 	respond.WithStatus(w, req, http.StatusCreated)
 }
 
@@ -398,6 +385,5 @@ func PutThesis(w http.ResponseWriter, req *http.Request) {
 		respond.With(w, req, http.StatusBadRequest, err)
 		return
 	}
-	//TODO create a service for DB communication and add thesis
 	respond.WithStatus(w, req, http.StatusCreated)
 }

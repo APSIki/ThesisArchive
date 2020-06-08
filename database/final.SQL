@@ -51,8 +51,8 @@ ALTER TABLE "thesis" ADD CONSTRAINT "thesis_id" UNIQUE ("thesis_id")
 CREATE TABLE "staff_person"
 (
   "staff_person_id" Integer NOT NULL GENERATED ALWAYS AS IDENTITY
-    (INCREMENT BY 1 NO MINVALUE NO MAXVALUE START WITH 1 CACHE 1),
-  "session_token" Integer NOT NULL
+    (INCREMENT BY 1 NO MINVALUE NO MAXVALUE START WITH 2 CACHE 1),
+  "session_token" Integer NOT NULL,
   "first_name" Text NOT NULL,
   "second_name" Text,
   "surname" Text NOT NULL,
@@ -284,18 +284,18 @@ INSERT INTO public.committee DEFAULT VALUES;
 INSERT INTO public.commitee_person(
 	committee_id, committee_role, person_id)
 	VALUES 
-	(1, 1, 2),
-	(1, 2, 3),
-	(1, 4, 1),
-	(1, 3, 6),
-	(2, 1, 2),
-	(2, 2, 3),
-	(2, 4, 1),
-	(2, 3, 6),
-	(3, 1, 2),
-	(3, 2, 3),
-	(3, 4, 1),
-	(3, 3, 6);
+	(1, 1, 3),
+	(1, 2, 4),
+	(1, 4, 2),
+	(1, 3, 7),
+	(2, 1, 3),
+	(2, 2, 4),
+	(2, 4, 2),
+	(2, 3, 7),
+	(3, 1, 3),
+	(3, 2, 4),
+	(3, 4, 2),
+	(3, 3, 7);
 
 INSERT INTO public.thesis_type(
 	name)

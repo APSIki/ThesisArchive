@@ -17,7 +17,7 @@ type ThesesData struct {
 func Search(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 	query := "select thesis.thesis_id, thesis.title, students.first_name, students.surname, thesis_type.name from thesis, thesis_type, students where thesis.thesis_type_id = thesis_type.thesis_type_id and thesis.title is not null and students.session_token = thesis.author_id"
-	var thesesData []ThesesData
+	thesesData := make([]ThesesData, 0)
 	dbConnection := db.GetDB()
 	rows, err := dbConnection.Query(query)
 	if err != nil {

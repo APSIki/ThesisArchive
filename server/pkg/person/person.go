@@ -19,7 +19,6 @@ func GetPerson(w http.ResponseWriter, r *http.Request) {
 	dbConnection := db.GetDB()
 	var query string
 	id := params["id"]
-	// TODO change session_token in DB
 	if id == "1" {
 		query = `select first_name, surname from students where session_token = $1`
 	} else {
