@@ -17,7 +17,7 @@ import (
 )
 
 type Thesis struct {
-	ThesisID           int     `json:"thesisid"`
+	ThesisID           int     `json:"id"`
 	Name               string  `json:"name"`
 	Type               string  `json:"type"`
 	SubjectMatter      int     `json:"subjectMatter"`
@@ -40,9 +40,9 @@ type Defense struct {
 
 type CommitteeGet struct {
 	Chairman   Person `json:"chairman"`
-	Member     Person `json:"member"`
-	Reviewer   Person `json:"reviewer"`
-	Supervisor Person `json:"supervisor"`
+	Member     Person `json:"member2"`
+	Reviewer   Person `json:"member1"`
+	Supervisor Person `json:"advisor"`
 }
 
 type Person struct {
