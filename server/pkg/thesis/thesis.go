@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"strconv"
 
 	"server/pkg/db"
 
@@ -33,7 +34,7 @@ type Thesis struct {
 
 type Defense struct {
 	Defendedbool bool           `json:"defended,omitempty"`
-	Grade        float32 `json:"grade,omitempty"`
+	Grade        float64 `json:"grade,omitempty"`
 	DefenseDate  string         `json:"date,omitempty"`
 	Committee    CommitteeGet   `json:"commitee,omitempty"`
 }
@@ -74,7 +75,7 @@ type Review struct {
 	Name       string  `json:"reviewerName,omitempty"`
 	ReviewerID int     `json:"reviewerId",omitempty`
 	Text       string  `json:"text"`
-	Grade      float32 `json:"grade,omitempty"`
+	Grade      float64 `json:"grade,omitempty"`
 }
 
 func PostThesis(w http.ResponseWriter, req *http.Request) {
@@ -101,18 +102,27 @@ func GetThesis(w http.ResponseWriter, req *http.Request) {
 	var MajorSpecialityID int
 	var commiteeID int
 	var gradeAvg sql.NullString
+	var grade1 sql.NullString
+	var grade2 sql.NullString
 	var authorID int
 	var thesis Thesis
 
 	getAllThesisStmt := `SELECT * FROM thesis WHERE thesis_id=$1;`
 	row := dbConnection.QueryRow(getAllThesisStmt, params["id"])
-	err := row.Scan(&thesis.ThesisID, &thesis.Defense.DefenseDate, &thesisTypeID, &MajorSpecialityID, &thesis.Name, &thesis.Keywords, &thesis.OrganizationalUnit, &thesis.SubjectMatter, &commiteeID, &thesis.Defense.Grade, &thesis.Review2.Grade, &thesis.Review1.Grade, &gradeAvg, &authorID, &thesis.Abstract, &thesis.Review1.Text, &thesis.Review2.Text, &thesis.FilePath)
+	err := row.Scan(&thesis.ThesisID, &thesis.Defense.DefenseDate, &thesisTypeID, &MajorSpecialityID, &thesis.Name, &thesis.Keywords, &thesis.OrganizationalUnit, &thesis.SubjectMatter, &commiteeID, &thesis.Defense.Grade, &grade2, &grade1, &gradeAvg, &authorID, &thesis.Abstract, &thesis.Review1.Text, &thesis.Review2.Text, &thesis.FilePath)
 	if err == sql.ErrNoRows {
 		log.Fatal("No rows were returned!")
 	} else if err != nil {
 		log.Fatal(err)
 	}
-
+	thesis.Review1.Grade = 0
+	if grade1.Valid {
+		thesis.Review1.Grade, _ = strconv.ParseFloat(grade1.String, 64)
+	}
+	thesis.Review2.Grade = 0
+	if grade2.Valid {
+		thesis.Review2.Grade, _ = strconv.ParseFloat(grade2.String, 64)
+	}
 	thesis.Defense.Defendedbool = false
 	if thesis.Defense.Grade != 0 {
 		thesis.Defense.Defendedbool = true
