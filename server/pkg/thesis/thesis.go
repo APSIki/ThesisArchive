@@ -24,8 +24,8 @@ type Thesis struct {
 	OrganizationalUnit int     `json:"organizationalUnit"`
 	Abstract           string  `json:"abstract"`
 	Keywords           string  `json:"keywords"`
-	Review1            Review  `json:"review1"`
-	Review2            Review  `json:"review2"`
+	Review1            Review  `json:"reviewer1"`
+	Review2            Review  `json:"reviewer2"`
 	Defense            Defense `json:"defense"`
 	FilePath           string  `json:"filePath"`
 	Role               string  `json:"role"`
