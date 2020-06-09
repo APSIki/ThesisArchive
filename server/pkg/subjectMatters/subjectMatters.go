@@ -2,19 +2,44 @@ package subjectMatters
 
 import (
 	"encoding/json"
+	"log"
 	"net/http"
+	"server/pkg/db"
+	"strconv"
 )
 
-type ThesisData struct {
-	ThesisID string `json:"userid"`
-	Name     string `json:"name"`
-	Type     string `json:"type"`
-	Author   string `json:"author"`
+type Subject struct {
+	ID   string `json:"id"`
+	Name string `json:"name"`
 }
 
 func GetSubjects(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
-	//Mock data - @todo - implement connection with DB
-	subjectData := []ThesisData{{ThesisID: "1", Name: "teleinformatyka"}}
+	dbConnection := db.GetDB()
+	rows, err := dbConnection.Query("select subject_matter_id, name from subject_matter")
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer rows.Close()
+	idSlice := make([]int, 0)
+	nameSlice := make([]string, 0)
+	var id int
+	var name string
+	for rows.Next() {
+		err := rows.Scan(&id, &name)
+		if err != nil {
+			log.Fatal(err)
+		}
+		idSlice = append(idSlice, id)
+		nameSlice = append(nameSlice, name)
+	}
+	err = rows.Err()
+	if err != nil {
+		log.Fatal(err)
+	}
+	var subjectData []Subject
+	for i := 0; i < len(idSlice); i++ {
+		subjectData = append(subjectData, Subject{ID: strconv.Itoa(idSlice[i]), Name: nameSlice[i]})
+	}
 	json.NewEncoder(w).Encode(subjectData)
 }

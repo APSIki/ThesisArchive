@@ -1,15 +1,15 @@
 import React from 'react';
 import { createUseStyles } from 'react-jss';
 
-const ModalTrigger = ({ triggerText, buttonRef, showModal }) => {
+const ModalTrigger = ({ triggerText, buttonRef, showModal, insideTable }) => {
   const classes = useStyles();
   return (
-    <button
-        className={classes.buttonTrigger}
-        ref={buttonRef}
-        onClick={showModal}>
-        {triggerText}
-    </button>
+        <button
+            className={insideTable ? classes.buttonTriggerinTable : classes.buttonTrigger}
+            ref={buttonRef}
+            onClick={showModal}>
+            {triggerText}
+        </button>
   );
 };
 
@@ -32,6 +32,18 @@ const useStyles = createUseStyles({
         border: 'none',
         right: "0%",
         "border-left": "1px dotted #fff"
+    },
+    buttonTriggerinTable: {
+        'text-decoration': 'none',
+        color: '#000000',
+        display: 'block',
+        '&:hover': {
+            color: '#00000', 
+            cursor: 'pointer'
+        },
+        background: 'none !important',
+        border: 'none',
+        right: "0%"
     }
 });
 

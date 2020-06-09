@@ -43,6 +43,7 @@ const ThesisPage = props => {
   const [member2Name, setMember2Name] = useState("")
   const [subjectMatter, setSubjectMatter] = useState(null)
   const [organizationalUnit, setOrganizationalUnit] = useState(null)
+  const [filePath, setFilePath] = useState(null);
 
   const [defenseDate, setDefenseDate] = useState(null)
 
@@ -85,9 +86,16 @@ const ThesisPage = props => {
         setAdvisorName(response.data.defense.commitee.advisor.name)
         setMember1Name(response.data.defense.commitee.member1.name)
         setMember2Name(response.data.defense.commitee.member2.name)
-        setSubjectMatter(props.config.subjectMatters.filter(subjectMatter => subjectMatter.id == response.data.subjectMatter)[0]);
+        setSubjectMatter(props.config.subjectMatters.filter(subjectMatter => subjectMatter.id === response.data.subjectMatter)[0]);
         setOrganizationalUnit(props.config.organizationalUnits.filter(organizationalUnit => organizationalUnit.id == response.data.organizationalUnit)[0]);
         setDefenseDate(moment(response.data.defense.date))
+
+        if (response.data.role == "MEMBER") {
+          setActiveStep(2);
+        }
+        if (response.data.role == "CHAIRMAN") {
+          setActiveStep(3);
+        }
       })
   }, []);
 
@@ -138,6 +146,13 @@ const ThesisPage = props => {
 
   const handleUploadFileClick = () => {
     inputFile.current.click()
+  }
+
+  const handleFileSelected = () => {
+    setFilePath("/praca.html")
+  }
+
+  const handleFileConfirmedClick = () => {
     props.setFilePath("/praca.html")
     WS.postFilePath(props.currentThesis, "/praca.html")
       .then(response => {
@@ -213,7 +228,7 @@ const ThesisPage = props => {
           <ArrowBack />
         </IconButton>
         {activeStep === 0 && (
-          <div style={{display: 'flex'}}>
+          <div style={{ display: 'flex' }}>
             <div className={classes.halfPage}>
               <p className={classes.header}>{props.currentThesis.type}</p>
               <p className={classes.thesisName}>{props.currentThesis.name}</p>
@@ -266,20 +281,28 @@ const ThesisPage = props => {
             )}
             <div className={classes.button}>
               {!props.currentThesis.filePath && roles.canUploadFile(props.currentThesis.role) && (
-                <Button variant="contained" color="#CCC" disabled={props.currentThesis.defense.defended} onClick={handleUploadFileClick}>
-                  Dodaj plik z pracą
-                </Button>
+                <React.Fragment>
+                  <p className={classes.subHeader}>Aby umożliwić składanie recenzji, musisz dodać treść pracy.</p>
+                  <p className={classes.subHeader}>Wciśnij przycisk poniżej, aby dodać plik z pracą.</p>
+                  <Button variant="contained" color="#CCC" disabled={props.currentThesis.defense.defended} onClick={handleUploadFileClick}>
+                    Dodaj plik z pracą
+                  </Button>
+                </React.Fragment>
               )}
               {!props.currentThesis.filePath && !roles.canUploadFile(props.currentThesis.role) && (
                 <p className={classes.header}>Praca nie została jeszcze załadowana przez studenta.</p>
               )}
             </div>
-            <input type="file" id="file" ref={inputFile} style={{ display: "none" }} />
-            {props.currentThesis.filePath && (
+            <input type="file" id="file" ref={inputFile} style={{ display: "none" }} onChange={handleFileSelected} />
+            {filePath && (
               <React.Fragment>
-                <p className={classes.header}>Plik z pracą został już dodany.</p>
+                <p className={classes.header}>Plik z pracą został dodany.</p>
                 <p className={classes.subHeader}>Aby pobrać plik z pracą, kliknij poniżej</p>
                 <a href={props.currentThesis.filePath} download>Click to download</a>
+                <p className={classes.header}>Kliknij poniżej aby ostatecznie zatwierdzić pracę</p>
+                <Button variant="contained" color="#CCC" disabled={props.currentThesis.filePath} onClick={handleFileConfirmedClick}>
+                  Zatwierdź treść pracy
+                </Button>
               </React.Fragment>
             )}
           </React.Fragment>
@@ -347,8 +370,8 @@ const ThesisPage = props => {
               <p className={classes.subHeader}>Data obrony: {moment(props.currentThesis.defense.date).format("DD/MM/YYYY HH:mm")}</p>
             )}
             {roles.canChangeCommittee(props.currentThesis) && (
-              <div style={{margin: 10}}>
-                <DateTimePicker 
+              <div style={{ margin: 10 }}>
+                <DateTimePicker
                   label="Data obrony"
                   value={defenseDate}
                   onChange={handleDefenseDateChange}
@@ -428,8 +451,7 @@ const useStyles = createUseStyles({
   paper: {
     margin: 10,
     height: "80%",
-    overflowX: "scroll",
-    overflowX: "hidden"
+    overflowX: "scroll"
   },
   thesisName: {
     padding: 10,

@@ -2,6 +2,7 @@ import React from 'react';
 import { Grid } from '@material-ui/core';
 import SingleThesis from './SingleThesis';
 import ModalContainer from '../Modal/ModalContainer';
+import * as roles from '../../../tools/roleUtils'
 
 const MyTheses = props => { 
  
@@ -12,7 +13,9 @@ const MyTheses = props => {
           thesis={thesis}
           key={id} />
         ))}
-       <ModalContainer triggerText='Dodaj pracę dyplomową' modalAction="addThesis" /> 
+        {roles.canAddNewThesis(props.theses) && (
+          <ModalContainer triggerText='Dodaj pracę dyplomową' modalAction="addThesis" /> 
+        )}
     </Grid>
   );
 }

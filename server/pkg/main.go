@@ -1,6 +1,7 @@
 package main
 
 import (
+	"database/sql"
 	"log"
 	"net/http"
 	"server/pkg/db"
@@ -14,9 +15,12 @@ import (
 	"server/pkg/searchTheses"
 	"server/pkg/subjectMatters"
 	"server/pkg/thesis"
-	"server/pkg/userdata"
 	"server/pkg/users"
 )
+
+type dbConn struct {
+	dbService *sql.DB
+}
 
 func main() {
 	viper.SetConfigFile("config.yaml")
@@ -39,11 +43,10 @@ func main() {
 	r := mux.NewRouter()
 	r.HandleFunc("/thesis", thesis.PostThesis).Methods("POST")
 	r.HandleFunc("/thesis", thesis.PutThesis).Methods("PUT")
-	r.HandleFunc("/user-data", userdata.GetAllUserData).Methods("GET")
 	r.HandleFunc("/theses", theses.GetTheses).Methods("GET")
-	r.HandleFunc("/dashbord-info/", dashbordInfo.GetDashbord).Methods("GET")
+	r.HandleFunc("/dashboard-info", dashbordInfo.GetDashboard).Methods("GET")
 	r.HandleFunc("/person/{id}", person.GetPerson).Methods("GET")
-	r.HandleFunc("/searchTheses", searchTheses.Search).Methods("GET")
+	r.HandleFunc("/searchTheses/{type}", searchTheses.Search).Methods("GET")
 	r.HandleFunc("/subject-matters", subjectMatters.GetSubjects).Methods("GET")
 	r.HandleFunc("/users", users.GetUser).Methods("GET")
 	r.HandleFunc("/thesis/{id}/committee", thesis.PostCommittee).Methods("POST")
@@ -58,4 +61,7 @@ func main() {
 		log.Fatal(err)
 	}
 
+	//func getDbService() {
+	//	return dbService
+	//}
 }

@@ -1,0 +1,44 @@
+HTTP/1.1 200 OK
+Content-Type: application/json; charset=utf-8
+Access-Control-Allow-Origin: *
+
+{
+      "theses":[
+      {
+         "id":1,
+         "thesisSubject":"Czy gdzieś w oddali widać bunkry?",
+         "thesisType":"Praca inżynierska",
+         "thesisAuthor":"Krzysztof Jeżyna",
+         "thesisGuardian": "profesor Bralczyk"
+      },
+      {
+         "id": 2,
+         "thesisSubject":"Przygody Jasia i Małgosi",
+         "thesisType":"Praca inżynierska",
+         "thesisAuthor":"Harry Potter",
+         "thesisGuardian": "Dumbledore"
+      },
+      {
+         "id": 3,
+         "thesisSubject":"Studia na WEiTI a zdrowie psychiczne",
+         "thesisType":"Praca inżynierska",
+         "thesisAuthor":"Student WEiTI",
+         "thesisGuardian": "Dumbledore"
+
+      },
+      {
+         "id": 4,
+         "thesisSubject":"Hot16challenge, a koronawirus",
+         "thesisType":"Praca inżynierska",
+         "thesisAuthor":"Zatroskany obywatel",
+         "thesisGuardian": "Dumbledore"
+      },
+      {
+         "id": 5,
+         "thesisSubject":"Jak PiS zabił trójkę",
+         "thesisType":"Praca inżynierska",
+         "thesisAuthor":"Kazik",
+         "thesisGuardian": "Pan Prezes"
+      }
+   ]
+}

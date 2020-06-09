@@ -40,6 +40,7 @@ export class ModalContainer extends Component {
                 onKeyDown={this.onKeyDown}
                 onClickOutside={this.onClickOutside}
                 modalAction={this.props.modalAction}
+                thesisId={this.props.thesisId}
             />
         );
 
@@ -50,6 +51,7 @@ export class ModalContainer extends Component {
                     showModal={this.showModal}
                     buttonRef={(n) => (this.ModalTrigger = n)}
                     triggerText={this.props.triggerText}
+                    insideTable={this.props.table}
                 /> :
                 <AddThesisComponent 
                     showModal={this.showModal}

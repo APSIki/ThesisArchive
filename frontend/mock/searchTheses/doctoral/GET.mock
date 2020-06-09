@@ -1,0 +1,58 @@
+HTTP/1.1 200 OK
+Content-Type: application/json; charset=utf-8
+Access-Control-Allow-Origin: *
+
+{
+      "theses":[
+      {
+         "id":1,
+         "thesisSubject":"Czy gdzieś w oddali widać bunkry?",
+         "thesisType":"Praca doktorancka",
+         "thesisAuthor":"Krzysztof Jeżyna",
+         "thesisGuardian": "profesor Bralczyk"
+      },
+      {
+         "id": 2,
+         "thesisSubject":"Wpływ mugoli na świat czarodziejów",
+         "thesisType":"Praca doktorancka",
+         "thesisAuthor":"Harry Potter",
+         "thesisGuardian": "Dumbledore"
+      },
+      {
+         "id": 3,
+         "thesisSubject":"Studia na WEiTI a zdrowie psychiczne",
+         "thesisType":"Praca doktorancka",
+         "thesisAuthor":"Student WEiTI",
+         "thesisGuardian": "Dumbledore"
+
+      },
+      {
+         "id": 4,
+         "thesisSubject":"Hot16challenge, a koronawirus",
+         "thesisType":"Praca doktorancka",
+         "thesisAuthor":"Zatroskany obywatel",
+         "thesisGuardian": "Dumbledore"
+      },
+      {
+         "id": 5,
+         "thesisSubject":"Jak PiS zabił trójkę",
+         "thesisType":"Praca doktorancka",
+         "thesisAuthor":"Kazik",
+         "thesisGuardian": "Pan Prezes"
+      },
+      {
+         "id": 6,
+         "thesisSubject":"Czy żyje się nam lepiej?",
+         "thesisType":"Praca doktorancka",
+         "thesisAuthor":"Antoni Macierewicz",
+         "thesisGuardian": "Pan Prezes"
+      },
+      {
+         "id": 7,
+         "thesisSubject":"Wpływ koronawirusa na studiowanie",
+         "thesisType":"Praca doktorancka",
+         "thesisAuthor":"Jerzy Bralczyk",
+         "thesisGuardian": "NadProfesor"
+      }
+   ]
+}

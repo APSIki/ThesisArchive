@@ -1,10 +1,11 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-// import AddThesisModalForm from './AddThesisModalForm';
 import FocusTrap from 'focus-trap-react';
 import { createUseStyles } from 'react-jss';
-import AddThesisModalFormContainer from './AddThesisModalFormContainer';
-import SelectUserModalFormContainer from './SelectUserModalFormContainer';
+import AddThesisModalFormContainer from './AddThesis/AddThesisModalFormContainer';
+import SelectUserModalFormContainer from './SelectUser/SelectUserModalFormContainer';
+import ThesisDetailsModalFormContainer from './ThesisDetails/ThesisDetailsModalFormContainer';
+
 
 const Modal = ({
   modalAction,
@@ -12,12 +13,14 @@ const Modal = ({
   onKeyDown,
   modalRef,
   buttonRef,
-  closeModal
+  closeModal,
+  thesisId
 }) => {
 
   const modals = {
       addThesis: AddThesisModalFormContainer,
-      selectUser: SelectUserModalFormContainer
+      selectUser: SelectUserModalFormContainer,
+      thesisDetails: ThesisDetailsModalFormContainer
   }
 
   const classes = useStyles();
@@ -47,7 +50,7 @@ const Modal = ({
             </svg>
           </button>
           <div className={classes._modalBody}>
-            <SpecificModal closeModal={closeModal}/>
+            <SpecificModal closeModal={closeModal} thesisId={thesisId}/>
           </div>
         </div>
       </aside>
@@ -94,7 +97,7 @@ const useStyles = createUseStyles({
             top: '50%',
             height: 'auto',
             transform: 'translate(-50%, -50%)',
-            'max-width': '30em',
+            'max-width': '80em',
             'max-height': 'calc(100% - 1em)'
         }
     },

@@ -30,3 +30,9 @@ export const canSaveReview = (thesis) => {
 export const canChangeCommittee = (thesis) => {
     return thesis.role === ADMIN
 }
+
+export const canAddNewThesis = (theses) => {
+    console.log(theses.filter(thesis => thesis.role === "STUDENT").length)
+
+    return theses.filter(thesis => thesis.role === "STUDENT").length > 0
+}

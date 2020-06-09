@@ -10,7 +10,8 @@ const TopBarLinkItem = props => {
     <div className={classes.topBar}>
         <p className={classes.title}>ARCHIWUM PRAC DYPLOMOWYCH</p>
 
-        <TopBarLink title='Moje prace' href='/' />
+        <TopBarLink title='Strona główna' href='/' />
+        <TopBarLink title='Prace dyplomowe' href='/theses' />
         <TopBarLink title='Katalog' href='/catalog' />
         
         <p className={classes.username}>Użytkownik: {props.username}</p>
@@ -24,7 +25,7 @@ const useStyles = createUseStyles({
         width: "100%",
         position: "fixed",
         height: 40,
-        backgroundColor: "#775f94",
+        backgroundColor: "#3f51b5",
         display: "flex",
         flexDirection: "row",
         paddingLeft: 10,

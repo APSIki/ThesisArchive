@@ -18,7 +18,7 @@ const Layout = props => {
         </div>
         <div className={classes.footer}>
             <footer>
-                <small>&copy; Copyright {currentYear}, Very serious developers</small>
+                <small>&copy; Copyright {currentYear}, Analiza i projektowanie systemów informacyjnych</small>
             </footer>
         </div>
     </React.Fragment>

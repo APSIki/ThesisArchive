@@ -1,67 +1,60 @@
 import React, { useState } from 'react';
-import { Paper } from '@material-ui/core';
+import { Grid } from '@material-ui/core';
 import { createUseStyles } from 'react-jss';
-import WS from '../../tools/WS';
-import Theses from '../components/Catalog/Theses'
+import AppBar from '@material-ui/core/AppBar';
+import Tabs from '@material-ui/core/Tabs';
+import Tab from '@material-ui/core/Tab';
+import TabPanel from '../components/Catalog/TabPanel'
+import BasicSearch from '../components/Search/BasicSearch'
+import AdvancedSearch from '../components/Search/AdvancedSearch'
+import PropsGenerator from '../components/Catalog/PropsGenerator'
+
 
 const CatalogPage = () => {
 
-    const [filteredData, setFilteredData] = useState([]);
-    const [query, setQuery] = useState([]);
+    const [tabNumber, setTabNumber] = useState(0);
 
-
-    const getData = () => {
-        WS.getThesisBySearch().then(response => {
-            console.log(response);
-            setFilteredData(response.data.theses);
-        })
-    }
-
-    const handleInputChange = event => {
-        const query = event.target.value;
-        setQuery(query);
-      };
+    const handleChange = (event, newValue) => {
+        setTabNumber(newValue);
+    };
 
     const classes = useStyles();
     return (
-        <React.Fragment>
-            <Paper variant="outlined" elevation={3} className={classes.paper}>
-                <div>Wyszukiwanie prac</div>
-                <div className={classes.searchForm}>
-                    <input className={classes.searchBox} placeholder="Search for..." value={query} onChange={handleInputChange} />
-                    <button className={classes.searchButton} onClick={getData} >Wyszukaj!</button>
-                </div>
-                {
-                filteredData != null ? <Theses theses={filteredData} /> : null 
-                }
-            </Paper>
-
-        </React.Fragment>
+        <Grid container spacing={1} >
+            <AppBar position="static" style={{ background: '0c0a8c', marginTop: '10px' }}>
+                <Tabs value={tabNumber} onChange={handleChange} className={classes.tabs} centered>
+                    <Tab label="Wyszukiwanie podstawowe" 
+                        {...PropsGenerator(0)} 
+                        classes={{ root: classes.root }}/>
+                    <Tab label="Wyszukiwanie zaawansowane" 
+                        {...PropsGenerator(1)} 
+                        className={{ root: classes.root }}/>
+                </Tabs>
+            </AppBar>
+            <TabPanel value={tabNumber} index={0} style={{ width: 'inherit'}}>
+                <BasicSearch />
+            </TabPanel>
+            <TabPanel value={tabNumber} index={1}  style={{ width: 'inherit'}}>
+                <AdvancedSearch />
+            </TabPanel>
+        </Grid>
     )
 }
 
 const useStyles = createUseStyles({
+    root: {
+        width: 200,
+        backGrounColor: '#000'
+    },
     paper: {
         padding: 10,
         height: 700,
         marginLeft: 10
     },
-    searchForm: {
-        marginTop: 10,
-        marginBottom: 20
+    tabs: {
+        borderBottom: `1px solid #000`,
+        width: 'inherit !important'
     },
-    searchButton: {
-        "background": "#7f5c8c",
-        "border-radius": "5px"
-    },
-    searchBox: {
-        border: "1px solid #7f5c8c",
-        width: "300px",
-        "border-radius": "5px",
-        "&:focus": {
-            "outline-color": "#7f5c8c"
-        }
-    }
 });
 
 export default CatalogPage

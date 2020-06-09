@@ -7,8 +7,6 @@ const BASE_URL = "http://localhost:9001";
 class WS {
 
     getThesis(id) {
-        console.log(store.getState().config.authorization)
-
         return axios.get(`${BASE_URL}/thesis/${id}`, {
             headers: {
                 'Authorization': store.getState().config.authorization
@@ -87,9 +85,41 @@ class WS {
         })
     }
 
-    getThesisBySearch(titleOrAuthorName) {
-        return axios.get(`${BASE_URL}/searchTheses`);
+    getThesesByAdvancedSearch(thesisType, author, reviewer, memberOfTheCommission, keyword, defenseDateFrom, defenseDateTo,
+        publicationDateFrom, publicationDateTo) {
+        return axios.get(`${BASE_URL}/searchTheses`, {
+            params: {
+                type: thesisType,
+                author: author,
+                reviewer: reviewer,
+                memberOfTheCommission: memberOfTheCommission,
+                keyword: keyword,
+                defenseDateFrom: defenseDateFrom,
+                defenseDateTo: defenseDateTo,
+                publicationDateFrom: publicationDateFrom,
+                publicationDateTo: publicationDateTo,
+                query: ''
+            }
+        });
     }
+
+    getThesesByBasicSearch(query) {
+        return axios.get(`${BASE_URL}/searchTheses`, {
+            params: {
+                query: query,
+                type: '',
+                author: '',
+                reviewer: '',
+                memberOfTheCommission: '',
+                keyword: '',
+                defenseDateFrom: '',
+                defenseDateTo: '',
+                publicationDateFrom: '',
+                publicationDateTo: '',
+            }
+        });
+    }
+
 
     getPerson(personId) {
         return axios.get(`${BASE_URL}/person/${personId}`)
@@ -107,6 +137,14 @@ class WS {
         return axios.post(`${BASE_URL}/thesis/${thesis.id}/defense-date`, {
             "date": date
         })
+    }
+
+    postNewThesis(thesisData) {
+        return axios.post(`${BASE_URL}/thesis`, thesisData, {
+            headers: {
+                'Authorization': store.getState().config.authorization
+            }
+        });
     }
 }
 

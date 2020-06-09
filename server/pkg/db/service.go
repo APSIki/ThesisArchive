@@ -11,20 +11,28 @@ import (
 )
 
 type Service struct {
-	DB *sql.DB
+	*sql.DB
+}
+
+var sqlDB *Service
+
+//var db *DB
+
+func GetDB() *Service {
+	return sqlDB
 }
 
 func NewService() (*Service, error) {
-	sqlDB, err := ConnectDB()
+	var err error
+	//var sqlDB *Service
+	sqlDB, err = ConnectDB()
 	if err != nil {
 		return nil, fmt.Errorf("init DB failed: %v", err)
 	}
-	return &Service{
-		DB: sqlDB,
-	}, nil
+	return sqlDB, nil
 }
 
-func ConnectDB() (*sql.DB, error) {
+func ConnectDB() (*Service, error) {
 	host := viper.GetString("database.host")
 	port := viper.GetInt("database.port")
 	user := viper.GetString("database.user_name")
@@ -33,7 +41,6 @@ func ConnectDB() (*sql.DB, error) {
 	psqlInfo := fmt.Sprintf("host=%s port=%d user=%s "+
 		"password=%s dbname=%s sslmode=disable",
 		host, port, user, password, dbName)
-
 	db, err := sql.Open("postgres", psqlInfo)
 	if err != nil {
 		return nil, err
@@ -48,12 +55,12 @@ func ConnectDB() (*sql.DB, error) {
 		err = db.Ping()
 		if err == nil {
 			log.Print("connected to DB")
-			return db, nil
+			return &Service{db}, nil
 		}
 		time.Sleep(period)
 		log.Printf("could not connect to DB, retrying.. (%s)", err)
 	}
 	defer db.Close() // TODO move it
 
-	return db, nil
+	return &Service{db}, nil
 }

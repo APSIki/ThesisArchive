@@ -1,0 +1,51 @@
+HTTP/1.1 200 OK
+Content-Type: application/json; charset=utf-8
+Access-Control-Allow-Origin: *
+
+{
+      "theses":[
+      {
+         "id":1,
+         "thesisSubject":"Czy gdzieś w oddali widać bunkry?",
+         "thesisType":"Praca magisterska",
+         "thesisAuthor":"Krzysztof Jeżyna",
+         "thesisGuardian": "profesor Bralczyk"
+      },
+      {
+         "id": 2,
+         "thesisSubject":"Przygody Jasia i Małgosi",
+         "thesisType":"Praca magisterska",
+         "thesisAuthor":"Harry Potter",
+         "thesisGuardian": "Dumbledore"
+      },
+      {
+         "id": 3,
+         "thesisSubject":"Studia na WEiTI a zdrowie psychiczne",
+         "thesisType":"Praca magisterska",
+         "thesisAuthor":"Student WEiTI",
+         "thesisGuardian": "Dumbledore"
+
+      },
+      {
+         "id": 4,
+         "thesisSubject":"Hot16challenge, a koronawirus",
+         "thesisType":"Praca magisterska",
+         "thesisAuthor":"Zatroskany obywatel",
+         "thesisGuardian": "Dumbledore"
+      },
+      {
+         "id": 5,
+         "thesisSubject":"Jak PiS zabił trójkę",
+         "thesisType":"Praca magisterska",
+         "thesisAuthor":"Kazik",
+         "thesisGuardian": "Pan Prezes"
+      },
+      {
+         "id": 3,
+         "thesisSubject":"Studia",
+         "thesisType":"Praca magisterska",
+         "thesisAuthor":"NZSPW",
+         "thesisGuardian": "PW"
+      }
+   ]
+}

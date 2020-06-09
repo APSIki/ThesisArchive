@@ -13,19 +13,22 @@ CREATE TABLE "thesis"
 (
   "thesis_id" Integer NOT NULL GENERATED ALWAYS AS IDENTITY
     (INCREMENT BY 1 NO MINVALUE NO MAXVALUE START WITH 1 CACHE 1),
-  "date" Date NOT NULL,
+  "defence_date" Date,
   "thesis_type_id" Integer NOT NULL,
-  "major_speciality_id" Integer NOT NULL,
+  "major_speciality_id" Integer,
   "title" Text NOT NULL,
-  "key_words" Text NOT NULL,
-  "organizational_unit_id" Integer NOT NULL,
-  "subject_matter_id" Integer NOT NULL,
-  "committee_id" Integer NOT NULL,
+  "key_words" Text,
+  "organizational_unit_id" Integer,
+  "subject_matter_id" Integer,
+  "committee_id" Integer,
   "grade_defence" Numeric(2,1),
+  "grade_review_supervisor" Numeric(2,1),
+  "grade_review_reviewer" Numeric(2,1),
   "grade_avg" Numeric(3,2),
   "author_id" Integer NOT NULL,
-  "Abstract" Text,
-  "Review" Text
+  "abstract" Text,
+  "reviewer_review" Text,
+  "supervisor_review" Text
 )
 WITH (
   autovacuum_enabled=true)
@@ -48,12 +51,13 @@ ALTER TABLE "thesis" ADD CONSTRAINT "thesis_id" UNIQUE ("thesis_id")
 CREATE TABLE "staff_person"
 (
   "staff_person_id" Integer NOT NULL GENERATED ALWAYS AS IDENTITY
-    (INCREMENT BY 1 NO MINVALUE NO MAXVALUE START WITH 1 CACHE 1),
-  "session_token" Name NOT NULL,
+    (INCREMENT BY 1 NO MINVALUE NO MAXVALUE START WITH 2 CACHE 1),
+  "session_token" Integer NOT NULL,
   "first_name" Text NOT NULL,
   "second_name" Text,
   "surname" Text NOT NULL,
-  "person_title_id" Integer NOT NULL
+  "person_title_id" Integer NOT NULL,
+  "is_admin" BOOLEAN NOT NULL
 )
 WITH (
   autovacuum_enabled=true)
@@ -97,7 +101,7 @@ CREATE TABLE "thesis_type"
 (
   "thesis_type_id" Integer NOT NULL GENERATED ALWAYS AS IDENTITY
     (INCREMENT BY 1 NO MINVALUE NO MAXVALUE START WITH 1 CACHE 1),
-  "name" Integer NOT NULL
+  "name" Text NOT NULL
 )
 WITH (
   autovacuum_enabled=true)
@@ -185,8 +189,9 @@ ALTER TABLE "committee_roles" ADD CONSTRAINT "PK_committee_roles" PRIMARY KEY ("
 
 CREATE TABLE "students"
 (
-  "student_id" Integer NOT NULL,
-  "session_token" Text NOT NULL,
+  "student_id" Integer NOT NULL GENERATED ALWAYS AS IDENTITY
+    (INCREMENT BY 1 NO MINVALUE NO MAXVALUE START WITH 1 CACHE 1),
+  "session_token" Integer NOT NULL,
   "first_name" Text NOT NULL,
   "second_name" Text,
   "surname" Text NOT NULL
@@ -230,5 +235,92 @@ ALTER TABLE "thesis" ADD CONSTRAINT "thesis_has_author" FOREIGN KEY ("author_id"
 ;
 
 
+
+INSERT INTO public.person_title(
+	name)VALUES
+	('prof.'),
+	('dr hab.'),
+	('dr'),
+	('mgr inż.'),
+	('mgr');
+
+INSERT INTO public.staff_person(
+	session_token, first_name, second_name, surname, person_title_id, is_admin)
+	VALUES (2, 'Wiesława', null, 'Promotorska', 1, FALSE),
+	(3, 'Krzysztof', null, 'Przewodniczącki', 1, FALSE),
+	(4, 'Krystyna', null, 'Członkowska', 3, FALSE),
+	(5, 'Janusz', null, 'Admiński', 4, TRUE),
+	(6, 'Monika', null, 'Przykładowa', 4, FALSE),
+	(7, 'Wiesław', null, 'Elektroniczny', 5, FALSE);
+
+INSERT INTO public.students(
+	session_token, first_name, second_name, surname)
+	VALUES (1, 'Jan', null, 'Studencki');
+
+INSERT INTO public.organizational_unit(
+	name)
+	VALUES ('Instytut Telekomunikacji'),
+	('Instytut Informatyki'),
+	('Instytut Radiokomunikacji i Mulitimediów');
+
+INSERT INTO public.subject_matter(
+	name)
+	VALUES ('teleinformatyka'),
+	('dorożkarstwo'),
+	('systemy wbudowane'),
+	('systemy operacyjne');
+
+INSERT INTO public.committee_roles(
+	name)
+	VALUES ('Chairman'),
+	('Member'),
+	('Reviewer'),
+	('Thesis supervisor');
+
+INSERT INTO public.committee DEFAULT VALUES;
+INSERT INTO public.committee DEFAULT VALUES;
+INSERT INTO public.committee DEFAULT VALUES;
+
+INSERT INTO public.commitee_person(
+	committee_id, committee_role, person_id)
+	VALUES 
+	(1, 1, 3),
+	(1, 2, 4),
+	(1, 4, 2),
+	(1, 3, 7),
+	(2, 1, 3),
+	(2, 2, 4),
+	(2, 4, 2),
+	(2, 3, 7),
+	(3, 1, 3),
+	(3, 2, 4),
+	(3, 4, 2),
+	(3, 3, 7);
+
+INSERT INTO public.thesis_type(
+	name)
+	VALUES ('Inżynierska'),
+	('Magisterska'),
+	('Doktorska');
+
+INSERT INTO public.major_speciality(
+	major, speciality)
+	VALUES ('Telekomunikacja', 'Teleinformatyka i Cyberbezpieczeństwo'),
+	('Dorożkarstwo', 'Budowa linijek i powozów wyścigowych'),
+	('Automatyka i Robotyka', 'Coś ze żwirem'),
+	('Informatyka', 'Systemy operacyjne');
+
+INSERT INTO public.thesis(
+	defence_date, thesis_type_id, major_speciality_id, title, key_words, organizational_unit_id, subject_matter_id, committee_id, grade_defence, grade_review_supervisor, grade_review_reviewer, grade_avg, author_id, abstract, reviewer_review, supervisor_review)
+	VALUES 	
+('2020-05-23', 2, 2, 'Wpływ zaćmień księżyca na jakość dorożkarstwa w Kenii', 'dorożkarstwo, Kenia, zaćmienie księżyca', 3, 2, 1, null, 5.0, 5.0, null, 1, 'Praca opisuje wpływ zaćmień księżyca na jakość dorożkarstwa w Kenii.', 'Bardzo dobrze, super recenzja, 10/10', 'Bardzo dobrze, super recenzja, 10/10'),
+
+('2020-05-21', 1, 1, 'Wwpływ studiowania na Wydziale Elektroniki i Technik Informacyjnych na zdrowie psychiczne.', 'zdrowie psychiczne, studia, WEiTI', 1, 1, 2, null, 5.0, 5.0, null, 1, 'Praca opisuje wpływ studiowania na Wydziale Elektroniki i Technik Informacyjnych na zdrowie psychiczne.', 'Bardzo dobrze, super recenzja, 10/10', 'Bardzo dobrze, super recenzja, 10/10'),
+
+('2020-06-12', 3, 3, 'Sieci SDN', 'SDN, kontroler, sieci', 1, 1, 3, null, 5.0, 5.0, null, 1, 'Praca opisuje sieci SDN', 'Bardzo dobrze, super recenzja, 10/10', 'Bardzo dobrze, super recenzja, 10/10'),
+
+('2020-06-05', 3, 3, 'Systemy operacyjne', 'Linux, Windows', 2, 2, 3, null, 5.0, 5.0, null, 1, 'Praca opisuje systemy operacyjne', 'Bardzo dobrze, super recenzja, 10/10', 'Bardzo dobrze, super recenzja, 10/10'),
+
+('2020-06-03', 1, 3, 'Swiatlowody', 'swiatlowod, kwarc', 2, 1, 3, null, 3.0, 3.0, null, 1, 'Praca opisuje swiatlowody', 'Marnie, 0/10', 'Bardzo dobrze, super recenzja, 10/10');
 
 
