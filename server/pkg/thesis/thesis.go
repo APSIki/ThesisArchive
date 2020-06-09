@@ -32,7 +32,7 @@ type Thesis struct {
 }
 
 type Defense struct {
-	Defendedbool bool           `json:"defended,omitempty"`
+	Defendedbool bool           `json:"defended"`
 	Grade        float64 `json:"grade,omitempty"`
 	DefenseDate  string         `json:"date,omitempty"`
 	Committee    CommitteeGet   `json:"commitee,omitempty"`
@@ -111,7 +111,7 @@ func GetThesis(w http.ResponseWriter, req *http.Request) {
 	row := dbConnection.QueryRow(getAllThesisStmt, params["id"])
 	err := row.Scan(&thesis.ThesisID, &thesis.Defense.DefenseDate, &thesisTypeID, &MajorSpecialityID, &thesis.Name, &thesis.Keywords, &thesis.OrganizationalUnit, &thesis.SubjectMatter, &commiteeID, &defGrade, &grade2, &grade1, &gradeAvg, &authorID, &thesis.Abstract, &thesis.Review1.Text, &thesis.Review2.Text, &thesis.FilePath)
 	if err == sql.ErrNoRows {
-		log.Fatal("No rows were returned!")
+		log.Print("No rows were returned!")
 	} else if err != nil {
 		log.Fatal(err)
 	}
@@ -136,7 +136,7 @@ func GetThesis(w http.ResponseWriter, req *http.Request) {
 	row = dbConnection.QueryRow(thesisTypeNameStmt, thesisTypeID)
 	err = row.Scan(&thesis.Type)
 	if err == sql.ErrNoRows {
-		log.Fatal("No rows were returned!")
+		log.Print("No rows were returned!")
 	} else if err != nil {
 		log.Fatal(err)
 	}
@@ -158,15 +158,15 @@ func GetThesis(w http.ResponseWriter, req *http.Request) {
 	var reviewerSurname string
 	err = row.Scan(&thesis.Review1.ReviewerID, &reviewerName, &reviewerSurname)
 	if err == sql.ErrNoRows {
-		log.Fatal("No rows were returned!")
+		log.Print("No rows were returned!")
 	} else if err != nil {
 		log.Fatal(err)
 	}
 	thesis.Review1.Name = reviewerName + " " + reviewerSurname
 	row = dbConnection.QueryRow(reviewerNameAndIDStmt, commiteeID, 4)
-	err = row.Scan(&thesis.Review1.ReviewerID, &reviewerName, &reviewerSurname)
+	err = row.Scan(&thesis.Review2.ReviewerID, &reviewerName, &reviewerSurname)
 	if err == sql.ErrNoRows {
-		log.Fatal("No rows were returned!")
+		log.Print("No rows were returned!")
 	} else if err != nil {
 		log.Fatal(err)
 	}
@@ -180,7 +180,7 @@ func GetThesis(w http.ResponseWriter, req *http.Request) {
 	var chairmanSurname string
 	err = row.Scan(&thesis.Defense.Committee.Chairman.ID, &chairmanName, &chairmanSurname)
 	if err == sql.ErrNoRows {
-		log.Fatal("No rows were returned!")
+		log.Print("No rows were returned!")
 	} else if err != nil {
 		log.Fatal(err)
 	}
@@ -189,9 +189,9 @@ func GetThesis(w http.ResponseWriter, req *http.Request) {
 	row = dbConnection.QueryRow(reviewerNameAndIDStmt, commiteeID, 2)
 	var memberName string
 	var memberSurname string
-	err = row.Scan(&thesis.Defense.Committee.Chairman.ID, &memberName, &memberSurname)
+	err = row.Scan(&thesis.Defense.Committee.Member.ID, &memberName, &memberSurname)
 	if err == sql.ErrNoRows {
-		log.Fatal("No rows were returned!")
+		log.Print("No rows were returned!")
 	} else if err != nil {
 		log.Fatal(err)
 	}
