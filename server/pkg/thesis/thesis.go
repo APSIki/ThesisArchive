@@ -24,16 +24,16 @@ type Thesis struct {
 	OrganizationalUnit int     `json:"organizationalUnit"`
 	Abstract           string  `json:"abstract"`
 	Keywords           string  `json:"keywords"`
-	Review1            Review  `json:"review_reviewer"`
-	Review2            Review  `json:"review_supervisor"`
+	Review1            Review  `json:"review1"`
+	Review2            Review  `json:"review2"`
 	Defense            Defense `json:"defense"`
 	FilePath           string  `json:"filePath"`
 	Role               string  `json:"role"`
 }
 
 type Defense struct {
-	Defendedbool bool           `json:"defended,omitempty"`
-	Grade        sql.NullString `json:"grade,omitempty"`
+	Defendedbool bool           `json:"defended"`
+	Grade        float64 `json:"grade,omitempty"`
 	DefenseDate  string         `json:"date,omitempty"`
 	Committee    CommitteeGet   `json:"commitee,omitempty"`
 }
@@ -74,7 +74,7 @@ type Review struct {
 	Name       string  `json:"reviewerName,omitempty"`
 	ReviewerID int     `json:"reviewerId",omitempty`
 	Text       string  `json:"text"`
-	Grade      []uint8 `json:"grade,omitempty"`
+	Grade      float64 `json:"grade,omitempty"`
 }
 
 func PostThesis(w http.ResponseWriter, req *http.Request) {
@@ -95,145 +95,107 @@ func PostThesis(w http.ResponseWriter, req *http.Request) {
 func GetThesis(w http.ResponseWriter, req *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 	params := mux.Vars(req)
-	//token := req.Header.Get("Authorization")
-	fmt.Println("Jestem1")
+	auth := req.Header.Get("Authorization")
 	dbConnection := db.GetDB()
-	sqlStatement1 := `SELECT * FROM thesis WHERE thesis_id=$1;`
-	//sqlStatement1 := `SELECT thesis_id, defence_date FROM thesis WHERE thesis_id=$1;`
-	row1 := dbConnection.QueryRow(sqlStatement1, params["id"])
-	//switch err1 := row1.Scan(&id); err1 {
-
 	var thesisTypeID int
 	var MajorSpecialityID int
 	var commiteeID int
-	//var gradeDefence int
-	var gradeAvg sql.NullString
+	var gradeAvg sql.NullFloat64
+	var defGrade sql.NullFloat64
+	var grade1 sql.NullFloat64
+	var grade2 sql.NullFloat64
 	var authorID int
 	var thesis Thesis
 
-	fmt.Println("Jestem11")
-	switch err1 := row1.Scan(&thesis.ThesisID, &thesis.Defense.DefenseDate, &thesisTypeID, &MajorSpecialityID, &thesis.Name, &thesis.Keywords, &thesis.OrganizationalUnit, &thesis.SubjectMatter, &commiteeID, &thesis.Defense.Grade, &thesis.Review2.Grade, &thesis.Review1.Grade, &gradeAvg, &authorID, &thesis.Abstract, &thesis.Review1.Text, &thesis.Review2.Text, &thesis.FilePath); err1 {
-	case sql.ErrNoRows:
-		fmt.Println("No rows were returned!")
-	case nil:
-		fmt.Println(thesis.ThesisID, thesis.Defense.DefenseDate)
-	default:
-		panic(err1)
+	getAllThesisStmt := `SELECT * FROM thesis WHERE thesis_id=$1;`
+	row := dbConnection.QueryRow(getAllThesisStmt, params["id"])
+	err := row.Scan(&thesis.ThesisID, &thesis.Defense.DefenseDate, &thesisTypeID, &MajorSpecialityID, &thesis.Name, &thesis.Keywords, &thesis.OrganizationalUnit, &thesis.SubjectMatter, &commiteeID, &defGrade, &grade2, &grade1, &gradeAvg, &authorID, &thesis.Abstract, &thesis.Review1.Text, &thesis.Review2.Text, &thesis.FilePath)
+	if err == sql.ErrNoRows {
+		log.Print("No rows were returned!")
+	} else if err != nil {
+		log.Fatal(err)
 	}
-	fmt.Println("Jestem2")
-	sqlStatement2 := `SELECT name FROM thesis_type WHERE thesis_type_id=$1;`
-	row2 := dbConnection.QueryRow(sqlStatement2, thesisTypeID)
-	switch err2 := row2.Scan(&thesis.Type); err2 {
-	case sql.ErrNoRows:
-		fmt.Println("No rows were returned!")
-	case nil:
-		fmt.Println(thesis.Type)
-	default:
-		panic(err2)
+	thesis.Defense.Grade = 0
+	if defGrade.Valid {
+		thesis.Defense.Grade = defGrade.Float64
 	}
-	fmt.Println("Jestem3")
-	thesis.Role = "admin"
-	sqlStatementReviewerID := `SELECT person_id FROM commitee_person WHERE committee_id=$1 and committee_role=3`
-	sqlStatementSupervisorID := `SELECT person_id FROM commitee_person WHERE committee_id=$1 and committee_role=4`
-	row3 := dbConnection.QueryRow(sqlStatementReviewerID, commiteeID)
-	switch err3 := row3.Scan(&thesis.Review1.ReviewerID); err3 {
-	case sql.ErrNoRows:
-		fmt.Println("No rows were returned!")
-	case nil:
-		fmt.Println(thesis.Review1.ReviewerID)
-	default:
-		panic(err3)
+	thesis.Review1.Grade = 0
+	if grade1.Valid {
+		thesis.Review1.Grade = grade1.Float64
 	}
-	fmt.Println("Jestem4")
-	row4 := dbConnection.QueryRow(sqlStatementSupervisorID, commiteeID)
-	switch err4 := row4.Scan(&thesis.Review2.ReviewerID); err4 {
-	case sql.ErrNoRows:
-		fmt.Println("No rows were returned!")
-	case nil:
-		fmt.Println(thesis.Review2.ReviewerID)
-	default:
-		panic(err4)
+	thesis.Review2.Grade = 0
+	if grade2.Valid {
+		thesis.Review2.Grade = grade2.Float64
 	}
-	fmt.Println("Jestem5")
-	var first_name_reviewer string
-	var surname_reviewer string
-	var first_name_supervisor string
-	var surname_supervisor string
-	sqlStatementReviewerName := `SELECT first_name, surname FROM staff_person WHERE staff_person_id=$1`
-	sqlStatementSupervisorName := `SELECT first_name, surname FROM staff_person WHERE staff_person_id=$1`
-	row5 := dbConnection.QueryRow(sqlStatementReviewerName, thesis.Review1.ReviewerID)
-	switch err5 := row5.Scan(&first_name_reviewer, &surname_reviewer); err5 {
-	case sql.ErrNoRows:
-		fmt.Println("No rows were returned!")
-	case nil:
-		fmt.Println(first_name_reviewer, surname_reviewer)
-	default:
-		panic(err5)
+	thesis.Defense.Defendedbool = false
+	if thesis.Defense.Grade != 0 {
+		thesis.Defense.Defendedbool = true
 	}
-	thesis.Review1.Name = first_name_reviewer + " " + surname_reviewer
-	row6 := dbConnection.QueryRow(sqlStatementSupervisorName, thesis.Review2.ReviewerID)
-	switch err6 := row6.Scan(&first_name_supervisor, &surname_supervisor); err6 {
-	case sql.ErrNoRows:
-		fmt.Println("No rows were returned!")
-	case nil:
-		fmt.Println(first_name_supervisor, surname_supervisor)
-	default:
-		panic(err6)
+
+	thesisTypeNameStmt := `SELECT name FROM thesis_type WHERE thesis_type_id=$1;`
+	row = dbConnection.QueryRow(thesisTypeNameStmt, thesisTypeID)
+	err = row.Scan(&thesis.Type)
+	if err == sql.ErrNoRows {
+		log.Print("No rows were returned!")
+	} else if err != nil {
+		log.Fatal(err)
 	}
-	thesis.Review2.Name = first_name_supervisor + " " + surname_supervisor
+
+	switch auth {
+	case "1":
+		thesis.Role = "STUDENT"
+	case "2","4":
+		thesis.Role = "MEMBER"
+	case "3":
+		thesis.Role = "CHAIRMAN"
+	case "5":
+		thesis.Role = "ADMIN"
+	}
+
+	reviewerNameAndIDStmt := `SELECT commitee_person.person_id, staff_person.first_name, staff_person.surname FROM commitee_person, staff_person WHERE committee_id=$1 and committee_role=$2 and staff_person.staff_person_id=commitee_person.person_id`
+	row = dbConnection.QueryRow(reviewerNameAndIDStmt, commiteeID, 3)
+	var reviewerName string
+	var reviewerSurname string
+	err = row.Scan(&thesis.Review1.ReviewerID, &reviewerName, &reviewerSurname)
+	if err == sql.ErrNoRows {
+		log.Print("No rows were returned!")
+	} else if err != nil {
+		log.Fatal(err)
+	}
+	thesis.Review1.Name = reviewerName + " " + reviewerSurname
+	row = dbConnection.QueryRow(reviewerNameAndIDStmt, commiteeID, 4)
+	err = row.Scan(&thesis.Review2.ReviewerID, &reviewerName, &reviewerSurname)
+	if err == sql.ErrNoRows {
+		log.Print("No rows were returned!")
+	} else if err != nil {
+		log.Fatal(err)
+	}
+	thesis.Review2.Name = reviewerName + " " + reviewerSurname
 	thesis.Defense.Committee.Reviewer.Name = thesis.Review1.Name
 	thesis.Defense.Committee.Reviewer.ID = thesis.Review1.ReviewerID
 	thesis.Defense.Committee.Supervisor.Name = thesis.Review2.Name
 	thesis.Defense.Committee.Supervisor.ID = thesis.Review2.ReviewerID
-	sqlStatementChairmanID := `SELECT person_id FROM commitee_person WHERE committee_id=$1 and committee_role=1`
-	sqlStatementMemberID := `SELECT person_id FROM commitee_person WHERE committee_id=$1 and committee_role=2`
-	row7 := dbConnection.QueryRow(sqlStatementChairmanID, commiteeID)
-	switch err7 := row7.Scan(&thesis.Defense.Committee.Chairman.ID); err7 {
-	case sql.ErrNoRows:
-		fmt.Println("No rows were returned!")
-	case nil:
-		fmt.Println(thesis.Defense.Committee.Member.ID)
-	default:
-		panic(err7)
+	row = dbConnection.QueryRow(reviewerNameAndIDStmt, commiteeID, 1)
+	var chairmanName string
+	var chairmanSurname string
+	err = row.Scan(&thesis.Defense.Committee.Chairman.ID, &chairmanName, &chairmanSurname)
+	if err == sql.ErrNoRows {
+		log.Print("No rows were returned!")
+	} else if err != nil {
+		log.Fatal(err)
 	}
-	row8 := dbConnection.QueryRow(sqlStatementMemberID, commiteeID)
-	switch err8 := row8.Scan(&thesis.Defense.Committee.Member.ID); err8 {
-	case sql.ErrNoRows:
-		fmt.Println("No rows were returned!")
-	case nil:
-		fmt.Println(thesis.Defense.Committee.Member.ID)
-	default:
-		panic(err8)
-	}
+	thesis.Defense.Committee.Chairman.Name = chairmanName + " " + chairmanSurname
 
-	var first_name_chairman string
-	var surname_chairman string
-	var first_name_member string
-	var surname_member string
-	sqlStatementCharimanName := `SELECT first_name, surname FROM staff_person WHERE staff_person_id=$1`
-	sqlStatementMemberName := `SELECT first_name, surname FROM staff_person WHERE staff_person_id=$1`
-	row9 := dbConnection.QueryRow(sqlStatementCharimanName, thesis.Defense.Committee.Chairman.ID)
-	switch err9 := row9.Scan(&first_name_chairman, &surname_chairman); err9 {
-	case sql.ErrNoRows:
-		fmt.Println("No rows were returned!")
-	case nil:
-		fmt.Println(first_name_chairman, surname_chairman)
-	default:
-		panic(err9)
+	row = dbConnection.QueryRow(reviewerNameAndIDStmt, commiteeID, 2)
+	var memberName string
+	var memberSurname string
+	err = row.Scan(&thesis.Defense.Committee.Member.ID, &memberName, &memberSurname)
+	if err == sql.ErrNoRows {
+		log.Print("No rows were returned!")
+	} else if err != nil {
+		log.Fatal(err)
 	}
-
-	thesis.Defense.Committee.Chairman.Name = first_name_chairman + " " + surname_chairman
-
-	row10 := dbConnection.QueryRow(sqlStatementMemberName, thesis.Defense.Committee.Member.ID)
-	switch err10 := row10.Scan(&first_name_member, &surname_member); err10 {
-	case sql.ErrNoRows:
-		fmt.Println("No rows were returned!")
-	case nil:
-		fmt.Println(thesis.Defense.Committee.Member.ID)
-	default:
-		panic(err10)
-	}
-	thesis.Defense.Committee.Member.Name = first_name_member + " " + surname_member
+	thesis.Defense.Committee.Member.Name = memberName + " " + memberSurname
 
 	json.NewEncoder(w).Encode(thesis)
 }
