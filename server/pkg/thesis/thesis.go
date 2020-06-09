@@ -6,7 +6,6 @@ import (
 	"fmt"
 	"log"
 	"net/http"
-	"strconv"
 
 	"server/pkg/db"
 
@@ -101,27 +100,32 @@ func GetThesis(w http.ResponseWriter, req *http.Request) {
 	var thesisTypeID int
 	var MajorSpecialityID int
 	var commiteeID int
-	var gradeAvg sql.NullString
-	var grade1 sql.NullString
-	var grade2 sql.NullString
+	var gradeAvg sql.NullFloat64
+	var defGrade sql.NullFloat64
+	var grade1 sql.NullFloat64
+	var grade2 sql.NullFloat64
 	var authorID int
 	var thesis Thesis
 
 	getAllThesisStmt := `SELECT * FROM thesis WHERE thesis_id=$1;`
 	row := dbConnection.QueryRow(getAllThesisStmt, params["id"])
-	err := row.Scan(&thesis.ThesisID, &thesis.Defense.DefenseDate, &thesisTypeID, &MajorSpecialityID, &thesis.Name, &thesis.Keywords, &thesis.OrganizationalUnit, &thesis.SubjectMatter, &commiteeID, &thesis.Defense.Grade, &grade2, &grade1, &gradeAvg, &authorID, &thesis.Abstract, &thesis.Review1.Text, &thesis.Review2.Text, &thesis.FilePath)
+	err := row.Scan(&thesis.ThesisID, &thesis.Defense.DefenseDate, &thesisTypeID, &MajorSpecialityID, &thesis.Name, &thesis.Keywords, &thesis.OrganizationalUnit, &thesis.SubjectMatter, &commiteeID, &defGrade, &grade2, &grade1, &gradeAvg, &authorID, &thesis.Abstract, &thesis.Review1.Text, &thesis.Review2.Text, &thesis.FilePath)
 	if err == sql.ErrNoRows {
 		log.Fatal("No rows were returned!")
 	} else if err != nil {
 		log.Fatal(err)
 	}
+	thesis.Defense.Grade = 0
+	if defGrade.Valid {
+		thesis.Defense.Grade = defGrade.Float64
+	}
 	thesis.Review1.Grade = 0
 	if grade1.Valid {
-		thesis.Review1.Grade, _ = strconv.ParseFloat(grade1.String, 64)
+		thesis.Review1.Grade = grade1.Float64
 	}
 	thesis.Review2.Grade = 0
 	if grade2.Valid {
-		thesis.Review2.Grade, _ = strconv.ParseFloat(grade2.String, 64)
+		thesis.Review2.Grade = grade2.Float64
 	}
 	thesis.Defense.Defendedbool = false
 	if thesis.Defense.Grade != 0 {
