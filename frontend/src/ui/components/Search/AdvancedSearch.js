@@ -85,7 +85,7 @@ const AdvancedSearch = (props) => {
             thesisType = thesisType + ";doctoral"
         } 
 
-        WS.getThesisByAdvancedSearch(thesisType, thesisAuthor, thesisReviewer, 
+        WS.getThesesByAdvancedSearch(thesisType, thesisAuthor, thesisReviewer, 
             memberOfTheCommission, keyWord, defenseDateFrom, defenseDateTo,
             publicationDateFrom, publicationDateTo).then(response => {
             setDataRows(response.data.theses);

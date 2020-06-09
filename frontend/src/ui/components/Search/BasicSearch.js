@@ -18,8 +18,12 @@ const BasicSearch = (props) => {
 
 
     const handlebuttonSearchClick = () => {
-        WS.getThesisByAdvancedSearch('all').then(response => {
-            setDataRows(response.data.theses);
+        // WS.getThesesByBasicSearch(query).then(response => {
+        //     setDataRows(response.data.theses);
+        // })
+
+        WS.getTheses().then(response => {
+             setDataRows(response.data.theses);
         })
     }
 

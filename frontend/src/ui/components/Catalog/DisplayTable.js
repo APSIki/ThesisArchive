@@ -53,8 +53,8 @@ function DisplayTable(rows) {
           {rows.rows.map((row, index) => (
             <StyledTableRow key={row.name}>
               <StyledTableCell component="th" scope="row">{index}</StyledTableCell>
-              <StyledTableCell>{row.thesisSubject}</StyledTableCell>
-              <StyledTableCell>{row.thesisType}</StyledTableCell>
+              <StyledTableCell>{row.name}</StyledTableCell>
+              <StyledTableCell>{row.type}</StyledTableCell>
               <StyledTableCell>{row.thesisAuthor}</StyledTableCell>
               <StyledTableCell>{row.thesisGuardian}</StyledTableCell>
               <StyledTableCell><ModalContainer triggerText="Szczegóły" modalAction="thesisDetails" ButtonAsTrigger thesisId={row.id} table/></StyledTableCell>

@@ -16,15 +16,15 @@ const ThesisDetailsModalForm = props => {
 
 
   useEffect(() => {
-     WS.getThesisDetailsById(props.thesisId).then(response => {
+     WS.getThesis(123).then(response => {
       setAbstract(response.data.abstract)
       setKeywords(response.data.keywords)
       setOrganizationalUnit(response.data.organizationalUnit)
       setReviewer(response.data.reviewer)
       setSubjectMatter(response.data.subjectMatter)
       setThesisGuardian(response.data.thesisGuardian)
-      setThesisSubject(response.data.thesisSubject)
-      setThesisType(response.data.thesisType)
+      setThesisSubject(response.data.name)
+      setThesisType(response.data.type)
     })
   }, []);
 

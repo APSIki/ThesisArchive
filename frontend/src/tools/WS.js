@@ -7,8 +7,6 @@ const BASE_URL = "http://localhost:9001";
 class WS {
 
     getThesis(id) {
-        console.log(store.getState().config.authorization)
-
         return axios.get(`${BASE_URL}/thesis/${id}`, {
             headers: {
                 'Authorization': store.getState().config.authorization
@@ -87,11 +85,7 @@ class WS {
         })
     }
 
-    getThesisByBasicSearch(query) {
-        return axios.get(`${BASE_URL}/searchTheses/all`);
-    }
-
-    getThesisByAdvancedSearch(thesisType, author, reviewer, memberOfTheCommission, keyword, defenseDateFrom, defenseDateTo,
+    getThesesByAdvancedSearch(thesisType, author, reviewer, memberOfTheCommission, keyword, defenseDateFrom, defenseDateTo,
         publicationDateFrom, publicationDateTo) {
         return axios.get(`${BASE_URL}/searchTheses`, {
             params: {
@@ -103,10 +97,29 @@ class WS {
                 defenseDateFrom: defenseDateFrom,
                 defenseDateTo: defenseDateTo,
                 publicationDateFrom: publicationDateFrom,
-                publicationDateTo: publicationDateTo
+                publicationDateTo: publicationDateTo,
+                query: ''
             }
         });
     }
+
+    getThesesByBasicSearch(query) {
+        return axios.get(`${BASE_URL}/searchTheses`, {
+            params: {
+                query: query,
+                type: '',
+                author: '',
+                reviewer: '',
+                memberOfTheCommission: '',
+                keyword: '',
+                defenseDateFrom: '',
+                defenseDateTo: '',
+                publicationDateFrom: '',
+                publicationDateTo: '',
+            }
+        });
+    }
+
 
     getPerson(personId) {
         return axios.get(`${BASE_URL}/person/${personId}`)
@@ -124,10 +137,6 @@ class WS {
         return axios.post(`${BASE_URL}/thesis/${thesis.id}/defense-date`, {
             "date": date
         })
-    }
-
-    getThesisDetailsById(thesisId) {
-        return axios.get(`${BASE_URL}/searchTheses/thesisDetails/${thesisId}`);
     }
 
     postNewThesis(thesisData) {
