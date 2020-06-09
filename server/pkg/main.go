@@ -49,6 +49,7 @@ func main() {
 	r.HandleFunc("/searchTheses/{type}", searchTheses.Search).Methods("GET")
 	r.HandleFunc("/subject-matters", subjectMatters.GetSubjects).Methods("GET")
 	r.HandleFunc("/users", users.GetUser).Methods("GET")
+	r.HandleFunc("/thesis/{id}", thesis.GetThesis).Methods("GET")
 	r.HandleFunc("/thesis/{id}/committee", thesis.PostCommittee).Methods("POST")
 	r.HandleFunc("/thesis/{id}/defense", thesis.PostDefense).Methods("POST")
 	r.HandleFunc("/thesis/{id}/defense-date", thesis.PostDefenseDate).Methods("POST")

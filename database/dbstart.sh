@@ -10,10 +10,10 @@ docker cp final.SQL pg-docker:/final.SQL
 echo "===Waiting for database up"
 sleep 5s
 
-docker exec -it pg-docker psql -U user -c 'create database thesis_db;'
+winpty docker exec -it pg-docker psql -U user -c 'create database thesis_db;'
 
-docker exec -it pg-docker psql -U user -c 'grant all privileges on database "thesis_db" to "user";'
+winpty docker exec -it pg-docker psql -U user -c 'grant all privileges on database "thesis_db" to "user";'
 
 echo "===Run SQL scheme"
- docker exec -it pg-docker psql -U user -d thesis_db -f final.SQL
+winpty docker exec -it pg-docker psql -U user -d thesis_db -f final.SQL
 
