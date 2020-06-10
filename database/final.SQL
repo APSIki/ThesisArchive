@@ -43,7 +43,7 @@ CREATE INDEX "IX_Relationship1" ON "thesis" ("author_id")
 ;
 CREATE INDEX "IX_thesis_has_commitee" ON "thesis" ("committee_id")
 ;
-ALTER TABLE "thesis" ADD CONSTRAINT "PK_thesis" PRIMARY KEY ("thesis_id","thesis_type_id","major_speciality_id","author_id")
+ALTER TABLE "thesis" ADD CONSTRAINT "PK_thesis" PRIMARY KEY ("thesis_id")
 ;
 ALTER TABLE "thesis" ADD CONSTRAINT "thesis_id" UNIQUE ("thesis_id")
 ;
