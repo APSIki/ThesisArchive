@@ -58,6 +58,8 @@ func main() {
 	r.HandleFunc("/thesis/{id}/review1", thesis.PostReview1).Methods("POST")
 	r.HandleFunc("/thesis/{id}/review2", thesis.PostReview2).Methods("POST")
 	r.HandleFunc("/thesis/{id}/thesis-details", thesis.PostThesisDetails).Methods("POST")
+	r.HandleFunc("/thesis/{id}/reviewers", thesis.PostReviewers).Methods("POST")
+
 
 	c := cors.New(cors.Options {
 		AllowedOrigins: []string{"*"},

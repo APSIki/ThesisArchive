@@ -79,6 +79,11 @@ type Review struct {
 	Grade      float64 `json:"grade,omitempty"`
 }
 
+type Reviewers struct {
+	Reviewer1 int `json:"reviewer1"`
+	Reviewer2 int `json:"reviewer2"`
+}
+
 func PostThesis(w http.ResponseWriter, req *http.Request) {
 	thesis := New()
 	if err := thesis.decodeJSON(w, req); err != nil {
@@ -387,6 +392,31 @@ func PostThesisDetails(w http.ResponseWriter, req *http.Request) {
 	w.Header().Set("Access-Control-Allow-Origin", "*")
 
 	json.NewEncoder(w).Encode(details)
+}
+
+func PostReviewers(w http.ResponseWriter, req *http.Request) {
+	w.Header().Set("Content-Type", "application/json")
+	params := mux.Vars(req)
+
+	var reviewers Reviewers
+	_ = json.NewDecoder(req.Body).Decode(&reviewers)
+
+	dbConnection := db.GetDB()
+
+	sqlStatement1 := "update commitee_person set person_id = $1 where committee_role=3 and committee_id = (select committee_id from thesis where thesis_id = $2)"
+	sqlStatement2 := "update commitee_person set person_id = $1 where committee_role=4 and committee_id = (select committee_id from thesis where thesis_id = $2)"
+
+	 _, err1 := dbConnection.Exec(sqlStatement1, reviewers.Reviewer1, params["id"])
+	if err1 != nil {
+		log.Print(err1)
+	}
+
+	_, err2 := dbConnection.Exec(sqlStatement2, reviewers.Reviewer2, params["id"])
+	if err2 != nil {
+		log.Print(err2)
+	}
+
+	json.NewEncoder(w).Encode(reviewers)
 }
 
 func New() *Thesis {
