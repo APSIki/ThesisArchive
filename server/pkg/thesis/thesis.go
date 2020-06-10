@@ -90,12 +90,19 @@ func PostThesis(w http.ResponseWriter, req *http.Request) {
 		respond.With(w, req, http.StatusBadRequest, err)
 		return
 	}
-	auth := req.Header.Get("Authorization")
-	insertStmt := `insert into thesis(thesis_type_id, title, author_id) values ($1, $2, $3)`
 	dbConnection := db.GetDB()
-	if _, err := dbConnection.Exec(insertStmt, thesis.Type, thesis.Name, auth); err != nil {
+
+
+	lastInsertId := 0
+	dbConnection.QueryRow("INSERT INTO committee DEFAULT VALUES RETURNING committee_id").Scan(&lastInsertId)
+
+	auth := req.Header.Get("Authorization")
+	insertStmt := `insert into thesis(thesis_type_id, title, author_id, committee_id) values ($1, $2, $3, $4)`
+	if _, err := dbConnection.Exec(insertStmt, thesis.Type, thesis.Name, auth, lastInsertId); err != nil {
 		log.Print(err)
 	}
+
+	log.Print(lastInsertId)
 	respond.WithStatus(w, req, http.StatusCreated)
 }
 
