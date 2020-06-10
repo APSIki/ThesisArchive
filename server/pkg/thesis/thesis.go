@@ -61,6 +61,8 @@ type FilePath struct {
 type ThesisDetails struct {
 	Abstract string `json:"abstract"`
 	Keywords string `json:"keywords"`
+	OrganizationalUnit int `json:"organizationalUnit"`
+	SubjectMatter int `json:"subjectMatter"`
 }
 
 type Committee struct {
@@ -326,8 +328,8 @@ func PostThesisDetails(w http.ResponseWriter, req *http.Request) {
 	var details ThesisDetails
 	_ = json.NewDecoder(req.Body).Decode(&details)
 	dbConnection := db.GetDB()
-	sqlStatement := "update thesis set key_words = $1, abstract = $2 where thesis_id = $3"
-	_, err := dbConnection.Exec(sqlStatement, details.Keywords, details.Abstract, params["id"])
+	sqlStatement := "update thesis set key_words = $1, abstract = $2, organizational_unit_id = $3, subject_matter_id = $4 where thesis_id = $5"
+	_, err := dbConnection.Exec(sqlStatement, details.Keywords, details.Abstract, details.OrganizationalUnit, details.SubjectMatter, params["id"])
 	if err != nil {
 		log.Fatal(err)
 	}
