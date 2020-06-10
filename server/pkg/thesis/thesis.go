@@ -197,6 +197,7 @@ func GetThesis(w http.ResponseWriter, req *http.Request) {
 	}
 	thesis.Defense.Committee.Member.Name = memberName + " " + memberSurname
 
+	w.Header().Set("Access-Control-Allow-Origin", "*")
 	json.NewEncoder(w).Encode(thesis)
 }
 
@@ -234,6 +235,8 @@ func PostCommittee(w http.ResponseWriter, req *http.Request) {
 	if _, err := dbConnection.Exec(sqlStatementSupervisor, committee.Supervisor, committeeID); err != nil {
 		panic(err)
 	}
+	w.Header().Set("Access-Control-Allow-Origin", "*")
+
 	json.NewEncoder(w).Encode(committee)
 }
 
@@ -248,6 +251,8 @@ func PostDefense(w http.ResponseWriter, req *http.Request) {
 	if err != nil {
 		log.Fatal(err)
 	}
+	w.Header().Set("Access-Control-Allow-Origin", "*")
+
 	json.NewEncoder(w).Encode(defense)
 }
 
@@ -278,6 +283,8 @@ func PostFile(w http.ResponseWriter, req *http.Request) {
 	if err != nil {
 		log.Fatal(err)
 	}
+	w.Header().Set("Access-Control-Allow-Origin", "*")
+
 	json.NewEncoder(w).Encode(path)
 }
 
@@ -292,6 +299,8 @@ func PostReview1(w http.ResponseWriter, req *http.Request) {
 	if err != nil {
 		log.Fatal(err)
 	}
+	w.Header().Set("Access-Control-Allow-Origin", "*")
+
 	json.NewEncoder(w).Encode(review)
 }
 
@@ -306,6 +315,8 @@ func PostReview2(w http.ResponseWriter, req *http.Request) {
 	if err != nil {
 		log.Fatal(err)
 	}
+	w.Header().Set("Access-Control-Allow-Origin", "*")
+
 	json.NewEncoder(w).Encode(review)
 }
 
@@ -320,6 +331,8 @@ func PostThesisDetails(w http.ResponseWriter, req *http.Request) {
 	if err != nil {
 		log.Fatal(err)
 	}
+	w.Header().Set("Access-Control-Allow-Origin", "*")
+
 	json.NewEncoder(w).Encode(details)
 }
 

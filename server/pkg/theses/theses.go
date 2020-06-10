@@ -53,11 +53,13 @@ func GetTheses(w http.ResponseWriter, r *http.Request) {
 
 	id, title, kind := QueryDB("select thesis.thesis_id, thesis.title, thesis_type.name from thesis, thesis_type where thesis.thesis_type_id = thesis_type.thesis_type_id and thesis.title is not null")
 	fmt.Println(len(id))
+	w.Header().Set("Access-Control-Allow-Origin", "*")
 	var returnData []Theses
 	if token == "1" {
 		for i := 0; i < len(id); i++ {
 			returnData = append(returnData, Theses{ThesisID: id[i], Name: title[i], Type: kind[i], Role: "STUDENT"})
 		}
+		
 		json.NewEncoder(w).Encode(returnData)
 	} else if token == "2" {
 		for i := 0; i < len(id); i++ {

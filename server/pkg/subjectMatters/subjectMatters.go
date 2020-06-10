@@ -41,5 +41,7 @@ func GetSubjects(w http.ResponseWriter, r *http.Request) {
 	for i := 0; i < len(idSlice); i++ {
 		subjectData = append(subjectData, Subject{ID: strconv.Itoa(idSlice[i]), Name: nameSlice[i]})
 	}
+
+	w.Header().Set("Access-Control-Allow-Origin", "*")
 	json.NewEncoder(w).Encode(subjectData)
 }

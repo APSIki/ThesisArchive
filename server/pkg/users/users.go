@@ -61,5 +61,7 @@ func GetUser(w http.ResponseWriter, r *http.Request) {
 		userData = append(userData, User{Authorization: strconv.Itoa(i + 2), Name: nameSlice[i]})
 	}
 
+	w.Header().Set("Access-Control-Allow-Origin", "*")
+
 	json.NewEncoder(w).Encode(userData)
 }

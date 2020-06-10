@@ -8,6 +8,7 @@ import (
 	"server/pkg/theses"
 
 	"github.com/gorilla/mux"
+	"github.com/rs/cors"
 	"github.com/spf13/viper"
 
 	"server/pkg/dashbordInfo"
@@ -58,7 +59,16 @@ func main() {
 	r.HandleFunc("/thesis/{id}/review2", thesis.PostReview2).Methods("POST")
 	r.HandleFunc("/thesis/{id}/thesis-details", thesis.PostThesisDetails).Methods("POST")
 
-	if err := http.ListenAndServe(":8088", r); err != nil {
+	c := cors.New(cors.Options {
+		AllowedOrigins: []string{"*"},
+		AllowCredentials: true,
+		AllowedHeaders: []string{"Expires", "Origin", "Language", "Pragma", "Accept", "Last-Modified", "X-XSRF-Token", "X-Requested-With", "Content-Type", "location", "Cache-Control", "Content-Language", "Authorization"},
+		AllowedMethods: []string{"POST", "GET", "OPTIONS"},
+	})
+
+	handler := c.Handler(r)
+
+	if err := http.ListenAndServe(":8088", handler); err != nil {
 		log.Fatal(err)
 	}
 
