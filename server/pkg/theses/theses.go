@@ -20,7 +20,7 @@ func QueryDB(query string) ([]int, []string, []string) {
 	dbConnection := db.GetDB()
 	rows, err := dbConnection.Query(query)
 	if err != nil {
-		log.Fatal(err)
+		log.Print(err)
 	}
 	defer rows.Close()
 	id_slice := make([]int, 0)
@@ -32,7 +32,7 @@ func QueryDB(query string) ([]int, []string, []string) {
 	for rows.Next() {
 		err := rows.Scan(&id, &title, &kind)
 		if err != nil {
-			log.Fatal(err)
+			log.Print(err)
 		}
 		id_slice = append(id_slice, id)
 		title_slice = append(title_slice, title)
@@ -40,7 +40,7 @@ func QueryDB(query string) ([]int, []string, []string) {
 	}
 	err = rows.Err()
 	if err != nil {
-		log.Fatal(err)
+		log.Print(err)
 	}
 	//log.Println(rows)
 	fmt.Println(id, title, kind)

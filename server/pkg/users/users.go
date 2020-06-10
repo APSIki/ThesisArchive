@@ -18,7 +18,7 @@ func GetUser(w http.ResponseWriter, r *http.Request) {
 	dbConnection := db.GetDB()
 	rows, err := dbConnection.Query("select first_name, surname from students")
 	if err != nil {
-		log.Fatal(err)
+		log.Print(err)
 	}
 	defer rows.Close()
 	var firstName string
@@ -26,19 +26,19 @@ func GetUser(w http.ResponseWriter, r *http.Request) {
 	for rows.Next() {
 		err := rows.Scan(&firstName, &surname)
 		if err != nil {
-			log.Fatal(err)
+			log.Print(err)
 		}
 	}
 	err = rows.Err()
 	if err != nil {
-		log.Fatal(err)
+		log.Print(err)
 	}
 	name := firstName + " " + surname
 	var userData []User
 	userData = append(userData, User{Authorization: "1", Name: name})
 	rows2, err2 := dbConnection.Query("select first_name, surname from staff_person where surname = 'Promotorska' or surname = 'Przewodniczącki' or surname = 'Członkowska' or surname = 'Admiński'")
 	if err2 != nil {
-		log.Fatal(err2)
+		log.Print(err2)
 	}
 	defer rows2.Close()
 	nameSlice := make([]string, 0)
@@ -47,14 +47,14 @@ func GetUser(w http.ResponseWriter, r *http.Request) {
 	for rows2.Next() {
 		err2 := rows2.Scan(&firstName, &surname)
 		if err2 != nil {
-			log.Fatal(err2)
+			log.Print(err2)
 		}
 		name := firstName + " " + surname
 		nameSlice = append(nameSlice, name)
 	}
 	err2 = rows2.Err()
 	if err2 != nil {
-		log.Fatal(err2)
+		log.Print(err2)
 	}
 
 	for i := 0; i < len(nameSlice); i++ {

@@ -89,7 +89,7 @@ func PostThesis(w http.ResponseWriter, req *http.Request) {
 	insertStmt := `insert into thesis(thesis_type_id, title, author_id) values ($1 $2 $3)`
 	dbConnection := db.GetDB()
 	if _, err := dbConnection.Exec(insertStmt, thesis.Type, thesis.Name, auth); err != nil {
-		log.Fatal(err)
+		log.Print(err)
 	}
 	respond.WithStatus(w, req, http.StatusCreated)
 }
@@ -115,7 +115,7 @@ func GetThesis(w http.ResponseWriter, req *http.Request) {
 	if err == sql.ErrNoRows {
 		log.Print("No rows were returned!")
 	} else if err != nil {
-		log.Fatal(err)
+		log.Print(err)
 	}
 	thesis.Defense.Grade = 0
 	if defGrade.Valid {
@@ -140,7 +140,7 @@ func GetThesis(w http.ResponseWriter, req *http.Request) {
 	if err == sql.ErrNoRows {
 		log.Print("No rows were returned!")
 	} else if err != nil {
-		log.Fatal(err)
+		log.Print(err)
 	}
 
 	switch auth {
@@ -162,7 +162,7 @@ func GetThesis(w http.ResponseWriter, req *http.Request) {
 	if err == sql.ErrNoRows {
 		log.Print("No rows were returned!")
 	} else if err != nil {
-		log.Fatal(err)
+		log.Print(err)
 	}
 	thesis.Review1.Name = reviewerName + " " + reviewerSurname
 	row = dbConnection.QueryRow(reviewerNameAndIDStmt, commiteeID, 4)
@@ -170,7 +170,7 @@ func GetThesis(w http.ResponseWriter, req *http.Request) {
 	if err == sql.ErrNoRows {
 		log.Print("No rows were returned!")
 	} else if err != nil {
-		log.Fatal(err)
+		log.Print(err)
 	}
 	thesis.Review2.Name = reviewerName + " " + reviewerSurname
 	thesis.Defense.Committee.Reviewer.Name = thesis.Review1.Name
@@ -184,7 +184,7 @@ func GetThesis(w http.ResponseWriter, req *http.Request) {
 	if err == sql.ErrNoRows {
 		log.Print("No rows were returned!")
 	} else if err != nil {
-		log.Fatal(err)
+		log.Print(err)
 	}
 	thesis.Defense.Committee.Chairman.Name = chairmanName + " " + chairmanSurname
 
@@ -195,7 +195,7 @@ func GetThesis(w http.ResponseWriter, req *http.Request) {
 	if err == sql.ErrNoRows {
 		log.Print("No rows were returned!")
 	} else if err != nil {
-		log.Fatal(err)
+		log.Print(err)
 	}
 	thesis.Defense.Committee.Member.Name = memberName + " " + memberSurname
 
@@ -216,9 +216,9 @@ func PostCommittee(w http.ResponseWriter, req *http.Request) {
 	row := dbConnection.QueryRow(sqlStatement1, params["id"])
 	err := row.Scan(&committeeID)
 	if err == sql.ErrNoRows {
-		log.Fatal("No rows were returned!")
+		log.Print("No rows were returned!")
 	} else if err != nil {
-		log.Fatal(err)
+		log.Print(err)
 	}
 
 	sqlStatementChairman := "update commitee_person set person_id = $1 where committee_id = $2 and committee_role = 1"
@@ -251,7 +251,7 @@ func PostDefense(w http.ResponseWriter, req *http.Request) {
 	sqlStatement := "update thesis set grade_defence = $1 where thesis_id = $2"
 	_, err := dbConnection.Exec(sqlStatement, defense.Grade, params["id"])
 	if err != nil {
-		log.Fatal(err)
+		log.Print(err)
 	}
 	w.Header().Set("Access-Control-Allow-Origin", "*")
 
@@ -269,7 +269,7 @@ func PostDefenseDate(w http.ResponseWriter, req *http.Request) {
 	sqlStatement := "update thesis set defence_date = $1 where thesis_id = $2"
 	_, err := dbConnection.Exec(sqlStatement, date_final, params["id"])
 	if err != nil {
-		log.Fatal(err)
+		log.Print(err)
 	}
 	json.NewEncoder(w).Encode(date_final)
 }
@@ -283,7 +283,7 @@ func PostFile(w http.ResponseWriter, req *http.Request) {
 	sqlStatement := "update thesis set file_path = $1 where thesis_id = $2"
 	_, err := dbConnection.Exec(sqlStatement, path.Path, params["id"])
 	if err != nil {
-		log.Fatal(err)
+		log.Print(err)
 	}
 	w.Header().Set("Access-Control-Allow-Origin", "*")
 
@@ -299,7 +299,7 @@ func PostReview1(w http.ResponseWriter, req *http.Request) {
 	sqlStatement := "update thesis set supervisor_review = $1, grade_review_supervisor = $2 where thesis_id = $3"
 	_, err := dbConnection.Exec(sqlStatement, review.Text, review.Grade, params["id"])
 	if err != nil {
-		log.Fatal(err)
+		log.Print(err)
 	}
 	w.Header().Set("Access-Control-Allow-Origin", "*")
 
@@ -315,7 +315,7 @@ func PostReview2(w http.ResponseWriter, req *http.Request) {
 	sqlStatement := "update thesis set reviewer_review = $1, grade_review_reviewer = $2 where thesis_id = $3"
 	_, err := dbConnection.Exec(sqlStatement, review.Text, review.Grade, params["id"])
 	if err != nil {
-		log.Fatal(err)
+		log.Print(err)
 	}
 	w.Header().Set("Access-Control-Allow-Origin", "*")
 
@@ -331,7 +331,7 @@ func PostThesisDetails(w http.ResponseWriter, req *http.Request) {
 	sqlStatement := "update thesis set key_words = $1, abstract = $2, organizational_unit_id = $3, subject_matter_id = $4 where thesis_id = $5"
 	_, err := dbConnection.Exec(sqlStatement, details.Keywords, details.Abstract, details.OrganizationalUnit, details.SubjectMatter, params["id"])
 	if err != nil {
-		log.Fatal(err)
+		log.Print(err)
 	}
 	w.Header().Set("Access-Control-Allow-Origin", "*")
 

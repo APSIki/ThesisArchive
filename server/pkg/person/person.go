@@ -29,7 +29,7 @@ func GetPerson(w http.ResponseWriter, r *http.Request) {
 	var firstName string
 	var surname string
 	if err := row.Scan(&firstName, &surname); err != nil {
-		log.Fatal(err)
+		log.Print(err)
 	}
 	name := firstName + " " + surname
 	person = Person{Name: name}
