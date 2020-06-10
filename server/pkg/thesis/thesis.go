@@ -133,7 +133,6 @@ func GetThesis(w http.ResponseWriter, req *http.Request) {
 
 	getAllThesisStmt := `SELECT * FROM thesis WHERE thesis_id=$1;`
 	row := dbConnection.QueryRow(getAllThesisStmt, params["id"])
-	//err := row.Scan(&thesis.ThesisID, &thesis.Defense.DefenseDate, &thesisTypeID, &MajorSpecialityID, &thesis.Name, &thesis.Keywords, &thesis.OrganizationalUnit, &thesis.SubjectMatter, &commiteeID, &defGrade, &grade2, &grade1, &gradeAvg, &authorID, &thesis.Abstract, &thesis.Review1.Text, &thesis.Review2.Text, &thesis.FilePath)
 	err := row.Scan(&thesis.ThesisID, &defenseDate, &thesisTypeID, &majorSpecID, &thesis.Name, &keywords, &organizationID, &subjectMatter, &committeeID, &defGrade, &grade2, &grade1, &gradeAvg, &authorID, &abstract, &review1, &review2, &filePath)
 	if err == sql.ErrNoRows {
 		log.Print("No rows were returned!")
@@ -160,10 +159,7 @@ func GetThesis(w http.ResponseWriter, req *http.Request) {
 	if defenseDate.Valid {
 		thesis.Defense.DefenseDate = defenseDate.String
 	}
-	//..thesis.
-	//if majorSpecID.Valid {
-	//
-	//}
+
 	thesis.Keywords = ""
 	if keywords.Valid {
 		thesis.Keywords = keywords.String
@@ -176,10 +172,6 @@ func GetThesis(w http.ResponseWriter, req *http.Request) {
 	if subjectMatter.Valid {
 		thesis.SubjectMatter = subjectMatter.Int64
 	}
-	//thesis.Defense.Committee.
-	//if committeeID.Valid {
-	//
-	//}
 	thesis.Abstract = ""
 	if abstract.Valid {
 		thesis.Abstract = abstract.String
