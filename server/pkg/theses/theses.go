@@ -20,7 +20,7 @@ func QueryDB(query string) ([]int, []string, []string) {
 	dbConnection := db.GetDB()
 	rows, err := dbConnection.Query(query)
 	if err != nil {
-		log.Fatal(err)
+		log.Print(err)
 	}
 	defer rows.Close()
 	id_slice := make([]int, 0)
@@ -32,7 +32,7 @@ func QueryDB(query string) ([]int, []string, []string) {
 	for rows.Next() {
 		err := rows.Scan(&id, &title, &kind)
 		if err != nil {
-			log.Fatal(err)
+			log.Print(err)
 		}
 		id_slice = append(id_slice, id)
 		title_slice = append(title_slice, title)
@@ -40,7 +40,7 @@ func QueryDB(query string) ([]int, []string, []string) {
 	}
 	err = rows.Err()
 	if err != nil {
-		log.Fatal(err)
+		log.Print(err)
 	}
 	//log.Println(rows)
 	fmt.Println(id, title, kind)
@@ -53,11 +53,13 @@ func GetTheses(w http.ResponseWriter, r *http.Request) {
 
 	id, title, kind := QueryDB("select thesis.thesis_id, thesis.title, thesis_type.name from thesis, thesis_type where thesis.thesis_type_id = thesis_type.thesis_type_id and thesis.title is not null")
 	fmt.Println(len(id))
+	w.Header().Set("Access-Control-Allow-Origin", "*")
 	var returnData []Theses
 	if token == "1" {
 		for i := 0; i < len(id); i++ {
 			returnData = append(returnData, Theses{ThesisID: id[i], Name: title[i], Type: kind[i], Role: "STUDENT"})
 		}
+		
 		json.NewEncoder(w).Encode(returnData)
 	} else if token == "2" {
 		for i := 0; i < len(id); i++ {

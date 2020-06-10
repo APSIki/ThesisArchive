@@ -8,6 +8,7 @@ import (
 	"server/pkg/theses"
 
 	"github.com/gorilla/mux"
+	"github.com/rs/cors"
 	"github.com/spf13/viper"
 
 	"server/pkg/dashbordInfo"
@@ -26,7 +27,7 @@ func main() {
 	viper.SetConfigFile("config.yaml")
 	viper.AddConfigPath(".")
 	if err := viper.ReadInConfig(); err != nil {
-		log.Fatal(err)
+		log.Print(err)
 		panic(err)
 	}
 
@@ -34,7 +35,7 @@ func main() {
 	if enableDB {
 		dbService, err := db.NewService()
 		if err != nil {
-			log.Fatal(err)
+			log.Print(err)
 			panic(err)
 		}
 		defer dbService.DB.Close()
@@ -49,6 +50,7 @@ func main() {
 	r.HandleFunc("/searchTheses/{type}", searchTheses.Search).Methods("GET")
 	r.HandleFunc("/subject-matters", subjectMatters.GetSubjects).Methods("GET")
 	r.HandleFunc("/users", users.GetUser).Methods("GET")
+	r.HandleFunc("/thesis/{id}", thesis.GetThesis).Methods("GET")
 	r.HandleFunc("/thesis/{id}/committee", thesis.PostCommittee).Methods("POST")
 	r.HandleFunc("/thesis/{id}/defense", thesis.PostDefense).Methods("POST")
 	r.HandleFunc("/thesis/{id}/defense-date", thesis.PostDefenseDate).Methods("POST")
@@ -57,8 +59,17 @@ func main() {
 	r.HandleFunc("/thesis/{id}/review2", thesis.PostReview2).Methods("POST")
 	r.HandleFunc("/thesis/{id}/thesis-details", thesis.PostThesisDetails).Methods("POST")
 
-	if err := http.ListenAndServe(":8088", r); err != nil {
-		log.Fatal(err)
+	c := cors.New(cors.Options {
+		AllowedOrigins: []string{"*"},
+		AllowCredentials: true,
+		AllowedHeaders: []string{"Expires", "Origin", "Language", "Pragma", "Accept", "Last-Modified", "X-XSRF-Token", "X-Requested-With", "Content-Type", "location", "Cache-Control", "Content-Language", "Authorization"},
+		AllowedMethods: []string{"POST", "GET", "OPTIONS"},
+	})
+
+	handler := c.Handler(r)
+
+	if err := http.ListenAndServe(":8088", handler); err != nil {
+		log.Print(err)
 	}
 
 	//func getDbService() {

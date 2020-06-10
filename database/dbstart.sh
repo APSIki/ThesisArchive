@@ -15,5 +15,4 @@ docker exec -it pg-docker psql -U user -c 'create database thesis_db;'
 docker exec -it pg-docker psql -U user -c 'grant all privileges on database "thesis_db" to "user";'
 
 echo "===Run SQL scheme"
- docker exec -it pg-docker psql -U user -d thesis_db -f final.SQL
-
+docker exec -it pg-docker psql -U user -d thesis_db -f final.SQL

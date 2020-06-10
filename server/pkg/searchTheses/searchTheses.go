@@ -2,14 +2,15 @@ package searchTheses
 
 import (
 	"encoding/json"
-	"github.com/gorilla/mux"
 	"log"
 	"net/http"
 	"server/pkg/db"
+
+	"github.com/gorilla/mux"
 )
 
 type ThesesData struct {
-	ThesisID int `json:"id"`
+	ThesisID int    `json:"id"`
 	Name     string `json:"name"`
 	Type     string `json:"type"`
 	Author   string `json:"author"`
@@ -34,7 +35,7 @@ func Search(w http.ResponseWriter, r *http.Request) {
 	dbConnection := db.GetDB()
 	rows, err := dbConnection.Query(query)
 	if err != nil {
-		log.Fatal(err)
+		log.Print(err)
 	}
 	defer rows.Close()
 	for rows.Next() {
@@ -45,12 +46,14 @@ func Search(w http.ResponseWriter, r *http.Request) {
 		var kind string
 		err := rows.Scan(&id, &title, &firstName, &surname, &kind)
 		if err != nil {
-			log.Fatal(err)
+			log.Print(err)
 		}
 		thesesData = append(thesesData, ThesesData{ThesisID: id, Name: title, Type: kind, Author: firstName + " " + surname})
 	}
 	if rows.Err() != nil {
-		log.Fatal(err)
+		log.Print(err)
 	}
+
+	w.Header().Set("Access-Control-Allow-Origin", "*")
 	json.NewEncoder(w).Encode(thesesData)
 }
