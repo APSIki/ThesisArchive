@@ -12,11 +12,11 @@ export const canUploadFile = role => {
 }
 
 export const canReview1 = (thesis, config) => {
-    return thesis.role === MEMBER && config.authorization === thesis.reviews.reviewer1.reviewerId
+    return thesis.role === MEMBER && config.authorization === thesis.reviewer1.reviewerId
 }
 
 export const canReview2 = (thesis, config) => {
-    return thesis.role === MEMBER && config.authorization === thesis.reviews.reviewer2.reviewerId
+    return thesis.role === MEMBER && config.authorization === thesis.reviewer2.reviewerId
 }
 
 export const canSetDefended = (thesis) => {
