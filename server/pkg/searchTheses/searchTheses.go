@@ -35,7 +35,7 @@ func Search(w http.ResponseWriter, r *http.Request) {
 	dbConnection := db.GetDB()
 	rows, err := dbConnection.Query(query)
 	if err != nil {
-		log.Fatal(err)
+		log.Print(err)
 	}
 	defer rows.Close()
 	for rows.Next() {
@@ -46,12 +46,12 @@ func Search(w http.ResponseWriter, r *http.Request) {
 		var kind string
 		err := rows.Scan(&id, &title, &firstName, &surname, &kind)
 		if err != nil {
-			log.Fatal(err)
+			log.Print(err)
 		}
 		thesesData = append(thesesData, ThesesData{ThesisID: id, Name: title, Type: kind, Author: firstName + " " + surname})
 	}
 	if rows.Err() != nil {
-		log.Fatal(err)
+		log.Print(err)
 	}
 
 	w.Header().Set("Access-Control-Allow-Origin", "*")

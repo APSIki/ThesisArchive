@@ -25,7 +25,7 @@ func GetDashboard(w http.ResponseWriter, r *http.Request) {
 	}
 	rows, err := dbConnection.Query(query)
 	if err != nil {
-		log.Fatal(err)
+		log.Print(err)
 	}
 	defer rows.Close()
 	defences := make([]NearestDefense, 0)
@@ -36,12 +36,12 @@ func GetDashboard(w http.ResponseWriter, r *http.Request) {
 		var kind string
 		err := rows.Scan(&id, &date, &name, &kind)
 		if err != nil {
-			log.Fatal(err)
+			log.Print(err)
 		}
 		defences = append(defences, NearestDefense{Date: date, ThesisID: id, ThesisName: name, ThesisType: kind})
 	}
 	if rows.Err() != nil {
-		log.Fatal(err)
+		log.Print(err)
 	}
 
 	w.Header().Set("Access-Control-Allow-Origin", "*")

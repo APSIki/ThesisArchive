@@ -27,7 +27,7 @@ func main() {
 	viper.SetConfigFile("config.yaml")
 	viper.AddConfigPath(".")
 	if err := viper.ReadInConfig(); err != nil {
-		log.Fatal(err)
+		log.Print(err)
 		panic(err)
 	}
 
@@ -35,7 +35,7 @@ func main() {
 	if enableDB {
 		dbService, err := db.NewService()
 		if err != nil {
-			log.Fatal(err)
+			log.Print(err)
 			panic(err)
 		}
 		defer dbService.DB.Close()
@@ -69,7 +69,7 @@ func main() {
 	handler := c.Handler(r)
 
 	if err := http.ListenAndServe(":8088", handler); err != nil {
-		log.Fatal(err)
+		log.Print(err)
 	}
 
 	//func getDbService() {
