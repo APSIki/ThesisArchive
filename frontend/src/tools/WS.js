@@ -2,7 +2,7 @@ import axios from 'axios';
 import store from '../store/store'
 
 // temporary
-const BASE_URL = "http://localhost:9001";
+const BASE_URL = "http://192.168.0.16:8088";
 
 class WS {
 
@@ -14,11 +14,11 @@ class WS {
         });
     }
 
-    postThesisDetails(id, thesis, subjectMatter, organizationalUnit) {
+    postThesisDetails(id, thesis, subjectMatter, organizationalUnit, abstract, keywords) {
         return axios.post(`${BASE_URL}/thesis/${id}/thesis-details`, {
             "id": thesis.id,
-            "abstract": thesis.abstract,
-            "keywords": thesis.keywords,
+            "abstract": abstract,
+            "keywords": keywords,
             "subjectMatter": subjectMatter,
             "organizationalUnit": organizationalUnit
         }, {

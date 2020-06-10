@@ -12,18 +12,18 @@ const DashboardPage = props => {
 
     useEffect(() => {
         WS.getUsers().then(response => {
-            props.setUsers(response.data)
+            props.setUsers({users: response.data})
         })
 
         WS.getDashboardData().then(response => {
-            setDashboardData(response.data)
+            setDashboardData({nearestDefenses: response.data})
         })
     
       }, []);
 
     useEffect(() => {
         WS.getDashboardData().then(response => {
-            setDashboardData(response.data)
+            setDashboardData({nearestDefenses: response.data})
         })
     })
 

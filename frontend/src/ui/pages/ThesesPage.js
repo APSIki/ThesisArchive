@@ -11,17 +11,17 @@ const LandingPage = props => {
 
     useEffect(() => {
         WS.getUsers().then(response => {
-            props.setUsers(response.data)
+            props.setUsers({users: response.data})
         })
         
         WS.getTheses().then(response => {
-            props.setTheses(response.data)
+            props.setTheses({theses: response.data})
         })
       }, []);
 
     useEffect(() => {
         WS.getTheses().then(response => {
-            props.setTheses(response.data)
+            props.setTheses({theses: response.data})
         })
     })
 

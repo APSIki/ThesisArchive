@@ -73,10 +73,10 @@ const ThesisPage = props => {
 
         setAbstract(response.data.abstract)
         setKeywords(response.data.keywords)
-        setReview1(response.data.reviews.reviewer1.text)
-        setGrade1(response.data.reviews.reviewer1.grade)
-        setReview2(response.data.reviews.reviewer2.text)
-        setGrade2(response.data.reviews.reviewer2.grade)
+        setReview1(response.data.reviewer1.text)
+        setGrade1(response.data.reviewer1.grade)
+        setReview2(response.data.reviewer2.text)
+        setGrade2(response.data.reviewer2.grade)
         setDefenseGrade(response.data.defense.grade)
         setChairmanId(response.data.defense.commitee.chairman.id)
         setAdvisorId(response.data.defense.commitee.advisor.id)
@@ -104,7 +104,9 @@ const ThesisPage = props => {
   }
 
   const handleSaveAbstractAndKeywords = () => {
-    WS.postThesisDetails(props.currentThesis.id, props.currentThesis, subjectMatter ? subjectMatter.id : null, organizationalUnit ? organizationalUnit.id : null)
+    WS.postThesisDetails(props.currentThesis.id, props.currentThesis, subjectMatter ? parseInt(subjectMatter.id) : null, 
+                        organizationalUnit ? parseInt(organizationalUnit.id) : null,
+                        abstract, keywords)
       .then(response => {
         setSuccessSnackbarOpen(true)
       })
@@ -309,13 +311,13 @@ const ThesisPage = props => {
         )}
         {activeStep === 2 && (
           <React.Fragment>
-            {!roles.canReview1(props.currentThesis, props.config) && roles.canSaveReview(props.currentThesis) && !!props.currentThesis.reviews.reviewer1.text ? (
+            {!roles.canReview1(props.currentThesis, props.config) && roles.canSaveReview(props.currentThesis) && !!props.currentThesis.reviewer1.text ? (
               <React.Fragment>
                 <p className={classes.header}>Recenzja 1 jest dostępna:</p>
-                <p className={classes.subHeader}>Recenzent: {props.currentThesis.reviews.reviewer1.reviewerName}</p>
-                <p className={classes.subHeader}>Ocena: {props.currentThesis.reviews.reviewer1.grade}</p>
+                <p className={classes.subHeader}>Recenzent: {props.currentThesis.reviewer1.reviewerName}</p>
+                <p className={classes.subHeader}>Ocena: {props.currentThesis.reviewer1.grade}</p>
                 <p className={classes.subHeader}>Tekst recenzji:</p>
-                <p className={classes.reviewText}>{props.currentThesis.reviews.reviewer1.text}</p>
+                <p className={classes.reviewText}>{props.currentThesis.reviewer1.text}</p>
               </React.Fragment>
             ) : (
                 <p className={classes.header}>Recenzja 1 nie jest jeszcze gotowa.</p>
@@ -333,13 +335,13 @@ const ThesisPage = props => {
                 </div>
               </React.Fragment>
             )}
-            {!roles.canReview2(props.currentThesis, props.config) && roles.canSaveReview(props.currentThesis) && !!props.currentThesis.reviews.reviewer2.text ? (
+            {!roles.canReview2(props.currentThesis, props.config) && roles.canSaveReview(props.currentThesis) && !!props.currentThesis.reviewer2.text ? (
               <React.Fragment>
                 <p className={classes.header}>Recenzja 2 jest dostępna:</p>
-                <p className={classes.subHeader}>Recenzent: {props.currentThesis.reviews.reviewer2.reviewerName}</p>
-                <p className={classes.subHeader}>Ocena: {props.currentThesis.reviews.reviewer2.grade}</p>
+                <p className={classes.subHeader}>Recenzent: {props.currentThesis.reviewer2.reviewerName}</p>
+                <p className={classes.subHeader}>Ocena: {props.currentThesis.reviewer2.grade}</p>
                 <p className={classes.subHeader}>Tekst recenzji:</p>
-                <p className={classes.reviewText}>{props.currentThesis.reviews.reviewer2.text}</p>
+                <p className={classes.reviewText}>{props.currentThesis.reviewer2.text}</p>
               </React.Fragment>
             ) : (
                 <p className={classes.header}>Recenzja 2 nie jest jeszcze gotowa.</p>
