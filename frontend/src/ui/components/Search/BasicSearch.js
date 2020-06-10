@@ -18,19 +18,15 @@ const BasicSearch = (props) => {
 
 
     const handlebuttonSearchClick = () => {
-        // WS.getThesesByBasicSearch(query).then(response => {
-        //     setDataRows(response.data.theses);
-        // })
-
-        WS.getTheses().then(response => {
-             setDataRows(response.data.theses);
+        WS.getThesesByBasicSearch(query).then(response => {
+            setDataRows(response.data.theses);
         })
     }
 
     return (
         <React.Fragment>
             <div className={classes.searchForm}>
-                <input className={classes.searchBox} placeholder="tytuł, imiona i nazwiska autorów lub opiekunów" value={query} onChange={handleUserInput} />
+                <input className={classes.searchBox} placeholder="tytuł, imiona i nazwiska autorów" value={query} onChange={handleUserInput} />
                 <Button
                     variant="contained"
                     color="primary"
