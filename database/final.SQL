@@ -205,11 +205,6 @@ ALTER TABLE "students" ADD CONSTRAINT "PK_students" PRIMARY KEY ("student_id")
 ;
 -- Create foreign keys (relationships) section ------------------------------------------------- 
 
-ALTER TABLE "thesis" ADD CONSTRAINT "thesis_has_organizational_unit" FOREIGN KEY ("organizational_unit_id") REFERENCES "organizational_unit" ("organizational_unit_id") ON DELETE NO ACTION ON UPDATE NO ACTION
-;
-
-ALTER TABLE "thesis" ADD CONSTRAINT "thesis_has_subject_matter" FOREIGN KEY ("subject_matter_id") REFERENCES "subject_matter" ("subject_matter_id") ON DELETE NO ACTION ON UPDATE NO ACTION
-;
 
 ALTER TABLE "thesis" ADD CONSTRAINT "thesis_has_type" FOREIGN KEY ("thesis_type_id") REFERENCES "thesis_type" ("thesis_type_id") ON DELETE NO ACTION ON UPDATE NO ACTION
 ;
