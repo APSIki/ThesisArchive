@@ -25,11 +25,11 @@ func Search(w http.ResponseWriter, r *http.Request) {
 	case "all":
 		query = "select thesis.thesis_id, thesis.title, students.first_name, students.surname, thesis_type.name from thesis, thesis_type, students where thesis.thesis_type_id = thesis_type.thesis_type_id and thesis.title is not null and students.session_token = thesis.author_id"
 	case "doctoral":
-		query = "select thesis.thesis_id, thesis.title, students.first_name, students.surname, thesis_type.name from thesis, thesis_type, students where thesis.thesis_type_id = thesis_type.thesis_type_id and thesis.title is not null and students.session_token = thesis.author_id and thesis_type.name = 'Doktorska'"
+		query = "select thesis.thesis_id, thesis.title, students.first_name, students.surname, thesis_type.name from thesis, thesis_type, students where thesis.thesis_type_id = thesis_type.thesis_type_id and thesis.title is not null and students.session_token = thesis.author_id and thesis_type.name = 'Praca doktorska'"
 	case "master":
-		query = "select thesis.thesis_id, thesis.title, students.first_name, students.surname, thesis_type.name from thesis, thesis_type, students where thesis.thesis_type_id = thesis_type.thesis_type_id and thesis.title is not null and students.session_token = thesis.author_id and thesis_type.name = 'Magisterska'"
+		query = "select thesis.thesis_id, thesis.title, students.first_name, students.surname, thesis_type.name from thesis, thesis_type, students where thesis.thesis_type_id = thesis_type.thesis_type_id and thesis.title is not null and students.session_token = thesis.author_id and thesis_type.name = 'Praca magisterska'"
 	case "engineering":
-		query = "select thesis.thesis_id, thesis.title, students.first_name, students.surname, thesis_type.name from thesis, thesis_type, students where thesis.thesis_type_id = thesis_type.thesis_type_id and thesis.title is not null and students.session_token = thesis.author_id and thesis_type.name = 'Inżynierska'"
+		query = "select thesis.thesis_id, thesis.title, students.first_name, students.surname, thesis_type.name from thesis, thesis_type, students where thesis.thesis_type_id = thesis_type.thesis_type_id and thesis.title is not null and students.session_token = thesis.author_id and thesis_type.name = 'Praca inżynierska'"
 	}
 	thesesData := make([]ThesesData, 0)
 	dbConnection := db.GetDB()

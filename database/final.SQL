@@ -293,9 +293,9 @@ INSERT INTO public.commitee_person(
 
 INSERT INTO public.thesis_type(
 	name)
-	VALUES ('Inżynierska'),
-	('Magisterska'),
-	('Doktorska');
+	VALUES ('Praca inżynierska'),
+	('Praca magisterska'),
+	('Praca doktorska');
 
 INSERT INTO public.major_speciality(
 	major, speciality)
