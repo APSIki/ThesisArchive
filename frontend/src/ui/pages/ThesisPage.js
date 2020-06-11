@@ -33,10 +33,10 @@ const ThesisPage = props => {
 
   const [isCommitteEdited, setIsCommiteeEdited] = useState(false)
 
-  const [chairmanId, setChairmanId] = useState(0)
-  const [advisorId, setAdvisorId] = useState(0)
-  const [member1Id, setMember1Id] = useState(0)
-  const [member2Id, setMember2Id] = useState(0)
+  const [chairman, setChairman] = useState(null)
+  const [advisor, setAdvisor] = useState(null)
+  const [member1, setMember1] = useState(null)
+  const [member2, setMember2] = useState(null)
   const [chairmanName, setChairmanName] = useState("")
   const [advisorName, setAdvisorName] = useState("")
   const [member1Name, setMember1Name] = useState("")
@@ -44,6 +44,8 @@ const ThesisPage = props => {
   const [subjectMatter, setSubjectMatter] = useState(null)
   const [organizationalUnit, setOrganizationalUnit] = useState(null)
   const [filePath, setFilePath] = useState(null);
+  const [reviewer1, setReviewer1] = useState(null);
+  const [reviewer2, setReviewer2] = useState(null);
 
   const [defenseDate, setDefenseDate] = useState(null)
 
@@ -78,17 +80,19 @@ const ThesisPage = props => {
         setReview2(response.data.reviewer2.text)
         setGrade2(response.data.reviewer2.grade)
         setDefenseGrade(response.data.defense.grade)
-        setChairmanId(response.data.defense.commitee.chairman.id)
-        setAdvisorId(response.data.defense.commitee.advisor.id)
-        setMember1Id(response.data.defense.commitee.member1.id)
-        setMember2Id(response.data.defense.commitee.member2.id)
+        setChairman(props.config.staffPersons.filter(staffPerson => staffPerson.id == response.data.defense.commitee.chairman.id)[0]);
+        setAdvisor(props.config.staffPersons.filter(staffPerson => staffPerson.id == response.data.defense.commitee.advisor.id)[0]);
+        setMember1(props.config.staffPersons.filter(staffPerson => staffPerson.id == response.data.defense.commitee.member1.id)[0]);
+        setMember2(props.config.staffPersons.filter(staffPerson => staffPerson.id == response.data.defense.commitee.member2.id)[0]);
         setChairmanName(response.data.defense.commitee.chairman.name)
         setAdvisorName(response.data.defense.commitee.advisor.name)
         setMember1Name(response.data.defense.commitee.member1.name)
         setMember2Name(response.data.defense.commitee.member2.name)
-        setSubjectMatter(props.config.subjectMatters.filter(subjectMatter => subjectMatter.id === response.data.subjectMatter)[0]);
+        setSubjectMatter(props.config.subjectMatters.filter(subjectMatter => subjectMatter.id == response.data.subjectMatter)[0]);
         setOrganizationalUnit(props.config.organizationalUnits.filter(organizationalUnit => organizationalUnit.id == response.data.organizationalUnit)[0]);
         setDefenseDate(moment(response.data.defense.date))
+        setReviewer1(props.config.staffPersons.filter(staffPerson => staffPerson.id == response.data.reviewer1.reviewerId)[0]);
+        setReviewer2(props.config.staffPersons.filter(staffPerson => staffPerson.id == response.data.reviewer2.reviewerId)[0]);
 
         if (response.data.role == "MEMBER") {
           setActiveStep(2);
@@ -104,9 +108,9 @@ const ThesisPage = props => {
   }
 
   const handleSaveAbstractAndKeywords = () => {
-    WS.postThesisDetails(props.currentThesis.id, props.currentThesis, subjectMatter ? parseInt(subjectMatter.id) : null, 
-                        organizationalUnit ? parseInt(organizationalUnit.id) : null,
-                        abstract, keywords)
+    WS.postThesisDetails(props.currentThesis.id, props.currentThesis, subjectMatter ? parseInt(subjectMatter.id) : null,
+      organizationalUnit ? parseInt(organizationalUnit.id) : null,
+      abstract, keywords)
       .then(response => {
         setSuccessSnackbarOpen(true)
       })
@@ -116,7 +120,7 @@ const ThesisPage = props => {
   }
 
   const handleSaveReview1 = () => {
-    WS.postReview1(props.currentThesis, review1, grade1)
+    WS.postReview1(props.currentThesis, review1, parseFloat(grade1))
       .then(response => {
         setSuccessSnackbarOpen(true)
       })
@@ -126,7 +130,7 @@ const ThesisPage = props => {
   }
 
   const handleSaveReview2 = () => {
-    WS.postReview2(props.currentThesis, review2, grade2)
+    WS.postReview2(props.currentThesis, review2, parseFloat(grade2))
       .then(response => {
         setSuccessSnackbarOpen(true)
       })
@@ -169,22 +173,29 @@ const ThesisPage = props => {
     if (!isCommitteEdited) {
       setIsCommiteeEdited(true)
     } else {
-      WS.getPerson(chairmanId)
+      WS.getPerson(chairman.id)
         .then(response => {
-          setChairmanName(response.data.name)
+          setChairmanName(response.data.Name)
         })
-      WS.getPerson(advisorId)
+      WS.getPerson(advisor.id)
         .then(response => {
-          setAdvisorName(response.data.name)
+          setAdvisorName(response.data.Name)
         })
-      WS.getPerson(member1Id)
+      WS.getPerson(member1.id)
         .then(response => {
-          setMember1Name(response.data.name)
+          setMember1Name(response.data.Name)
         })
-      WS.getPerson(member2Id)
+      WS.getPerson(member2.id)
         .then(response => {
-          setMember2Name(response.data.name)
+          setMember2Name(response.data.Name)
         })
+
+      WS.postCommittee(props.currentThesis, {
+        chairman: chairman.id,
+        supervisor: advisor.id,
+        reviewer: member1.id,
+        member: member2.id
+      })
       setSuccessSnackbarOpen(true)
       setIsCommiteeEdited(false)
     }
@@ -199,6 +210,18 @@ const ThesisPage = props => {
       .catch(err => {
         setErrorSnackbarOpen(true)
       })
+  }
+
+  const handleSetReviewer = () => {
+    WS.postReviewers(props.currentThesis, {
+      reviewer1: parseInt(reviewer1.id),
+      reviewer2: parseInt(reviewer2.id)
+    }).then(response => {
+      setSuccessSnackbarOpen(true)
+    })
+    .catch(err => {
+      setErrorSnackbarOpen(true)
+    })
   }
 
   return (
@@ -311,6 +334,27 @@ const ThesisPage = props => {
         )}
         {activeStep === 2 && (
           <React.Fragment>
+            {roles.canEditReviewer(props.currentThesis) && (
+              <React.Fragment>
+                <p className={classes.subHeader}>Zmień promotora:</p>
+                <Autocomplete
+                  value={reviewer1}
+                  setValue={setReviewer1}
+                  options={props.config.staffPersons}
+                />
+                <p className={classes.subHeader}>Zmień recenzenta:</p>
+                <Autocomplete
+                  value={reviewer2}
+                  setValue={setReviewer2}
+                  options={props.config.staffPersons}
+                />
+                <div>
+                  <Button variant="contained" color="#CCC" onClick={handleSetReviewer} >
+                    ZATWIERDŹ ZMIANĘ RECENZENTÓW
+                </Button>
+                </div>
+              </React.Fragment>
+            )}
             {!roles.canReview1(props.currentThesis, props.config) && roles.canSaveReview(props.currentThesis) && !!props.currentThesis.reviewer1.text ? (
               <React.Fragment>
                 <p className={classes.header}>Recenzja 1 jest dostępna:</p>
@@ -396,19 +440,35 @@ const ThesisPage = props => {
               <React.Fragment>
                 <div className={classes.textAndButton}>
                   <p className={classes.reviewText}>Przewodniczący: </p>
-                  <TextField value={chairmanId} onChange={(e) => setChairmanId(e.target.value)} />
+                  <Autocomplete
+                    value={chairman}
+                    setValue={setChairman}
+                    options={props.config.staffPersons}
+                  />
                 </div>
                 <div className={classes.textAndButton}>
                   <p className={classes.reviewText}>Opiekun: </p>
-                  <TextField value={advisorId} onChange={(e) => setAdvisorId(e.target.value)} />
+                  <Autocomplete
+                    value={advisor}
+                    setValue={setAdvisor}
+                    options={props.config.staffPersons}
+                  />
                 </div>
                 <div className={classes.textAndButton}>
                   <p className={classes.reviewText}>Członek: </p>
-                  <TextField value={member1Id} onChange={(e) => setMember1Id(e.target.value)} />
+                  <Autocomplete
+                    value={member1}
+                    setValue={setMember1}
+                    options={props.config.staffPersons}
+                  />
                 </div>
                 <div className={classes.textAndButton}>
                   <p className={classes.reviewText}>Członek: </p>
-                  <TextField value={member2Id} onChange={(e) => setMember2Id(e.target.value)} />
+                  <Autocomplete
+                    value={member2}
+                    setValue={setMember2}
+                    options={props.config.staffPersons}
+                  />
                 </div>
               </React.Fragment>
             )}

@@ -6,4 +6,4 @@ export const SET_FILEPATH = "SET_FILEPATH"
 
 export const SET_USERS = "SET_USERS"
 export const SET_AUTHORIZATION = "SET_AUTHORIZATION"
-
+export const SET_STAFF_PERSONS = "SET_STAFF_PERSONS"

@@ -2,7 +2,7 @@ import axios from 'axios';
 import store from '../store/store'
 
 // temporary
-const BASE_URL = "http://192.168.0.16:8088";
+const BASE_URL = "http://192.168.0.20:8088";
 
 class WS {
 
@@ -31,7 +31,7 @@ class WS {
     postReview1(thesis, review, grade) {
         return axios.post(`${BASE_URL}/thesis/${thesis.id}/review1`, {
             "id": thesis.id,
-            "review": review,
+            "text": review,
             "grade": grade
         }, {
             headers: {
@@ -43,7 +43,7 @@ class WS {
     postReview2(thesis, review, grade) {
         return axios.post(`${BASE_URL}/thesis/${thesis.id}/review2`, {
             "id": thesis.id,
-            "review": review,
+            "text": review,
             "grade": grade
         }, {
             headers: {
@@ -55,7 +55,7 @@ class WS {
     postDefenseGrade(thesis, grade) {
         return axios.post(`${BASE_URL}/thesis/${thesis.id}/defense`, {
             "defended": "true",
-            "grade": grade
+            "grade": parseFloat(grade)
         }, {
             headers: {
                 'Authorization': store.getState().config.authorization
@@ -145,6 +145,18 @@ class WS {
                 'Authorization': store.getState().config.authorization
             }
         });
+    }
+
+    postReviewers(thesis, reviewers) {
+        return axios.post(`${BASE_URL}/thesis/${thesis.id}/reviewers`, reviewers);
+    }
+
+    getStaffPersons() {
+        return axios.get(`${BASE_URL}/staff-persons`);
+    }
+
+    postCommittee(thesis, committee) {
+        return axios.post(`${BASE_URL}/thesis/${thesis.id}/committee`, committee)
     }
 }
 

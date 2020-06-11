@@ -13,3 +13,10 @@ export const setAuthorization = authorization => {
         value: authorization
     }
 }
+
+export const setStaffPersons = staffPersons => {
+    return {
+        type: actionTypes.SET_STAFF_PERSONS,
+        value: staffPersons
+    }
+}

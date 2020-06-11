@@ -31,8 +31,8 @@ const useStyles = createUseStyles({
     paper: {
       padding: 10,
       paddingTop: 2,
-      maxWidth: 300,
-      backgroundColor: "#cccccc"
+      backgroundColor: "#cccccc",
+      height: 210
     },
     additionalText: {
       fontStyle: "italic"
