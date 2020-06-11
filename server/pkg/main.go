@@ -17,6 +17,7 @@ import (
 	"server/pkg/subjectMatters"
 	"server/pkg/thesis"
 	"server/pkg/users"
+	"server/pkg/staffPersons"
 )
 
 type dbConn struct {
@@ -50,6 +51,7 @@ func main() {
 	r.HandleFunc("/searchTheses/{type}", searchTheses.Search).Methods("GET")
 	r.HandleFunc("/subject-matters", subjectMatters.GetSubjects).Methods("GET")
 	r.HandleFunc("/users", users.GetUser).Methods("GET")
+	r.HandleFunc("/staff-persons", staffPersons.GetStaffPersons).Methods("GET")
 	r.HandleFunc("/thesis/{id}", thesis.GetThesis).Methods("GET")
 	r.HandleFunc("/thesis/{id}/committee", thesis.PostCommittee).Methods("POST")
 	r.HandleFunc("/thesis/{id}/defense", thesis.PostDefense).Methods("POST")
@@ -58,6 +60,8 @@ func main() {
 	r.HandleFunc("/thesis/{id}/review1", thesis.PostReview1).Methods("POST")
 	r.HandleFunc("/thesis/{id}/review2", thesis.PostReview2).Methods("POST")
 	r.HandleFunc("/thesis/{id}/thesis-details", thesis.PostThesisDetails).Methods("POST")
+	r.HandleFunc("/thesis/{id}/reviewers", thesis.PostReviewers).Methods("POST")
+
 
 	c := cors.New(cors.Options {
 		AllowedOrigins: []string{"*"},

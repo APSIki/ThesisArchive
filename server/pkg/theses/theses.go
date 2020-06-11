@@ -1,11 +1,12 @@
 package theses
 
 import (
+	"database/sql"
 	"encoding/json"
-	"fmt"
 	"log"
 	"net/http"
 	"server/pkg/db"
+	"time"
 )
 
 type Theses struct {
@@ -16,72 +17,95 @@ type Theses struct {
 	AdditionalText string `json:"additionalText,omitempty"`
 }
 
-func QueryDB(query string) ([]int, []string, []string) {
-	dbConnection := db.GetDB()
-	rows, err := dbConnection.Query(query)
-	if err != nil {
-		log.Print(err)
-	}
-	defer rows.Close()
-	id_slice := make([]int, 0)
-	title_slice := make([]string, 0)
-	kind_slice := make([]string, 0)
-	var id int
-	var title string
-	var kind string
-	for rows.Next() {
-		err := rows.Scan(&id, &title, &kind)
-		if err != nil {
-			log.Print(err)
-		}
-		id_slice = append(id_slice, id)
-		title_slice = append(title_slice, title)
-		kind_slice = append(kind_slice, kind)
-	}
-	err = rows.Err()
-	if err != nil {
-		log.Print(err)
-	}
-	//log.Println(rows)
-	fmt.Println(id, title, kind)
-	fmt.Println(len(id_slice))
-	return id_slice, title_slice, kind_slice
-}
 func GetTheses(w http.ResponseWriter, r *http.Request) {
 	token := r.Header.Get("Authorization")
 	w.Header().Set("Content-Type", "application/json")
-
-	id, title, kind := QueryDB("select thesis.thesis_id, thesis.title, thesis_type.name from thesis, thesis_type where thesis.thesis_type_id = thesis_type.thesis_type_id and thesis.title is not null")
-	fmt.Println(len(id))
+	dbConnection := db.GetDB()
 	w.Header().Set("Access-Control-Allow-Origin", "*")
-	var returnData []Theses
+	returnData :=  make([]Theses, 0)
+	var query string
 	if token == "1" {
-		for i := 0; i < len(id); i++ {
-			returnData = append(returnData, Theses{ThesisID: id[i], Name: title[i], Type: kind[i], Role: "STUDENT"})
+		query = `select thesis.thesis_id, thesis.title, thesis_type.name from thesis, thesis_type where thesis.thesis_type_id = thesis_type.thesis_type_id and thesis.title is not null and thesis.author_id = $1`
+		rows, err := dbConnection.Query(query, token)
+		if err != nil {
+			log.Print(err)
 		}
-		
-		json.NewEncoder(w).Encode(returnData)
-	} else if token == "2" {
-		for i := 0; i < len(id); i++ {
-			returnData = append(returnData, Theses{ThesisID: id[i], Name: title[i], Type: kind[i], Role: "MEMBER", AdditionalText: "Oczekuje na recenzję"})
+		defer rows.Close()
+		for rows.Next() {
+			var thesis Theses
+			err := rows.Scan(&thesis.ThesisID, &thesis.Name, &thesis.Type)
+			if err != nil {
+				log.Print(err)
+			}
+			thesis.Role = "STUDENT"
+			returnData = append(returnData, thesis)
 		}
-		json.NewEncoder(w).Encode(returnData)
-	} else if token == "3" {
-		for i := 0; i < len(id); i++ {
-			returnData = append(returnData, Theses{ThesisID: id[i], Name: title[i], Type: kind[i], Role: "CHAIRMAN"})
+		if rows.Err() != nil {
+			log.Print(err)
 		}
-		json.NewEncoder(w).Encode(returnData)
-	} else if token == "4" {
-		for i := 0; i < len(id); i++ {
-			returnData = append(returnData, Theses{ThesisID: id[i], Name: title[i], Type: kind[i], Role: "MEMBER", AdditionalText: "Oczekuje na recenzję"})
-		}
-		json.NewEncoder(w).Encode(returnData)
+
 	} else if token == "5" {
-		for i := 0; i < len(id); i++ {
-			returnData = append(returnData, Theses{ThesisID: id[i], Name: title[i], Type: kind[i], Role: "ADMIN"})
+		query = "select thesis.thesis_id, thesis.title, thesis_type.name from thesis, thesis_type where thesis.thesis_type_id = thesis_type.thesis_type_id and thesis.title is not null"
+		rows, err := dbConnection.Query(query)
+		if err != nil {
+			log.Print(err)
 		}
-		json.NewEncoder(w).Encode(returnData)
+		defer rows.Close()
+		for rows.Next() {
+			var thesis Theses
+			err := rows.Scan(&thesis.ThesisID, &thesis.Name, &thesis.Type)
+			if err != nil {
+				log.Print(err)
+			}
+			thesis.Role = "ADMIN"
+			returnData = append(returnData, thesis)
+		}
+		if rows.Err() != nil {
+			log.Print(err)
+		}
 	} else {
-		w.WriteHeader(http.StatusBadRequest)
+		query = `select thesis.thesis_id, thesis.title, thesis.defence_date, thesis.grade_defence, thesis.reviewer_review, thesis.supervisor_review, thesis_type.name, commitee_person.committee_role from thesis, thesis_type, commitee_person where thesis.thesis_type_id = thesis_type.thesis_type_id and thesis.title is not null and commitee_person.committee_id = thesis.committee_id and commitee_person.person_id = $1`
+		var review1 sql.NullString
+		var review2 sql.NullString
+		var defenceDate sql.NullString
+		var defenceGrade sql.NullFloat64
+		var roleID int
+		rows, err := dbConnection.Query(query, token)
+		if err != nil {
+			log.Print(err)
+		}
+		defer rows.Close()
+		for rows.Next() {
+			var thesis Theses
+			err := rows.Scan(&thesis.ThesisID, &thesis.Name, &defenceDate, &defenceGrade, &review1, &review2, &thesis.Type, &roleID)
+			if err != nil {
+				log.Print(err)
+			}
+
+			if roleID == 2 || roleID == 3 {
+				thesis.Role = "MEMBER"
+			} else if roleID == 1 {
+				thesis.Role = "CHAIRMAN"
+			} else {
+				thesis.Role = "ADVISOR"
+			}
+			 if (roleID == 3 && !review1.Valid) || (roleID == 4 && !review2.Valid)  {
+				thesis.AdditionalText = "Oczekuje na recenzję"
+			 }
+			 if defenceDate.Valid {
+				 now := time.Now()
+				 defDate, _ := time.Parse(time.RFC3339, defenceDate.String)
+				 if roleID == 1 && !defenceGrade.Valid && now.After(defDate){
+					 thesis.AdditionalText = "Oczekuje na zatwierdzenie"
+				 }
+			 }
+
+			returnData = append(returnData, thesis)
+		}
+		if rows.Err() != nil {
+			log.Print(err)
+		}
 	}
+	json.NewEncoder(w).Encode(returnData)
+
 }
