@@ -14,6 +14,7 @@ type Theses struct {
 	Name           string `json:"name"`
 	Type           string `json:"type"`
 	Role           string `json:"role"`
+	Author		   string `json:"author"`
 	AdditionalText string `json:"additionalText,omitempty"`
 }
 
@@ -25,7 +26,7 @@ func GetTheses(w http.ResponseWriter, r *http.Request) {
 	returnData :=  make([]Theses, 0)
 	var query string
 	if token == "1" {
-		query = `select thesis.thesis_id, thesis.title, thesis_type.name from thesis, thesis_type where thesis.thesis_type_id = thesis_type.thesis_type_id and thesis.title is not null and thesis.author_id = $1`
+		query = `select thesis.thesis_id, thesis.title, students.first_name || ' ' || students.surname, thesis_type.name from thesis, thesis_type, students where thesis.thesis_type_id = thesis_type.thesis_type_id and thesis.title is not null and thesis.author_id = $1 and students.student_id = thesis.author_id`
 		rows, err := dbConnection.Query(query, token)
 		if err != nil {
 			log.Print(err)
@@ -33,7 +34,7 @@ func GetTheses(w http.ResponseWriter, r *http.Request) {
 		defer rows.Close()
 		for rows.Next() {
 			var thesis Theses
-			err := rows.Scan(&thesis.ThesisID, &thesis.Name, &thesis.Type)
+			err := rows.Scan(&thesis.ThesisID, &thesis.Name, &thesis.Author, &thesis.Type)
 			if err != nil {
 				log.Print(err)
 			}
@@ -45,7 +46,7 @@ func GetTheses(w http.ResponseWriter, r *http.Request) {
 		}
 
 	} else if token == "5" {
-		query = "select thesis.thesis_id, thesis.title, thesis_type.name from thesis, thesis_type where thesis.thesis_type_id = thesis_type.thesis_type_id and thesis.title is not null"
+		query = "select thesis.thesis_id, thesis.title, students.first_name || ' ' || students.surname, thesis_type.name from thesis, thesis_type, students where thesis.thesis_type_id = thesis_type.thesis_type_id and thesis.title is not null and students.student_id = thesis.author_id"
 		rows, err := dbConnection.Query(query)
 		if err != nil {
 			log.Print(err)
@@ -53,7 +54,7 @@ func GetTheses(w http.ResponseWriter, r *http.Request) {
 		defer rows.Close()
 		for rows.Next() {
 			var thesis Theses
-			err := rows.Scan(&thesis.ThesisID, &thesis.Name, &thesis.Type)
+			err := rows.Scan(&thesis.ThesisID, &thesis.Name, &thesis.Author, &thesis.Type)
 			if err != nil {
 				log.Print(err)
 			}
@@ -64,7 +65,7 @@ func GetTheses(w http.ResponseWriter, r *http.Request) {
 			log.Print(err)
 		}
 	} else {
-		query = `select thesis.thesis_id, thesis.title, thesis.defence_date, thesis.grade_defence, thesis.reviewer_review, thesis.supervisor_review, thesis_type.name, commitee_person.committee_role from thesis, thesis_type, commitee_person where thesis.thesis_type_id = thesis_type.thesis_type_id and thesis.title is not null and commitee_person.committee_id = thesis.committee_id and commitee_person.person_id = $1`
+		query = `select thesis.thesis_id, thesis.title, students.first_name || ' ' || students.surname, thesis.defence_date, thesis.grade_defence, thesis.reviewer_review, thesis.supervisor_review, thesis_type.name, commitee_person.committee_role from thesis, thesis_type, commitee_person, students where thesis.thesis_type_id = thesis_type.thesis_type_id and thesis.title is not null and commitee_person.committee_id = thesis.committee_id and commitee_person.person_id = $1 and students.student_id = thesis.author_id`
 		var review1 sql.NullString
 		var review2 sql.NullString
 		var defenceDate sql.NullString
@@ -77,7 +78,7 @@ func GetTheses(w http.ResponseWriter, r *http.Request) {
 		defer rows.Close()
 		for rows.Next() {
 			var thesis Theses
-			err := rows.Scan(&thesis.ThesisID, &thesis.Name, &defenceDate, &defenceGrade, &review1, &review2, &thesis.Type, &roleID)
+			err := rows.Scan(&thesis.ThesisID, &thesis.Name, &thesis.Author, &defenceDate, &defenceGrade, &review1, &review2, &thesis.Type, &roleID)
 			if err != nil {
 				log.Print(err)
 			}
