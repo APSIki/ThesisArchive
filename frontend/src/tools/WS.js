@@ -2,7 +2,7 @@ import axios from 'axios';
 import store from '../store/store'
 
 // temporary
-const BASE_URL = "http://192.168.0.20:8088";
+const BASE_URL = "http://192.168.0.21:8088";
 
 class WS {
 
