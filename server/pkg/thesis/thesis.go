@@ -107,7 +107,7 @@ func PostThesis(w http.ResponseWriter, req *http.Request) {
 
 
 	auth := req.Header.Get("Authorization")
-	insertStmt := `insert into thesis(thesis_type_id, title, author_id, committee_id) values ($1, $2, $3, $4)`
+	insertStmt := `insert into thesis(thesis_type_id, title, author_id, committee_id, defence_date) values ($1, $2, $3, $4, '2020-06-28T12:00:00.000Z')`
 	if _, err := dbConnection.Exec(insertStmt, thesis.Type, thesis.Name, auth, lastInsertId); err != nil {
 		log.Print(err)
 	}
