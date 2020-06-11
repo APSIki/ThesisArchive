@@ -326,10 +326,10 @@ INSERT INTO public.thesis(
 
 ('2020-05-21', 1, 1, 'Wwpływ studiowania na Wydziale Elektroniki i Technik Informacyjnych na zdrowie psychiczne.', 'zdrowie psychiczne, studia, WEiTI', 1, 1, 2, null, 5.0, 5.0, null, 1, 'Praca opisuje wpływ studiowania na Wydziale Elektroniki i Technik Informacyjnych na zdrowie psychiczne.', 'Bardzo dobrze, super recenzja, 10/10', 'Bardzo dobrze, super recenzja, 10/10', '/thesis2.html'),
 
-('2020-06-25', 3, 3, 'Sieci SDN', 'SDN, kontroler, sieci', 1, 1, 4, 4.0, 5.0, 5.0, 4.00, 2, 'Praca opisuje sieci SDN', 'Bardzo dobrze, super recenzja, 10/10', 'Bardzo dobrze, super recenzja, 10/10', '/praca.html'),
+('2020-06-08', 3, 3, 'Sieci SDN', 'SDN, kontroler, sieci', 1, 1, 4, 4.0, 5.0, 5.0, 4.00, 2, 'Praca opisuje sieci SDN', 'Bardzo dobrze, super recenzja, 10/10', 'Bardzo dobrze, super recenzja, 10/10', '/praca.html'),
 
-('2020-06-26', 3, 3, 'Systemy operacyjne', 'Linux, Windows', 2, 1, 5, null, 5.0, 5.0, null, 2, 'Praca opisuje systemy operacyjne', 'Bardzo dobrze, super recenzja, 10/10', 'Bardzo dobrze, super recenzja, 10/10', '/praca.html'),
+('2020-06-09', 3, 3, 'Systemy operacyjne', 'Linux, Windows', 2, 1, 5, null, 5.0, 5.0, null, 2, 'Praca opisuje systemy operacyjne', 'Bardzo dobrze, super recenzja, 10/10', 'Bardzo dobrze, super recenzja, 10/10', '/praca.html'),
 
-('2020-06-27', 1, 3, 'Swiatlowody', 'swiatlowod, kwarc', 2, 1, 6, null, 3.0, 3.0, null, 2, 'Praca opisuje swiatlowody', 'Marnie, 0/10', 'Bardzo dobrze, super recenzja, 10/10', '/praca.html');
+('2020-06-10', 1, 3, 'Swiatlowody', 'swiatlowod, kwarc', 2, 1, 6, null, 3.0, 3.0, null, 2, 'Praca opisuje swiatlowody', 'Marnie, 0/10', 'Bardzo dobrze, super recenzja, 10/10', '/praca.html');
 
 
