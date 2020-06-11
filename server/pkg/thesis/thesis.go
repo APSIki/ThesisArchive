@@ -92,9 +92,19 @@ func PostThesis(w http.ResponseWriter, req *http.Request) {
 	}
 	dbConnection := db.GetDB()
 
-
 	lastInsertId := 0
 	dbConnection.QueryRow("INSERT INTO committee DEFAULT VALUES RETURNING committee_id").Scan(&lastInsertId)
+
+	_, err := dbConnection.Exec("INSERT INTO commitee_person (committee_id, committee_role, person_id) VALUES ($1, 1, 0)", lastInsertId)
+
+	if err != nil {
+		log.Print(err)
+	}
+
+	dbConnection.Exec("INSERT INTO commitee_person (committee_id, committee_role, person_id) VALUES ($1, 2, 0)", lastInsertId)
+	dbConnection.Exec("INSERT INTO commitee_person (committee_id, committee_role, person_id) VALUES ($1, 3, 0)", lastInsertId)
+	dbConnection.Exec("INSERT INTO commitee_person (committee_id, committee_role, person_id) VALUES ($1, 4, 0)", lastInsertId)
+
 
 	auth := req.Header.Get("Authorization")
 	insertStmt := `insert into thesis(thesis_type_id, title, author_id, committee_id) values ($1, $2, $3, $4)`
@@ -133,6 +143,7 @@ func GetThesis(w http.ResponseWriter, req *http.Request) {
 
 	getAllThesisStmt := `SELECT * FROM thesis WHERE thesis_id=$1;`
 	row := dbConnection.QueryRow(getAllThesisStmt, params["id"])
+	//err := row.Scan(&thesis.ThesisID, &thesis.Defense.DefenseDate, &thesisTypeID, &MajorSpecialityID, &thesis.Name, &thesis.Keywords, &thesis.OrganizationalUnit, &thesis.SubjectMatter, &commiteeID, &defGrade, &grade2, &grade1, &gradeAvg, &authorID, &thesis.Abstract, &thesis.Review1.Text, &thesis.Review2.Text, &thesis.FilePath)
 	err := row.Scan(&thesis.ThesisID, &defenseDate, &thesisTypeID, &majorSpecID, &thesis.Name, &keywords, &organizationID, &subjectMatter, &committeeID, &defGrade, &grade2, &grade1, &gradeAvg, &authorID, &abstract, &review1, &review2, &filePath)
 	if err == sql.ErrNoRows {
 		log.Print("No rows were returned!")
@@ -159,7 +170,10 @@ func GetThesis(w http.ResponseWriter, req *http.Request) {
 	if defenseDate.Valid {
 		thesis.Defense.DefenseDate = defenseDate.String
 	}
-
+	//..thesis.
+	//if majorSpecID.Valid {
+	//
+	//}
 	thesis.Keywords = ""
 	if keywords.Valid {
 		thesis.Keywords = keywords.String
@@ -172,6 +186,10 @@ func GetThesis(w http.ResponseWriter, req *http.Request) {
 	if subjectMatter.Valid {
 		thesis.SubjectMatter = subjectMatter.Int64
 	}
+	//thesis.Defense.Committee.
+	//if committeeID.Valid {
+	//
+	//}
 	thesis.Abstract = ""
 	if abstract.Valid {
 		thesis.Abstract = abstract.String
@@ -351,7 +369,7 @@ func PostReview1(w http.ResponseWriter, req *http.Request) {
 	var review Review
 	_ = json.NewDecoder(req.Body).Decode(&review)
 	dbConnection := db.GetDB()
-	sqlStatement := "update thesis set supervisor_review = $1, grade_review_supervisor = $2 where thesis_id = $3"
+	sqlStatement := "update thesis set reviewer_review = $1, grade_review_reviewer = $2 where thesis_id = $3"
 	_, err := dbConnection.Exec(sqlStatement, review.Text, review.Grade, params["id"])
 	if err != nil {
 		log.Print(err)
@@ -367,7 +385,7 @@ func PostReview2(w http.ResponseWriter, req *http.Request) {
 	var review Review
 	_ = json.NewDecoder(req.Body).Decode(&review)
 	dbConnection := db.GetDB()
-	sqlStatement := "update thesis set reviewer_review = $1, grade_review_reviewer = $2 where thesis_id = $3"
+	sqlStatement := "update thesis set supervisor_review = $1, grade_review_supervisor = $2 where thesis_id = $3"
 	_, err := dbConnection.Exec(sqlStatement, review.Text, review.Grade, params["id"])
 	if err != nil {
 		log.Print(err)
@@ -383,6 +401,7 @@ func PostThesisDetails(w http.ResponseWriter, req *http.Request) {
 	var details ThesisDetails
 	_ = json.NewDecoder(req.Body).Decode(&details)
 	dbConnection := db.GetDB()
+	log.Print(details.SubjectMatter)
 	sqlStatement := "update thesis set key_words = $1, abstract = $2, organizational_unit_id = $3, subject_matter_id = $4 where thesis_id = $5"
 	_, err := dbConnection.Exec(sqlStatement, details.Keywords, details.Abstract, details.OrganizationalUnit, details.SubjectMatter, params["id"])
 	if err != nil {

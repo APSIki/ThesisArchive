@@ -212,8 +212,6 @@ ALTER TABLE "thesis" ADD CONSTRAINT "thesis_has_type" FOREIGN KEY ("thesis_type_
 ALTER TABLE "thesis" ADD CONSTRAINT "theses_has_major_speciality" FOREIGN KEY ("major_speciality_id") REFERENCES "major_speciality" ("major_speciality_id") ON DELETE NO ACTION ON UPDATE NO ACTION
 ;
 
-ALTER TABLE "commitee_person" ADD CONSTRAINT "committee_person_has_person" FOREIGN KEY ("person_id") REFERENCES "staff_person" ("staff_person_id") ON DELETE NO ACTION ON UPDATE NO ACTION
-;
 
 ALTER TABLE "thesis" ADD CONSTRAINT "thesis_has_commitee" FOREIGN KEY ("committee_id") REFERENCES "committee" ("committee_id") ON DELETE NO ACTION ON UPDATE NO ACTION
 ;
