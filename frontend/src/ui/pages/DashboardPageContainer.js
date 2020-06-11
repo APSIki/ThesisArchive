@@ -1,6 +1,6 @@
 import { connect } from 'react-redux';
 import DashboardPage from './DashboardPage'
-import { setUsers } from '../../store/actions/config'
+import { setUsers, setStaffPersons } from '../../store/actions/config'
 
 const mapStateToProps = state => {
   return {
@@ -9,7 +9,8 @@ const mapStateToProps = state => {
 }
 
 const DashboardPageContainer = connect(mapStateToProps, {
-  setUsers
+  setUsers,
+  setStaffPersons
 })(DashboardPage)
 
 export default DashboardPageContainer;

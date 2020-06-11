@@ -10,7 +10,7 @@ const AddThesisModalForm = (props) => {
     props.closeModal();
 
     WS.postNewThesis({
-      type: thesisType,
+      type: String(thesisType),
       name: thesisTitle
     }).then(response => {
       window.location.reload()

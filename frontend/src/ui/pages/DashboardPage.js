@@ -15,6 +15,10 @@ const DashboardPage = props => {
             props.setUsers({users: response.data})
         })
 
+        WS.getStaffPersons().then(response => {
+            props.setStaffPersons(response.data)
+        })
+
         WS.getDashboardData().then(response => {
             setDashboardData({nearestDefenses: response.data})
         })
