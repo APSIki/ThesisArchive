@@ -93,6 +93,7 @@ const ThesisPage = props => {
         setDefenseDate(moment(response.data.defense.date))
         setReviewer1(props.config.staffPersons.filter(staffPerson => staffPerson.id == response.data.reviewer1.reviewerId)[0]);
         setReviewer2(props.config.staffPersons.filter(staffPerson => staffPerson.id == response.data.reviewer2.reviewerId)[0]);
+        setFilePath(response.data.filePath)
 
         if (response.data.role == "MEMBER") {
           setActiveStep(2);
@@ -219,9 +220,9 @@ const ThesisPage = props => {
     }).then(response => {
       setSuccessSnackbarOpen(true)
     })
-    .catch(err => {
-      setErrorSnackbarOpen(true)
-    })
+      .catch(err => {
+        setErrorSnackbarOpen(true)
+      })
   }
 
   return (
@@ -260,7 +261,7 @@ const ThesisPage = props => {
               <p className={classes.header}>Streszczenie</p>
               <div className={classes.textFieldContainer}>
                 {roles.canChangeAbstractAndKeywords(props.currentThesis) && (
-                  <TextField multiline fullWidth value={abstract} onChange={handleAbstractChange} />
+                  <TextField multiline fullWidth value={abstract} onChange={handleAbstractChange} disabled={props.currentThesis.defense && props.currentThesis.defense.defended} />
                 )}
                 {!roles.canChangeAbstractAndKeywords(props.currentThesis) && (
                   <p className={classes.reviewText}>{abstract}</p>
@@ -269,7 +270,7 @@ const ThesisPage = props => {
               <p className={classes.header}>Słowa kluczowe</p>
               <div className={classes.textFieldContainer}>
                 {roles.canChangeAbstractAndKeywords(props.currentThesis) && (
-                  <TextField fullWidth value={keywords} onChange={handleKeywordsChange} />
+                  <TextField fullWidth value={keywords} onChange={handleKeywordsChange} disabled={props.currentThesis.defense && props.currentThesis.defense.defended} />
                 )}
                 {!roles.canChangeAbstractAndKeywords(props.currentThesis) && (
                   <p className={classes.reviewText}>{keywords}</p>
@@ -282,16 +283,18 @@ const ThesisPage = props => {
                 value={subjectMatter}
                 setValue={setSubjectMatter}
                 options={props.config.subjectMatters}
+                disabled={props.currentThesis.defense && props.currentThesis.defense.defended}
               />
               <p className={classes.header}>Jednostka organizacyjna</p>
               <Autocomplete
                 value={organizationalUnit}
                 setValue={setOrganizationalUnit}
                 options={props.config.organizationalUnits}
+                disabled={props.currentThesis.defense && props.currentThesis.defense.defended}
               />
               {roles.canChangeAbstractAndKeywords(props.currentThesis) && (
                 <div className={classes.button}>
-                  <Button variant="contained" color="#CCC" onClick={handleSaveAbstractAndKeywords}>
+                  <Button variant="contained" color="#CCC" onClick={handleSaveAbstractAndKeywords} disabled={props.currentThesis.defense && props.currentThesis.defense.defended} >
                     ZAPISZ DANE PRACY
                 </Button>
                 </div>
@@ -324,10 +327,14 @@ const ThesisPage = props => {
                 <p className={classes.header}>Plik z pracą został dodany.</p>
                 <p className={classes.subHeader}>Aby pobrać plik z pracą, kliknij poniżej</p>
                 <a href={props.currentThesis.filePath} download>Click to download</a>
-                <p className={classes.header}>Kliknij poniżej aby ostatecznie zatwierdzić pracę</p>
-                <Button variant="contained" color="#CCC" disabled={props.currentThesis.filePath} onClick={handleFileConfirmedClick}>
-                  Zatwierdź treść pracy
-                </Button>
+                {roles.canUploadFile(props.currentThesis.role) && filePath !== props.currentThesis.filePath &&  (
+                  <React.Fragment>
+                    <p className={classes.header}>Kliknij poniżej aby ostatecznie zatwierdzić pracę</p>
+                    <Button variant="contained" color="#CCC" disabled={props.currentThesis.filePath} onClick={handleFileConfirmedClick}>
+                      Zatwierdź treść pracy
+                    </Button>
+                  </React.Fragment>
+                )}
               </React.Fragment>
             )}
           </React.Fragment>
@@ -335,7 +342,7 @@ const ThesisPage = props => {
         {activeStep === 2 && (
           <React.Fragment>
             {roles.canEditReviewer(props.currentThesis) && (
-              <React.Fragment>
+              <div style={{margin: 10}}>
                 <p className={classes.subHeader}>Zmień promotora:</p>
                 <Autocomplete
                   value={reviewer1}
@@ -348,14 +355,14 @@ const ThesisPage = props => {
                   setValue={setReviewer2}
                   options={props.config.staffPersons}
                 />
-                <div>
+                <div style={{margin: 10}}>
                   <Button variant="contained" color="#CCC" onClick={handleSetReviewer} >
                     ZATWIERDŹ ZMIANĘ RECENZENTÓW
                 </Button>
                 </div>
-              </React.Fragment>
+              </div>
             )}
-            {!roles.canReview1(props.currentThesis, props.config) && roles.canSaveReview(props.currentThesis) && !!props.currentThesis.reviewer1.text ? (
+            {(props.currentThesis.defense.defended) || (!roles.canReview1(props.currentThesis, props.config) && roles.canSaveReview(props.currentThesis) && !!props.currentThesis.reviewer1.text) ? (
               <React.Fragment>
                 <p className={classes.header}>Recenzja 1 jest dostępna:</p>
                 <p className={classes.subHeader}>Recenzent: {props.currentThesis.reviewer1.reviewerName}</p>
@@ -366,7 +373,7 @@ const ThesisPage = props => {
             ) : (
                 <p className={classes.header}>Recenzja 1 nie jest jeszcze gotowa.</p>
               )}
-            {roles.canReview1(props.currentThesis, props.config) && roles.canSaveReview(props.currentThesis) && (
+            {!props.currentThesis.defense.defended && roles.canReview1(props.currentThesis, props.config) && roles.canSaveReview(props.currentThesis) && (
               <React.Fragment>
                 <p className={classes.subHeader}>Wprowadź ocenę:</p>
                 <TextField multiline fullWidth value={grade1} onChange={(event) => setGrade1(event.target.value)} />
@@ -379,7 +386,7 @@ const ThesisPage = props => {
                 </div>
               </React.Fragment>
             )}
-            {!roles.canReview2(props.currentThesis, props.config) && roles.canSaveReview(props.currentThesis) && !!props.currentThesis.reviewer2.text ? (
+            {(props.currentThesis.defense.defended) || (!roles.canReview2(props.currentThesis, props.config) && roles.canSaveReview(props.currentThesis) && !!props.currentThesis.reviewer2.text) ? (
               <React.Fragment>
                 <p className={classes.header}>Recenzja 2 jest dostępna:</p>
                 <p className={classes.subHeader}>Recenzent: {props.currentThesis.reviewer2.reviewerName}</p>
@@ -390,7 +397,7 @@ const ThesisPage = props => {
             ) : (
                 <p className={classes.header}>Recenzja 2 nie jest jeszcze gotowa.</p>
               )}
-            {roles.canReview2(props.currentThesis, props.config) && roles.canSaveReview(props.currentThesis) && (
+            {!props.currentThesis.defense.defended && roles.canReview2(props.currentThesis, props.config) && roles.canSaveReview(props.currentThesis)  && (
               <React.Fragment>
                 <p className={classes.subHeader}>Wprowadź ocenę:</p>
                 <TextField multiline fullWidth value={grade2} onChange={(event) => setGrade2(event.target.value)} />
@@ -421,11 +428,12 @@ const ThesisPage = props => {
                   label="Data obrony"
                   value={defenseDate}
                   onChange={handleDefenseDateChange}
+                  disabled={props.currentThesis.defense.defended}
                 />
               </div>
             )}
             <p className={classes.header}>Skład komisji:</p>
-            {roles.canChangeCommittee(props.currentThesis) && (
+            {roles.canChangeCommittee(props.currentThesis) && !props.currentThesis.defense.defended && (
               <Button onClick={handleCommitteeChangeClick}>{isCommitteEdited ? "ZATWIERDŹ ZMIANY" : "ZMIEŃ"}</Button>
             )}
             {!isCommitteEdited && (
