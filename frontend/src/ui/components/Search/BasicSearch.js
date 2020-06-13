@@ -35,7 +35,7 @@ const BasicSearch = (props) => {
                     endIcon={<SearchIcon />}>
                     Szukaj
                 </Button>
-                <p classes={classes.guideText}>Możesz wpisać fragment tytułu albo imiona i nazwiska autorów lub opiekunów pracy. <br/>
+                <p classes={classes.guideText}>Możesz wpisać fragment tytułu albo imiona i nazwiska autorów. <br/>
                 By uzyskać więcej opcji skorzystaj z wyszukiwania zaawansowanego.</p>
             </div>
             { 

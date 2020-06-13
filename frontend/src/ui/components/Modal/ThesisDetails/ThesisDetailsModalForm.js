@@ -16,7 +16,8 @@ const ThesisDetailsModalForm = props => {
 
 
   useEffect(() => {
-     WS.getThesis(123).then(response => {
+    console.log(props.thesisId)
+     WS.getThesis(1).then(response => {
       setAbstract(response.data.abstract)
       setKeywords(response.data.keywords)
       setOrganizationalUnit(response.data.organizationalUnit)
@@ -27,7 +28,6 @@ const ThesisDetailsModalForm = props => {
       setThesisType(response.data.type)
     })
   }, []);
-
 
 
   return (

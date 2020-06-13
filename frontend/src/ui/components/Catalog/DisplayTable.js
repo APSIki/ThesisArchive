@@ -45,7 +45,6 @@ function DisplayTable(rows) {
             <StyledTableCell >Temat pracy</StyledTableCell>
             <StyledTableCell >Typ pracy</StyledTableCell>
             <StyledTableCell >Autor</StyledTableCell>
-            <StyledTableCell >Opiekun</StyledTableCell>
             <StyledTableCell >Szczegóły</StyledTableCell>
           </TableRow>
         </TableHead>
@@ -55,8 +54,7 @@ function DisplayTable(rows) {
               <StyledTableCell component="th" scope="row">{index}</StyledTableCell>
               <StyledTableCell>{row.name}</StyledTableCell>
               <StyledTableCell>{row.type}</StyledTableCell>
-              <StyledTableCell>{row.thesisAuthor}</StyledTableCell>
-              <StyledTableCell>{row.thesisGuardian}</StyledTableCell>
+              <StyledTableCell>{row.author}</StyledTableCell>
               <StyledTableCell><ModalContainer triggerText="Szczegóły" modalAction="thesisDetails" ButtonAsTrigger thesisId={row.id} table/></StyledTableCell>
             </StyledTableRow>
           ))}

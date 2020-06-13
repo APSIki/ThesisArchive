@@ -7,8 +7,7 @@ import (
 	"net/url"
 	"server/pkg/db"
 	"time"
-	"fmt"
-	"reflect"
+	"strings"
 )
 
 type ThesesData struct {
@@ -53,31 +52,27 @@ func Search(w http.ResponseWriter, r *http.Request) {
 	publicationDateFromAsDate, _ := time.Parse(layoutISO, publicationDateFrom)
 	publicationDateToAsDate, _ := time.Parse(layoutISO, publicationDateTo)
 
-	fmt.Println(defenseDateFromAsDate)
-	fmt.Println(defenseDateToAsDate)
-	fmt.Println(publicationDateFromAsDate)
-	fmt.Println(publicationDateToAsDate)
-	fmt.Println(thesis_type)
-	fmt.Println(reflect.TypeOf(defenseDateFromAsDate))
-
 	var sql_query string
 	
 	if len(query) > 0 { 
 		sql_query = `select thesis.thesis_id, thesis.title, students.first_name, students.surname, thesis_type.name from thesis, thesis_type, students 
-		where (thesis.title LIKE $1 OR students.first_name LIKE $1 OR students.surname LIKE $1) AND
+		where (
+		LOWER(thesis.title) LIKE '%' || $1 || '%' OR 
+		LOWER(students.first_name) LIKE '%' || $1 || '%' OR 
+		LOWER(students.surname) LIKE '%' || $1 || '%') AND
 		(($2 <> '') IS NOT TRUE  AND
 		($3 <> '') IS NOT TRUE AND
 		($4 <> '') IS NOT TRUE AND
-		$5 IS NULL AND
-		$6 IS NULL AND
-		$7 IS NULL AND
-		$8 IS NULL)`
+		(thesis.defence_date > $5) AND
+		(thesis.defence_date < $6) AND
+		(thesis.defence_date > $7) AND
+		(thesis.defence_date < $8))`
 	} else {
 		sql_query = `select thesis.thesis_id, thesis.title, students.first_name, students.surname, thesis_type.name from thesis, thesis_type, students  where 
 		(($1 <> '') IS NOT TRUE) AND
 		(($2 <> '') IS NOT TRUE OR thesis_type.name = $2) AND
-		(($3 <> '') IS NOT TRUE OR students.surname = $3) AND
-		(($4 <> '') IS NOT TRUE OR thesis.key_words LIKE $4) AND
+		(($3 <> '') IS NOT TRUE OR LOWER(students.surname) LIKE '%' || $3 || '%' OR LOWER(students.first_name) LIKE '%' || $3 || '%') AND
+		(($4 <> '') IS NOT TRUE OR LOWER(thesis.key_words) LIKE '%' || $4 || '%') AND
 		(thesis.defence_date > $5) AND
 		(thesis.defence_date < $6) AND
 		(thesis.defence_date > $7) AND
@@ -87,7 +82,7 @@ func Search(w http.ResponseWriter, r *http.Request) {
 	thesesData := make([]ThesesData, 0)
 	dbConnection := db.GetDB()
 
-	rows, err := dbConnection.Query(sql_query, query, thesis_type, author, keyword, defenseDateFromAsDate, defenseDateToAsDate, publicationDateFromAsDate, publicationDateToAsDate)
+	rows, err := dbConnection.Query(sql_query, strings.ToLower(query), thesis_type, strings.ToLower(author), strings.ToLower(keyword), defenseDateFromAsDate, defenseDateToAsDate, publicationDateFromAsDate, publicationDateToAsDate)
 
 	if err != nil {
 		log.Print(err)
