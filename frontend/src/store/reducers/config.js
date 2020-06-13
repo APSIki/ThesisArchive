@@ -33,7 +33,34 @@ const initialState = {
             "id": "3",
             "name": "Instytut Radiokomunikacji i Mulitimediów"
         }
+    ],
+    staffPersons: [
+        {
+            "id": "2",
+            "name": "Wiesława Promotorska"
+        },
+        {
+            "id": "3",
+            "name": "Krzysztof Przewodniczącki"
+        },
+        {
+            "id": "4",
+            "name": "Krystyna Członkowska"
+        },
+        {
+            "id": "5",
+            "name": "Janusz Admiński"
+        },
+        {
+            "id": "6",
+            "name": "Monika Przykładowa"
+        },
+        {
+            "id": "7",
+            "name": "Wiesław Elektroniczny"
+        }
     ]
+
 }
 
 const reducer = (state = initialState, action) => {
@@ -48,6 +75,12 @@ const reducer = (state = initialState, action) => {
             return {
                 ...state,
                 authorization: action.value
+            }
+        }
+        case actionTypes.SET_STAFF_PERSONS: {
+            return {
+                ...state,
+                staffPersons: action.value
             }
         }
         default: {

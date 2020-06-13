@@ -20,8 +20,8 @@ type Thesis struct {
 	ThesisID           int     `json:"id"`
 	Name               string  `json:"name"`
 	Type               string  `json:"type"`
-	SubjectMatter      int     `json:"subjectMatter"`
-	OrganizationalUnit int     `json:"organizationalUnit"`
+	SubjectMatter      int64   `json:"subjectMatter"`
+	OrganizationalUnit int64   `json:"organizationalUnit"`
 	Abstract           string  `json:"abstract"`
 	Keywords           string  `json:"keywords"`
 	Review1            Review  `json:"reviewer1"`
@@ -32,10 +32,10 @@ type Thesis struct {
 }
 
 type Defense struct {
-	Defendedbool bool           `json:"defended"`
-	Grade        float64 `json:"grade,omitempty"`
-	DefenseDate  string         `json:"date,omitempty"`
-	Committee    CommitteeGet   `json:"commitee,omitempty"`
+	Defendedbool bool         `json:"defended"`
+	Grade        float64      `json:"grade,omitempty"`
+	DefenseDate  string       `json:"date,omitempty"`
+	Committee    CommitteeGet `json:"commitee,omitempty"`
 }
 
 type CommitteeGet struct {
@@ -59,10 +59,10 @@ type FilePath struct {
 }
 
 type ThesisDetails struct {
-	Abstract string `json:"abstract"`
-	Keywords string `json:"keywords"`
-	OrganizationalUnit int `json:"organizationalUnit"`
-	SubjectMatter int `json:"subjectMatter"`
+	Abstract           string `json:"abstract"`
+	Keywords           string `json:"keywords"`
+	OrganizationalUnit int    `json:"organizationalUnit"`
+	SubjectMatter      int    `json:"subjectMatter"`
 }
 
 type Committee struct {
@@ -79,18 +79,40 @@ type Review struct {
 	Grade      float64 `json:"grade,omitempty"`
 }
 
+type Reviewers struct {
+	Reviewer1 int `json:"reviewer1"`
+	Reviewer2 int `json:"reviewer2"`
+}
+
 func PostThesis(w http.ResponseWriter, req *http.Request) {
 	thesis := New()
 	if err := thesis.decodeJSON(w, req); err != nil {
 		respond.With(w, req, http.StatusBadRequest, err)
 		return
 	}
-	auth := req.Header.Get("Authorization")
-	insertStmt := `insert into thesis(thesis_type_id, title, author_id) values ($1, $2, $3)`
 	dbConnection := db.GetDB()
-	if _, err := dbConnection.Exec(insertStmt, thesis.Type, thesis.Name, auth); err != nil {
+
+	lastInsertId := 0
+	dbConnection.QueryRow("INSERT INTO committee DEFAULT VALUES RETURNING committee_id").Scan(&lastInsertId)
+
+	_, err := dbConnection.Exec("INSERT INTO commitee_person (committee_id, committee_role, person_id) VALUES ($1, 1, 0)", lastInsertId)
+
+	if err != nil {
 		log.Print(err)
 	}
+
+	dbConnection.Exec("INSERT INTO commitee_person (committee_id, committee_role, person_id) VALUES ($1, 2, 0)", lastInsertId)
+	dbConnection.Exec("INSERT INTO commitee_person (committee_id, committee_role, person_id) VALUES ($1, 3, 0)", lastInsertId)
+	dbConnection.Exec("INSERT INTO commitee_person (committee_id, committee_role, person_id) VALUES ($1, 4, 0)", lastInsertId)
+
+
+	auth := req.Header.Get("Authorization")
+	insertStmt := `insert into thesis(thesis_type_id, title, author_id, committee_id, defence_date) values ($1, $2, $3, $4, '2020-06-28T12:00:00.000Z')`
+	if _, err := dbConnection.Exec(insertStmt, thesis.Type, thesis.Name, auth, lastInsertId); err != nil {
+		log.Print(err)
+	}
+
+	log.Print(lastInsertId)
 	respond.WithStatus(w, req, http.StatusCreated)
 }
 
@@ -100,18 +122,29 @@ func GetThesis(w http.ResponseWriter, req *http.Request) {
 	auth := req.Header.Get("Authorization")
 	dbConnection := db.GetDB()
 	var thesisTypeID int
-	var MajorSpecialityID int
-	var commiteeID int
+	//var MajorSpecialityID int
+	//var commiteeID int
 	var gradeAvg sql.NullFloat64
 	var defGrade sql.NullFloat64
 	var grade1 sql.NullFloat64
 	var grade2 sql.NullFloat64
+	var defenseDate sql.NullString
+	var majorSpecID sql.NullInt64
+	var keywords sql.NullString
+	var organizationID sql.NullInt64
+	var subjectMatter sql.NullInt64
+	var committeeID sql.NullInt64
+	var abstract sql.NullString
+	var review1 sql.NullString
+	var review2 sql.NullString
+	var filePath sql.NullString
 	var authorID int
 	var thesis Thesis
 
 	getAllThesisStmt := `SELECT * FROM thesis WHERE thesis_id=$1;`
 	row := dbConnection.QueryRow(getAllThesisStmt, params["id"])
-	err := row.Scan(&thesis.ThesisID, &thesis.Defense.DefenseDate, &thesisTypeID, &MajorSpecialityID, &thesis.Name, &thesis.Keywords, &thesis.OrganizationalUnit, &thesis.SubjectMatter, &commiteeID, &defGrade, &grade2, &grade1, &gradeAvg, &authorID, &thesis.Abstract, &thesis.Review1.Text, &thesis.Review2.Text, &thesis.FilePath)
+	//err := row.Scan(&thesis.ThesisID, &thesis.Defense.DefenseDate, &thesisTypeID, &MajorSpecialityID, &thesis.Name, &thesis.Keywords, &thesis.OrganizationalUnit, &thesis.SubjectMatter, &commiteeID, &defGrade, &grade2, &grade1, &gradeAvg, &authorID, &thesis.Abstract, &thesis.Review1.Text, &thesis.Review2.Text, &thesis.FilePath)
+	err := row.Scan(&thesis.ThesisID, &defenseDate, &thesisTypeID, &majorSpecID, &thesis.Name, &keywords, &organizationID, &subjectMatter, &committeeID, &defGrade, &grade2, &grade1, &gradeAvg, &authorID, &abstract, &review1, &review2, &filePath)
 	if err == sql.ErrNoRows {
 		log.Print("No rows were returned!")
 	} else if err != nil {
@@ -133,6 +166,46 @@ func GetThesis(w http.ResponseWriter, req *http.Request) {
 	if thesis.Defense.Grade != 0 {
 		thesis.Defense.Defendedbool = true
 	}
+	thesis.Defense.DefenseDate = ""
+	if defenseDate.Valid {
+		thesis.Defense.DefenseDate = defenseDate.String
+	}
+	//..thesis.
+	//if majorSpecID.Valid {
+	//
+	//}
+	thesis.Keywords = ""
+	if keywords.Valid {
+		thesis.Keywords = keywords.String
+	}
+	thesis.OrganizationalUnit = 0
+	if organizationID.Valid {
+		thesis.OrganizationalUnit = organizationID.Int64
+	}
+	thesis.SubjectMatter = 0
+	if subjectMatter.Valid {
+		thesis.SubjectMatter = subjectMatter.Int64
+	}
+	//thesis.Defense.Committee.
+	//if committeeID.Valid {
+	//
+	//}
+	thesis.Abstract = ""
+	if abstract.Valid {
+		thesis.Abstract = abstract.String
+	}
+	thesis.Review1.Text = ""
+	if review1.Valid {
+		thesis.Review1.Text = review1.String
+	}
+	thesis.Review2.Text = ""
+	if review2.Valid {
+		thesis.Review2.Text = review2.String
+	}
+	thesis.FilePath = ""
+	if filePath.Valid {
+		thesis.FilePath = filePath.String
+	}
 
 	thesisTypeNameStmt := `SELECT name FROM thesis_type WHERE thesis_type_id=$1;`
 	row = dbConnection.QueryRow(thesisTypeNameStmt, thesisTypeID)
@@ -146,7 +219,7 @@ func GetThesis(w http.ResponseWriter, req *http.Request) {
 	switch auth {
 	case "1":
 		thesis.Role = "STUDENT"
-	case "2","4":
+	case "2", "4":
 		thesis.Role = "MEMBER"
 	case "3":
 		thesis.Role = "CHAIRMAN"
@@ -155,7 +228,7 @@ func GetThesis(w http.ResponseWriter, req *http.Request) {
 	}
 
 	reviewerNameAndIDStmt := `SELECT commitee_person.person_id, staff_person.first_name, staff_person.surname FROM commitee_person, staff_person WHERE committee_id=$1 and committee_role=$2 and staff_person.staff_person_id=commitee_person.person_id`
-	row = dbConnection.QueryRow(reviewerNameAndIDStmt, commiteeID, 3)
+	row = dbConnection.QueryRow(reviewerNameAndIDStmt, committeeID, 3)
 	var reviewerName string
 	var reviewerSurname string
 	err = row.Scan(&thesis.Review1.ReviewerID, &reviewerName, &reviewerSurname)
@@ -165,7 +238,7 @@ func GetThesis(w http.ResponseWriter, req *http.Request) {
 		log.Print(err)
 	}
 	thesis.Review1.Name = reviewerName + " " + reviewerSurname
-	row = dbConnection.QueryRow(reviewerNameAndIDStmt, commiteeID, 4)
+	row = dbConnection.QueryRow(reviewerNameAndIDStmt, committeeID, 4)
 	err = row.Scan(&thesis.Review2.ReviewerID, &reviewerName, &reviewerSurname)
 	if err == sql.ErrNoRows {
 		log.Print("No rows were returned!")
@@ -177,7 +250,7 @@ func GetThesis(w http.ResponseWriter, req *http.Request) {
 	thesis.Defense.Committee.Reviewer.ID = thesis.Review1.ReviewerID
 	thesis.Defense.Committee.Supervisor.Name = thesis.Review2.Name
 	thesis.Defense.Committee.Supervisor.ID = thesis.Review2.ReviewerID
-	row = dbConnection.QueryRow(reviewerNameAndIDStmt, commiteeID, 1)
+	row = dbConnection.QueryRow(reviewerNameAndIDStmt, committeeID, 1)
 	var chairmanName string
 	var chairmanSurname string
 	err = row.Scan(&thesis.Defense.Committee.Chairman.ID, &chairmanName, &chairmanSurname)
@@ -188,7 +261,7 @@ func GetThesis(w http.ResponseWriter, req *http.Request) {
 	}
 	thesis.Defense.Committee.Chairman.Name = chairmanName + " " + chairmanSurname
 
-	row = dbConnection.QueryRow(reviewerNameAndIDStmt, commiteeID, 2)
+	row = dbConnection.QueryRow(reviewerNameAndIDStmt, committeeID, 2)
 	var memberName string
 	var memberSurname string
 	err = row.Scan(&thesis.Defense.Committee.Member.ID, &memberName, &memberSurname)
@@ -296,7 +369,7 @@ func PostReview1(w http.ResponseWriter, req *http.Request) {
 	var review Review
 	_ = json.NewDecoder(req.Body).Decode(&review)
 	dbConnection := db.GetDB()
-	sqlStatement := "update thesis set supervisor_review = $1, grade_review_supervisor = $2 where thesis_id = $3"
+	sqlStatement := "update thesis set reviewer_review = $1, grade_review_reviewer = $2 where thesis_id = $3"
 	_, err := dbConnection.Exec(sqlStatement, review.Text, review.Grade, params["id"])
 	if err != nil {
 		log.Print(err)
@@ -312,7 +385,7 @@ func PostReview2(w http.ResponseWriter, req *http.Request) {
 	var review Review
 	_ = json.NewDecoder(req.Body).Decode(&review)
 	dbConnection := db.GetDB()
-	sqlStatement := "update thesis set reviewer_review = $1, grade_review_reviewer = $2 where thesis_id = $3"
+	sqlStatement := "update thesis set supervisor_review = $1, grade_review_supervisor = $2 where thesis_id = $3"
 	_, err := dbConnection.Exec(sqlStatement, review.Text, review.Grade, params["id"])
 	if err != nil {
 		log.Print(err)
@@ -328,6 +401,7 @@ func PostThesisDetails(w http.ResponseWriter, req *http.Request) {
 	var details ThesisDetails
 	_ = json.NewDecoder(req.Body).Decode(&details)
 	dbConnection := db.GetDB()
+	log.Print(details.SubjectMatter)
 	sqlStatement := "update thesis set key_words = $1, abstract = $2, organizational_unit_id = $3, subject_matter_id = $4 where thesis_id = $5"
 	_, err := dbConnection.Exec(sqlStatement, details.Keywords, details.Abstract, details.OrganizationalUnit, details.SubjectMatter, params["id"])
 	if err != nil {
@@ -336,6 +410,31 @@ func PostThesisDetails(w http.ResponseWriter, req *http.Request) {
 	w.Header().Set("Access-Control-Allow-Origin", "*")
 
 	json.NewEncoder(w).Encode(details)
+}
+
+func PostReviewers(w http.ResponseWriter, req *http.Request) {
+	w.Header().Set("Content-Type", "application/json")
+	params := mux.Vars(req)
+
+	var reviewers Reviewers
+	_ = json.NewDecoder(req.Body).Decode(&reviewers)
+
+	dbConnection := db.GetDB()
+
+	sqlStatement1 := "update commitee_person set person_id = $1 where committee_role=3 and committee_id = (select committee_id from thesis where thesis_id = $2)"
+	sqlStatement2 := "update commitee_person set person_id = $1 where committee_role=4 and committee_id = (select committee_id from thesis where thesis_id = $2)"
+
+	 _, err1 := dbConnection.Exec(sqlStatement1, reviewers.Reviewer1, params["id"])
+	if err1 != nil {
+		log.Print(err1)
+	}
+
+	_, err2 := dbConnection.Exec(sqlStatement2, reviewers.Reviewer2, params["id"])
+	if err2 != nil {
+		log.Print(err2)
+	}
+
+	json.NewEncoder(w).Encode(reviewers)
 }
 
 func New() *Thesis {

@@ -16,7 +16,7 @@ type User struct {
 func GetUser(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 	dbConnection := db.GetDB()
-	rows, err := dbConnection.Query("select first_name, surname from students")
+	rows, err := dbConnection.Query("select first_name, surname from students where student_id = 1")
 	if err != nil {
 		log.Print(err)
 	}

@@ -16,7 +16,8 @@ const SingleThesis = props => {
     <Grid item xs={12} xl={12}>
         <Paper className={classes.paper}>
             <p><strong>{props.thesis.type}</strong></p>
-            <p>{props.thesis.name}</p>
+            <p>{props.thesis.author}</p>
+            <p className={classes.additionalText}>{props.thesis.name}</p>
             <p className={classes.additionalText}>{props.thesis.additionalText}</p>
             <IconButton onClick={() => handleButtonClick(props.thesis.id)}>
                 <ArrowForward />
@@ -31,8 +32,8 @@ const useStyles = createUseStyles({
     paper: {
       padding: 10,
       paddingTop: 2,
-      maxWidth: 300,
-      backgroundColor: "#cccccc"
+      backgroundColor: "#cccccc",
+      height: 210
     },
     additionalText: {
       fontStyle: "italic"

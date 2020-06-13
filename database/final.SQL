@@ -212,8 +212,6 @@ ALTER TABLE "thesis" ADD CONSTRAINT "thesis_has_type" FOREIGN KEY ("thesis_type_
 ALTER TABLE "thesis" ADD CONSTRAINT "theses_has_major_speciality" FOREIGN KEY ("major_speciality_id") REFERENCES "major_speciality" ("major_speciality_id") ON DELETE NO ACTION ON UPDATE NO ACTION
 ;
 
-ALTER TABLE "commitee_person" ADD CONSTRAINT "committee_person_has_person" FOREIGN KEY ("person_id") REFERENCES "staff_person" ("staff_person_id") ON DELETE NO ACTION ON UPDATE NO ACTION
-;
 
 ALTER TABLE "thesis" ADD CONSTRAINT "thesis_has_commitee" FOREIGN KEY ("committee_id") REFERENCES "committee" ("committee_id") ON DELETE NO ACTION ON UPDATE NO ACTION
 ;
@@ -251,7 +249,7 @@ INSERT INTO public.staff_person(
 
 INSERT INTO public.students(
 	session_token, first_name, second_name, surname)
-	VALUES (1, 'Jan', null, 'Studencki');
+	VALUES (1, 'Jan', null, 'Studencki'), (100, 'Adam', null, 'Krupa');
 
 INSERT INTO public.organizational_unit(
 	name)
@@ -276,6 +274,9 @@ INSERT INTO public.committee_roles(
 INSERT INTO public.committee DEFAULT VALUES;
 INSERT INTO public.committee DEFAULT VALUES;
 INSERT INTO public.committee DEFAULT VALUES;
+INSERT INTO public.committee DEFAULT VALUES;
+INSERT INTO public.committee DEFAULT VALUES;
+INSERT INTO public.committee DEFAULT VALUES;
 
 INSERT INTO public.commitee_person(
 	committee_id, committee_role, person_id)
@@ -291,13 +292,25 @@ INSERT INTO public.commitee_person(
 	(3, 1, 3),
 	(3, 2, 4),
 	(3, 4, 2),
-	(3, 3, 7);
+	(3, 3, 7),
+  (4, 1, 3),
+  (4, 2, 2),
+  (4, 3, 4),
+  (5, 4, 7),
+  (5, 1, 2),
+  (5, 2, 3),
+  (5, 3, 4),
+  (5, 4, 6),
+  (6, 1, 2),
+  (6, 2, 3),
+  (6, 3, 4),
+  (6, 4, 6);
 
 INSERT INTO public.thesis_type(
 	name)
-	VALUES ('Inżynierska'),
-	('Magisterska'),
-	('Doktorska');
+	VALUES ('Praca inżynierska'),
+	('Praca magisterska'),
+	('Praca doktorska');
 
 INSERT INTO public.major_speciality(
 	major, speciality)
@@ -313,10 +326,10 @@ INSERT INTO public.thesis(
 
 ('2020-05-21', 1, 1, 'Wwpływ studiowania na Wydziale Elektroniki i Technik Informacyjnych na zdrowie psychiczne.', 'zdrowie psychiczne, studia, WEiTI', 1, 1, 2, null, 5.0, 5.0, null, 1, 'Praca opisuje wpływ studiowania na Wydziale Elektroniki i Technik Informacyjnych na zdrowie psychiczne.', 'Bardzo dobrze, super recenzja, 10/10', 'Bardzo dobrze, super recenzja, 10/10', '/thesis2.html'),
 
-('2020-06-12', 3, 3, 'Sieci SDN', 'SDN, kontroler, sieci', 1, 1, 3, 4.0, 5.0, 5.0, 4.00, 1, 'Praca opisuje sieci SDN', 'Bardzo dobrze, super recenzja, 10/10', 'Bardzo dobrze, super recenzja, 10/10', '/thesis3.html'),
+('2020-06-08', 3, 3, 'Sieci SDN', 'SDN, kontroler, sieci', 1, 1, 4, 4.0, 5.0, 5.0, 4.00, 2, 'Praca opisuje sieci SDN', 'Bardzo dobrze, super recenzja, 10/10', 'Bardzo dobrze, super recenzja, 10/10', '/praca.html'),
 
-('2020-06-05', 3, 3, 'Systemy operacyjne', 'Linux, Windows', 2, 2, 3, null, 5.0, 5.0, null, 1, 'Praca opisuje systemy operacyjne', 'Bardzo dobrze, super recenzja, 10/10', 'Bardzo dobrze, super recenzja, 10/10', '/thesis4.html'),
+('2020-06-09', 3, 3, 'Systemy operacyjne', 'Linux, Windows', 2, 1, 5, null, 5.0, 5.0, null, 2, 'Praca opisuje systemy operacyjne', 'Bardzo dobrze, super recenzja, 10/10', 'Bardzo dobrze, super recenzja, 10/10', '/praca.html'),
 
-('2020-06-03', 1, 3, 'Swiatlowody', 'swiatlowod, kwarc', 2, 1, 3, null, 3.0, 3.0, null, 1, 'Praca opisuje swiatlowody', 'Marnie, 0/10', 'Bardzo dobrze, super recenzja, 10/10', '/thesis5.html');
+('2020-06-10', 1, 3, 'Swiatlowody', 'swiatlowod, kwarc', 2, 1, 6, null, 3.0, 3.0, null, 2, 'Praca opisuje swiatlowody', 'Marnie, 0/10', 'Bardzo dobrze, super recenzja, 10/10', '/praca.html');
 
 
