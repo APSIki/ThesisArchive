@@ -47,7 +47,7 @@ func main() {
 	r.HandleFunc("/theses", theses.GetTheses).Methods("GET")
 	r.HandleFunc("/dashboard-info", dashbordInfo.GetDashboard).Methods("GET")
 	r.HandleFunc("/person/{id}", person.GetPerson).Methods("GET")
-	r.HandleFunc("/searchTheses/", searchTheses.Search).Methods("GET")
+	r.HandleFunc("/searchTheses", searchTheses.Search).Methods("GET")
 	r.HandleFunc("/subject-matters", subjectMatters.GetSubjects).Methods("GET")
 	r.HandleFunc("/users", users.GetUser).Methods("GET")
 	r.HandleFunc("/thesis/{id}", thesis.GetThesis).Methods("GET")

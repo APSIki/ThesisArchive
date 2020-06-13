@@ -75,20 +75,24 @@ const AdvancedSearch = (props) => {
 
     const handlebuttonSearchClick = () => {
         let thesisType;
-        if(engineeringThesis){
+        if(engineeringThesis && masterThesis && doctoralThesis){
+            thesisType = 'all'
+        }
+        else if(engineeringThesis){
             thesisType = 'engineering'
         } 
-        if(masterThesis) {
-            thesisType = thesisType + ";master"
+        else if(masterThesis) {
+            thesisType = 'master'
         }
-        if(doctoralThesis) {
-            thesisType = thesisType + ";doctoral"
+        else if(doctoralThesis) {
+            thesisType = 'doctoral'
         } 
 
         WS.getThesesByAdvancedSearch(thesisType, thesisAuthor, thesisReviewer, 
             memberOfTheCommission, keyWord, defenseDateFrom, defenseDateTo,
             publicationDateFrom, publicationDateTo).then(response => {
-            setDataRows(response.data.theses);
+            console.log(response.data)
+            setDataRows(response.data);
         })
     }
     
