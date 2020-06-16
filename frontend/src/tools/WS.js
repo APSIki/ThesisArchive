@@ -2,6 +2,8 @@ import axios from 'axios';
 import store from '../store/store'
 
 const BASE_URL = "http://192.168.0.21:8088";
+// const BASE_URL = "http://localhost:8088";
+
 
 class WS {
 

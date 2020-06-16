@@ -55,11 +55,14 @@ func Search(w http.ResponseWriter, r *http.Request) {
 	var sql_query string
 	
 	if len(query) > 0 { 
-		sql_query = `select thesis.thesis_id, thesis.title, students.first_name, students.surname, thesis_type.name from thesis, thesis_type, students 
-		where (
-		LOWER(thesis.title) LIKE '%' || $1 || '%' OR 
+		sql_query = `select distinct thesis.thesis_id, thesis.title, students.first_name, students.surname, thesis_type.name from thesis, thesis_type, students where
+		(thesis.author_id = students.student_id AND
+		thesis.thesis_type_id = thesis_type.thesis_type_id)
+		AND
+		(LOWER(thesis.title) LIKE '%' || $1 || '%' OR 
 		LOWER(students.first_name) LIKE '%' || $1 || '%' OR 
-		LOWER(students.surname) LIKE '%' || $1 || '%') AND
+		LOWER(students.surname) LIKE '%' || $1 || '%') 
+		AND
 		(($2 <> '') IS NOT TRUE  AND
 		($3 <> '') IS NOT TRUE AND
 		($4 <> '') IS NOT TRUE AND
@@ -68,7 +71,10 @@ func Search(w http.ResponseWriter, r *http.Request) {
 		(thesis.defence_date > $7) AND
 		(thesis.defence_date < $8))`
 	} else {
-		sql_query = `select thesis.thesis_id, thesis.title, students.first_name, students.surname, thesis_type.name from thesis, thesis_type, students  where 
+		sql_query = `select thesis.thesis_id, thesis.title, students.first_name, students.surname, thesis_type.name from thesis, thesis_type, students where
+		(thesis.author_id = students.student_id AND
+		thesis.thesis_type_id = thesis_type.thesis_type_id)
+		AND
 		(($1 <> '') IS NOT TRUE) AND
 		(($2 <> '') IS NOT TRUE OR thesis_type.name = $2) AND
 		(($3 <> '') IS NOT TRUE OR LOWER(students.surname) LIKE '%' || $3 || '%' OR LOWER(students.first_name) LIKE '%' || $3 || '%') AND
@@ -79,6 +85,7 @@ func Search(w http.ResponseWriter, r *http.Request) {
 		(thesis.defence_date < $8)`
 	}
 
+	
 	thesesData := make([]ThesesData, 0)
 	dbConnection := db.GetDB()
 

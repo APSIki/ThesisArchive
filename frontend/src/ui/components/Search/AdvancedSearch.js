@@ -91,7 +91,7 @@ const AdvancedSearch = (props) => {
         WS.getThesesByAdvancedSearch(thesisType, thesisAuthor, thesisReviewer, 
             memberOfTheCommission, keyWord, defenseDateFrom, defenseDateTo,
             publicationDateFrom, publicationDateTo).then(response => {
-            console.log(response.data)
+            console.log(response.data);
             setDataRows(response.data);
         })
     }

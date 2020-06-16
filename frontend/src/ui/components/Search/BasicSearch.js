@@ -19,7 +19,8 @@ const BasicSearch = (props) => {
 
     const handlebuttonSearchClick = () => {
         WS.getThesesByBasicSearch(query).then(response => {
-            setDataRows(response.data.theses);
+            setDataRows(response.data);
+
         })
     }
 
