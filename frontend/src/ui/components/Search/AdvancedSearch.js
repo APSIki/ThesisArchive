@@ -17,10 +17,10 @@ const AdvancedSearch = (props) => {
     const [engineeringThesis, setEngineeringThesis] = useState(true);
     const [masterThesis, setMasterThesis] = useState(true);
     const [doctoralThesis, setDoctoralThesis] = useState(true);
-    const [defenseDateFrom, setDefenseDateFrom] = useState(null);
-    const [defenseDateTo, setDefenseDateTo] = useState(null);
-    const [publicationDateFrom, setPublicationDateFrom] = useState(null);
-    const [publicationDateTo, setPublicationDateTo] = useState(null);
+    const [defenseDateFrom, setDefenseDateFrom] = useState('2018-01-01');
+    const [defenseDateTo, setDefenseDateTo] = useState('2100-01-01');
+    const [publicationDateFrom, setPublicationDateFrom] = useState('2018-01-01');
+    const [publicationDateTo, setPublicationDateTo] = useState('2100-01-01');
     const [thesisAuthor, setThesisAuthor] = useState('');
     const [thesisReviewer, setThesisReviewer] = useState('');
     const [memberOfTheCommission, setMemberOfTheCommission] = useState('');
@@ -75,20 +75,24 @@ const AdvancedSearch = (props) => {
 
     const handlebuttonSearchClick = () => {
         let thesisType;
-        if(engineeringThesis){
+        if(engineeringThesis && masterThesis && doctoralThesis){
+            thesisType = 'all'
+        }
+        else if(engineeringThesis){
             thesisType = 'engineering'
         } 
-        if(masterThesis) {
-            thesisType = thesisType + ";master"
+        else if(masterThesis) {
+            thesisType = 'master'
         }
-        if(doctoralThesis) {
-            thesisType = thesisType + ";doctoral"
+        else if(doctoralThesis) {
+            thesisType = 'doctoral'
         } 
 
         WS.getThesesByAdvancedSearch(thesisType, thesisAuthor, thesisReviewer, 
             memberOfTheCommission, keyWord, defenseDateFrom, defenseDateTo,
             publicationDateFrom, publicationDateTo).then(response => {
-            setDataRows(response.data.theses);
+            console.log(response.data);
+            setDataRows(response.data);
         })
     }
     

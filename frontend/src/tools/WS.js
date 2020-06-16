@@ -1,8 +1,9 @@
 import axios from 'axios';
 import store from '../store/store'
 
-// temporary
 const BASE_URL = "http://192.168.0.21:8088";
+// const BASE_URL = "http://localhost:8088";
+
 
 class WS {
 
@@ -89,6 +90,7 @@ class WS {
         publicationDateFrom, publicationDateTo) {
         return axios.get(`${BASE_URL}/searchTheses`, {
             params: {
+                query: '',
                 type: thesisType,
                 author: author,
                 reviewer: reviewer,
@@ -97,8 +99,7 @@ class WS {
                 defenseDateFrom: defenseDateFrom,
                 defenseDateTo: defenseDateTo,
                 publicationDateFrom: publicationDateFrom,
-                publicationDateTo: publicationDateTo,
-                query: ''
+                publicationDateTo: publicationDateTo
             }
         });
     }
@@ -112,10 +113,10 @@ class WS {
                 reviewer: '',
                 memberOfTheCommission: '',
                 keyword: '',
-                defenseDateFrom: '',
-                defenseDateTo: '',
-                publicationDateFrom: '',
-                publicationDateTo: '',
+                defenseDateFrom: '1900-01-01',
+                defenseDateTo: '2100-01-01',
+                publicationDateFrom: '1900-01-01',
+                publicationDateTo: '2100-01-01',
             }
         });
     }

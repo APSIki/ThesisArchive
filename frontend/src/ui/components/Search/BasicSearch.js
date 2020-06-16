@@ -18,19 +18,16 @@ const BasicSearch = (props) => {
 
 
     const handlebuttonSearchClick = () => {
-        // WS.getThesesByBasicSearch(query).then(response => {
-        //     setDataRows(response.data.theses);
-        // })
+        WS.getThesesByBasicSearch(query).then(response => {
+            setDataRows(response.data);
 
-        WS.getTheses().then(response => {
-             setDataRows(response.data.theses);
         })
     }
 
     return (
         <React.Fragment>
             <div className={classes.searchForm}>
-                <input className={classes.searchBox} placeholder="tytuł, imiona i nazwiska autorów lub opiekunów" value={query} onChange={handleUserInput} />
+                <input className={classes.searchBox} placeholder="tytuł, imiona i nazwiska autorów" value={query} onChange={handleUserInput} />
                 <Button
                     variant="contained"
                     color="primary"
@@ -39,7 +36,7 @@ const BasicSearch = (props) => {
                     endIcon={<SearchIcon />}>
                     Szukaj
                 </Button>
-                <p classes={classes.guideText}>Możesz wpisać fragment tytułu albo imiona i nazwiska autorów lub opiekunów pracy. <br/>
+                <p classes={classes.guideText}>Możesz wpisać fragment tytułu albo imiona i nazwiska autorów. <br/>
                 By uzyskać więcej opcji skorzystaj z wyszukiwania zaawansowanego.</p>
             </div>
             { 
