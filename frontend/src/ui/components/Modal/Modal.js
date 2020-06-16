@@ -97,7 +97,7 @@ const useStyles = createUseStyles({
             top: '50%',
             height: 'auto',
             transform: 'translate(-50%, -50%)',
-            'max-width': '80em',
+            'max-width': '60em',
             'max-height': 'calc(100% - 1em)'
         }
     },

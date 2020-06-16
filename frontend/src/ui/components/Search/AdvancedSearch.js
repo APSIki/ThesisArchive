@@ -91,7 +91,6 @@ const AdvancedSearch = (props) => {
         WS.getThesesByAdvancedSearch(thesisType, thesisAuthor, thesisReviewer, 
             memberOfTheCommission, keyWord, defenseDateFrom, defenseDateTo,
             publicationDateFrom, publicationDateTo).then(response => {
-            console.log(response.data);
             setDataRows(response.data);
         })
     }
@@ -189,7 +188,7 @@ const AdvancedSearch = (props) => {
                         </FormControl>
 
                         <FormControl className={classes.formControl}>
-                            <FormLabel className={classes.sectionTitle}>Osoby związane z pracą</FormLabel>
+                            <FormLabel className={classes.sectionTitle}>Osoby</FormLabel>
                             <FormGroup aria-label="position" style={{ width: '700px' }} row>
                                 <form className={classes.container} noValidate>
                                     <TextField
@@ -204,37 +203,8 @@ const AdvancedSearch = (props) => {
                                         }}
                                     />
                                 </form>
-                                <form className={classes.container} noValidate>
-                                    <TextField
-                                        id="thesisReviewer"
-                                        label="Recenzent"
-                                        type="text"
-                                        value={thesisReviewer}
-                                        onChange={handleChangeThesisReviewer}
-                                        className={classes.textField}
-                                        InputLabelProps={{
-                                        shrink: true,
-                                        }}
-                                        style={{ marginLeft: '15px' }}
-                                    />
-                                </form>
-                                <form className={classes.container} noValidate>
-                                    <TextField
-                                        id="memberOfTheCommission"
-                                        label="Członek Komisji"
-                                        type="text"
-                                        value={memberOfTheCommission}
-                                        onChange={handleChangeMemberOfTheCommission}
-                                        className={classes.textField}
-                                        InputLabelProps={{
-                                        shrink: true,
-                                        }}
-                                        style={{ marginLeft: '15px' }}
-                                    />
-                                </form>
                             </FormGroup>
                         </FormControl>
-
                         <FormControl className={classes.formControl}>
                             <FormLabel className={classes.sectionTitle}>Słowa kluczowe</FormLabel>
                             <FormGroup aria-label="position" style={{ width: '700px' }} row>

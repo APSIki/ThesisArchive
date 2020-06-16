@@ -5,27 +5,31 @@ import WS from '../../../../tools/WS'
 const ThesisDetailsModalForm = props => { 
   const classes = useStyles();
 
+
   const [abstract, setAbstract] = useState('')
   const [keywords, setKeywords] = useState('')
-  const [organizationalUnit, setOrganizationalUnit] = useState(0)
-  const [reviewer, setReviewer] = useState('')
-  const [subjectMatter, setSubjectMatter] = useState(0)
-  const [thesisGuardian, setThesisGuardian] = useState('')
   const [thesisSubject, setThesisSubject] = useState('')
   const [thesisType, setThesisType] = useState('')
+  const [subjectMatter, setSubjectMatter] = useState(null)
+  const [organizationalUnit, setOrganizationalUnit] = useState(null)
+  const [reviewer1, setReviewer1] = useState('');
+  const [reviewer2, setReviewer2] = useState('');
+
 
 
   useEffect(() => {
-    console.log(props.thesisId)
-     WS.getThesis(1).then(response => {
+     WS.getThesis(props.thesisId).then(response => {
+      console.log(response.data)
       setAbstract(response.data.abstract)
       setKeywords(response.data.keywords)
       setOrganizationalUnit(response.data.organizationalUnit)
-      setReviewer(response.data.reviewer)
+      setReviewer1(response.data.reviewer1.reviewerName)
+      setReviewer2(response.data.reviewer2.reviewerName)
       setSubjectMatter(response.data.subjectMatter)
-      setThesisGuardian(response.data.thesisGuardian)
       setThesisSubject(response.data.name)
       setThesisType(response.data.type)
+      setSubjectMatter(props.config.subjectMatters.filter(subjectMatter => subjectMatter.id == response.data.subjectMatter)[0].name);
+      setOrganizationalUnit(props.config.organizationalUnits.filter(organizationalUnit => organizationalUnit.id == response.data.organizationalUnit)[0].name);
     })
   }, []);
 
@@ -38,8 +42,10 @@ const ThesisDetailsModalForm = props => {
           <p><b>Typ:</b> {thesisType}</p>
           <p><b>Streszczenie:</b> {abstract}</p>
           <p><b>Słowa kluczowe:</b> {keywords}</p>
-          <p><b>Recenzent:</b>  {reviewer}</p>
-          <p><b>Promotor:</b> {thesisGuardian}</p>
+          <p><b>Tematyka:</b>  {subjectMatter}</p>
+          <p><b>Nazwa instytutu:</b> {organizationalUnit}</p>
+          <p><b>Recenzenci:</b> {reviewer1}, {reviewer2} </p>
+          
         </div>
     </React.Fragment>
   );
