@@ -32,7 +32,7 @@ export const canChangeCommittee = (thesis) => {
 }
 
 export const canEditReviewer = (thesis) => {
-    return thesis.role === ADMIN
+    return thesis.role === ADMIN && !(thesis.reviewer1.text && thesis.reviewer1.text.length > 0 && thesis.reviewer2.text && thesis.reviewer2.text.length > 0)
 }
 
 export const canAddNewThesis = (theses) => {

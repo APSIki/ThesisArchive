@@ -283,14 +283,14 @@ const ThesisPage = props => {
                 value={subjectMatter}
                 setValue={setSubjectMatter}
                 options={props.config.subjectMatters}
-                disabled={props.currentThesis.defense && props.currentThesis.defense.defended}
+                disabled={(props.currentThesis.defense && props.currentThesis.defense.defended) || !roles.canChangeAbstractAndKeywords(props.currentThesis)}
               />
               <p className={classes.header}>Jednostka organizacyjna</p>
               <Autocomplete
                 value={organizationalUnit}
                 setValue={setOrganizationalUnit}
                 options={props.config.organizationalUnits}
-                disabled={props.currentThesis.defense && props.currentThesis.defense.defended}
+                disabled={(props.currentThesis.defense && props.currentThesis.defense.defended) || !roles.canChangeAbstractAndKeywords(props.currentThesis)}
               />
               {roles.canChangeAbstractAndKeywords(props.currentThesis) && (
                 <div className={classes.button}>
@@ -356,7 +356,7 @@ const ThesisPage = props => {
                   options={props.config.staffPersons}
                 />
                 <div style={{margin: 10}}>
-                  <Button variant="contained" color="#CCC" onClick={handleSetReviewer} >
+                  <Button variant="contained" color="#CCC" onClick={handleSetReviewer} disabled={(props.currentThesis.defense && props.currentThesis.defense.defended)}>
                     ZATWIERDŹ ZMIANĘ RECENZENTÓW
                 </Button>
                 </div>

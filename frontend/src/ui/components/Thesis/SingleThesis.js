@@ -33,7 +33,7 @@ const useStyles = createUseStyles({
       padding: 10,
       paddingTop: 2,
       backgroundColor: "#cccccc",
-      height: 210
+      height: 225
     },
     additionalText: {
       fontStyle: "italic"
