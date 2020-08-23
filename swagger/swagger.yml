@@ -1,0 +1,421 @@
+swagger: "2.0"
+info:
+  description: "This is a frontend-backend communication plan for APSi Project."
+  version: "1.0.0"
+  title: "APSI Projekt"
+  termsOfService: "http://swagger.io/terms/"
+  license:
+    name: "Apache 2.0"
+    url: "http://www.apache.org/licenses/LICENSE-2.0.html"
+host: "tbd.io"
+basePath: "/v2"
+tags:
+- name: "thesis"
+  description: "Everything about theses"
+  externalDocs:
+    description: "Find out more"
+    url: "http://swagger.io"
+- name: "user"
+  description: "Operations about user"
+  externalDocs:
+    description: "Find out more about our store"
+    url: "http://swagger.io"
+schemes:
+- "https"
+paths:
+  /theses:
+    post:
+      tags:
+      - "thesis"
+      summary: "Add a new thesis to the system"
+      description: ""
+      operationId: "addThesis"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "body"
+        description: "Thesis to be added to the system"
+        required: true
+        schema:
+          $ref: "#/definitions/Thesis"
+      responses:
+        "201":
+          description: "Thesis was uploaded successfully"
+          schema:
+            $ref: "#/definitions/Thesis"
+        "405":
+          description: "Invalid input"
+  /theses/{thesisId}:
+    get:
+      tags:
+      - "thesis"
+      summary: "Find thesis by ID"
+      description: "Returns a single thesis"
+      operationId: "getThesisById"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "thesisId"
+        in: "path"
+        description: "ID of thesis to return"
+        required: true
+        type: "integer"
+        format: "int64"
+      responses:
+        "200":
+          description: "Successful operation"
+          schema:
+            $ref: "#/definitions/Thesis"
+        "400":
+          description: "Invalid ID supplied"
+        "404":
+          description: "Thesis not found"
+    put:
+      tags:
+      - "thesis"
+      summary: "Updates information about thesis"
+      description: ""
+      operationId: "updateThesis"
+      consumes:
+      - "application/x-www-form-urlencoded"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "thesisId"
+        in: "path"
+        description: "ID of thesis that needs to be updated"
+        required: true
+        type: "integer"
+        format: "int64"
+      - name: "name"
+        in: "formData"
+        description: "Updated name of the thesis"
+        required: false
+        type: "string"
+      - name: "status"
+        in: "formData"
+        description: "Updated status of the thesis"
+        required: false
+        type: "string"
+      - name: "category"
+        in: "formData"
+        description: "Updated category of the thesis"
+        required: false
+        type: "string"
+      - name: "organizationalUnit"
+        in: "formData"
+        description: "Updated organizational unit of the thesis"
+        required: false
+        type: "string"    
+      - name: "fieldOfStudy"
+        in: "formData"
+        description: "Updated field of study of the thesis"
+        required: false
+        type: "string"
+      - name: "keywords"
+        in: "formData"
+        description: "Updated keywords of the thesis"
+        required: false
+        type: "array"
+        items:
+          type: "string"
+      - name: "examDate"
+        in: "formData"
+        description: "Updated exam date"
+        required: false
+        type: "string"
+      - name: "publishDate"
+        in: "formData"
+        description: "Updated publish date"
+        required: false
+        type: "string"
+      - name: "authors"
+        in: "formData"
+        description: "Updated authors of the thesis"
+        required: false
+        type: "array"
+        items:
+          type: "string"
+      - name: "reviewers"
+        in: "formData"
+        description: "Updated reviewers of the thesis"
+        required: false
+        type: "array"
+        items:
+          type: "string"
+      - name: "examCommitteeMembers"
+        in: "formData"
+        description: "Updated exam committee members of the thesis"
+        required: false
+        type: "array"
+        items:
+          type: "string"
+      responses:
+        "405":
+          description: "Invalid input"
+    delete:
+      tags:
+      - "thesis"
+      summary: "Deletes a thesis"
+      description: ""
+      operationId: "deleteThesis"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "thesisId"
+        in: "path"
+        description: "Thesis id to delete"
+        required: true
+        type: "integer"
+        format: "int64"
+      responses:
+        "400":
+          description: "Invalid ID supplied"
+        "404":
+          description: "Thesis not found"
+  /thesis/{thesisId}/review:
+    post:
+      tags:
+      - "thesis"
+      summary: "Posts review of the thesis"
+      description: ""
+      operationId: "reviewThesis"
+      consumes:
+      - "application/x-www-form-urlencoded"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "thesisId"
+        in: "path"
+        description: "ID of Thesis to post the review"
+        required: true
+        type: "integer"
+        format: "int64"
+      - name: "review"
+        in: "formData"
+        description: "Review of the thesis"
+        required: true
+        type: "string"
+      responses:
+        "201":
+          description: "Review was added"
+          schema:
+            $ref: "#/definitions/ApiResponse"
+        "400":
+          description: "Invalid ID supplied"
+        "404":
+          description: "Thesis not found"
+    put:
+      tags:
+      - "thesis"
+      summary: "Updates review of the thesis"
+      description: ""
+      operationId: "updateReview"
+      consumes:
+      - "application/x-www-form-urlencoded"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "thesisId"
+        in: "path"
+        description: "ID of Thesis to post the review"
+        required: true
+        type: "integer"
+        format: "int64"
+      - name: "review"
+        in: "formData"
+        description: "Review of the thesis"
+        required: true
+        type: "string"
+      responses:
+        "400":
+          description: "Invalid ID supplied"
+        "404":
+          description: "Thesis not found"
+    delete:
+      tags:
+      - "thesis"
+      summary: "Deletes a review"
+      description: ""
+      operationId: "deleteReview"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "thesisId"
+        in: "path"
+        description: "Review id to delete"
+        required: true
+        type: "integer"
+        format: "int64"
+      responses:
+        "200":
+          description: "Review was successfully deleted"
+        "400":
+          description: "Invalid ID supplied"
+        "404":
+          description: "Review not found"
+  /thesis/{thesisId}/result:
+    post:
+      tags:
+      - "thesis"
+      summary: "Posts exam result"
+      description: ""
+      operationId: "examResult"
+      consumes:
+      - "application/x-www-form-urlencoded"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "thesisId"
+        in: "path"
+        description: "ID of exam to update"
+        required: true
+        type: "integer"
+        format: "int64"
+      - name: "mark"
+        in: "formData"
+        description: "Exam mark"
+        required: true
+        type: "integer"
+        format: "int64"
+      responses:
+        "201":
+          description: "successful operation"
+          schema:
+            $ref: "#/definitions/ApiResponse"
+        "400":
+          description: "Invalid ID supplied"
+        "404":
+          description: "Review not found"
+    put:
+      tags:
+      - "thesis"
+      summary: "Updates exam result"
+      description: ""
+      operationId: "updateResult"
+      consumes:
+      - "application/x-www-form-urlencoded"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "thesisId"
+        in: "path"
+        description: "ID of exam to update"
+        required: true
+        type: "integer"
+        format: "int64"
+      - name: "mark"
+        in: "formData"
+        description: "Exam mark"
+        required: true
+        type: "integer"
+        format: "int64"
+      responses:
+        "201":
+          description: "successful operation"
+          schema:
+            $ref: "#/definitions/ApiResponse"
+        "400":
+          description: "Invalid ID supplied"
+        "404":
+          description: "Review not found"
+    delete:
+      tags:
+      - "thesis"
+      summary: "Deletes the exam result"
+      description: ""
+      operationId: "deleteResult"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "thesisId"
+        in: "path"
+        description: "ID of thesis that exam result is to be deleted"
+        required: true
+        type: "integer"
+        format: "int64"
+      responses:
+        "200":
+          description: "Exam result deleted successfully"
+        "400":
+          description: "Invalid ID supplied"
+        "404":
+          description: "Exam result not found"
+securityDefinitions:
+  thesis_auth:
+    type: "oauth2"
+    authorizationUrl: "http://tbd/oauth/dialog"
+    flow: "implicit"
+    scopes:
+      write:theses: "modify thesis"
+      read:theses: "read thesis"
+  api_key:
+    type: "apiKey"
+    name: "api_key"
+    in: "header"
+definitions:
+  Thesis:
+    type: "object"
+    required:
+    - "name"
+    - "category"
+    - "organizationalEntity"
+    - "fieldOfStudy"
+    properties:
+      id:
+        type: "integer"
+        format: "int64"
+      category:
+        type: "string"
+        example: "Praca magisterska"
+      name:
+        type: "string"
+        example: "Temat pracy inżynierskiej"
+      organizationalEntity:
+          type: "string"
+          example: "Instytut Telekomunikacji"
+      fieldOfStudy:
+        type: "string"
+        example: "Telekomunikacja"
+      keywords:
+        type: "array"
+        items: 
+          type: "string"
+      examDate:
+        type: "string"
+        example: "29.04.2020"
+      publishDate:
+        type: "string"
+        example: "29.04.2020"
+      authors:
+        type: "array"
+        items:
+          type: "string"
+      reviewers:
+        type: "array"
+        items:
+          type: "string"
+      examCommitteeMembers:
+        type: "array"
+        items:
+          type: "string"      
+      tags:
+        type: "array"
+        items:
+          type: "string"
+  ApiResponse:
+    type: "object"
+    properties:
+      code:
+        type: "integer"
+        format: "int32"
+      type:
+        type: "string"
+      message:
+        type: "string"
+externalDocs:
+  description: "Find out more about Swagger"
+  url: "http://swagger.io"
