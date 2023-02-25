@@ -11,7 +11,6 @@ require (
 	github.com/matryer/respond v1.0.1 // indirect
 	github.com/rs/cors v1.7.0
 	github.com/spf13/viper v1.7.0
-	golang.org/x/crypto v0.0.0-20200510223506-06a226fb4e37 // indirect
-	golang.org/x/net v0.0.0-20200528225125-3c3fba18258b // indirect
+	golang.org/x/crypto v0.1.0 // indirect
 	gopkg.in/matryer/respond.v1 v1.0.1
 )
